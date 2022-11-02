@@ -29,3 +29,8 @@ setup.log
 _opam/
 
 readme/pandoc/
+
+
+
+**/.aux/*
+!**/.aux/main.pdf

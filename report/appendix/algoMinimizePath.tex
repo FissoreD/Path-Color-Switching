@@ -1,0 +1,32 @@
+\subsection{Minimize color switch in a path}
+\begin{algorithm}[H]
+	\caption{Minimize switches in path}
+	\label{algo:minpath}
+	\KwIn{$\path, \colf:=$ a path and the color function}
+	\KwOut{$R:=$ a path affectation minimizing the color switches}
+	$k \gets {\path}.length$\;
+
+	$prov \gets list(\colf(\path[0]))$\;
+
+	\For{$i\gets0$ \KwTo $k - 1$}{
+		$inter \gets prov[i - 1].inter(\colf(\path[i]))$\;
+		\uIf{$inter.isEmpty()$}{
+			$prov.append(\colf(\path[i]))$\;
+		} \Else{
+			$prov.append(inter)$\;
+		}
+	}
+
+	$R \gets [prov[k-1].choose()]$
+
+	\For{$i = k - 2$ \KwDownTo $0$}{
+		\uIf {$prov[i].has(h[0])$} {
+			$h.prepend(h[0])$
+		}
+		\Else {
+			$h.prepend(prov[i].choose())$
+		}
+	}
+	\Return R
+
+\end{algorithm}
