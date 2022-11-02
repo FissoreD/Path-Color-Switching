@@ -34,3 +34,4 @@ readme/pandoc/
 
 **/.aux/*
 !**/.aux/main.pdf
+indent.log
