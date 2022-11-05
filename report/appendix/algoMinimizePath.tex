@@ -1,26 +1,24 @@
-\subsection{Minimize color switch in a path}
+\subsection{Minimize color switches in a path}
 \begin{algorithm}[H]
-	\caption{Minimize switches in path}
+	\caption{Minimize color switches in a path algorithm}
 	\label{algo:minpath}
 	\KwIn{$\path = \row{\e}{\len}, \colf:=$ a path and the color function}
 	\KwOut{$\affect:=$ a path affectation minimizing the color switches}
+	\def\colSet{colSet}
 
-	$\affect \gets [\colf(\e_i) \text{ for } i \in [1..k] ]$\;
+	$\colSet \gets [\colf(\e_i) \text{ for } i \in [1..k]]$\;
 
 	\For{$i \gets 2$ \KwTo $\len$}{
-		$inter \gets \affect[i - 1] \cap \affect[i]$\;
+		$inter \gets \colSet[i - 1] \cap \colSet[i]$ \tcp*{Delay a color switch}
 		\If{$inter \neq \varnothing$}{
-			$\affect[i] \gets inter$\;
+			$\colSet[i] \gets inter$\;
 		}
 	}
 
-	$\affect[k] = \affect[k].choose()$\;
+	$\affect \gets [\colSet[i].choose() \text{ for } i \in [1..k]]$\;
 	\For{$i = k - 2$ \KwDownTo $1$}{
-		\uIf {$\affect[i+1] \in prov[i]$} {
-			$\affect[i] = \affect[i+1]$\;
-		}
-		\Else {
-			$\affect[i] = \affect[i].choose()$\;
+		\If {$\affect[i+1] \in \colSet[i] \land \affect[i] \neq \affect[i+1]$} {
+			$\affect[i] \gets \affect[i+1]$ \tcp*{If possible the $R(e_i)$ equals $R(e_{i+1})$}
 		}
 	}
 	\Return $\affect$\;

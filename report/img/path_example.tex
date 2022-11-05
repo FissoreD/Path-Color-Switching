@@ -16,8 +16,7 @@
 
 		% Draw dots with name
 		\foreach \x [count=\i] in {a,b,c,d,e,f,g} {
-				\node at (\x) [circle,fill,inner sep=1.5pt]{};
-				\node[above=1pt of {\x},fill opacity=0,text=black, text opacity=1] {$\n_\i$};
+				\node at (\x) [circle,fill,inner sep=1.5pt, label=above:$\n_\i$]{};
 			}
 
 		\def\lis{
