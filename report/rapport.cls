@@ -22,6 +22,7 @@
 
 
 \RequirePackage{geometry,tikz,afterpage}
+
 \usetikzlibrary{calc}
 
 \RequirePackage{titling,fancyhdr}
@@ -30,8 +31,10 @@
 \RequirePackage{amsthm}
 \RequirePackage{amssymb}
 \RequirePackage{xspace}
+\usepackage{multicol}
 
 \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
 
 \usepackage{pifont}
 \usepackage{url} 
@@ -66,7 +69,7 @@
 backend=biber,
 sorting=ynt
 ]{biblatex}
-\addbibresource{sections/References.bib}
+\addbibresource{bib.bib}
 
 \def\whitepage{
     \newpage
@@ -133,7 +136,7 @@ sorting=ynt
 %	LOGO SECTION
 %--------------------
 
-\includegraphics[width=13cm]{img/logo_haut_uca.png}\\[3cm] % Include a department/university logo - this will require the graphicx package
+\includegraphics[width=13cm]{img/logos/logo_haut_uca.png}\\[3cm] % Include a department/university logo - this will require the graphicx package
  
  
 %--------------------
