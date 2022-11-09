@@ -1,31 +1,32 @@
 \section{Minimize Switches in Paths}
 
 The goal of this section is to provide a greedy algorithm able to compute an optimal affectation $\affect$ of a given path $\path$. The obtained result, will then be extended to general graphs using the \textbf{XXX matrix}.
+% TODO : give a name to the matrix
 
 \subsection{Procedure}
 \label{sec:path_proc}
 This problem can be solved through a greedy strategy: taking a path $\path$ and a coloring function $\colf$, we must delay a color switch as much as possible. At the end we will have selected the biggest $l \in [1, k]$ such that the edges $(e_1, \dots, e_l)$ have at least one color in common. We repeat this procedure from the edge $e_{l+1}$ until reaching the end of our path. An implementation of this algorithm can be found in \cref{algo:minpath}.
 
-\subsection{Proof}
+\begin{proof}
+  Let $\affectf = \row{c}{k}$ be a solution returned by our algorithm, we can easily prove by induction on the length of the path that the solution is optimal.
 
-Let $\affectf = \row{c}{k}$ be a solution returned by our algorithm, we can easily prove by induction on the length of the path that the solution is optimal.
+  For $\k = 1$ we have $\weight(\affectf) = 0$ by defintion of the weight function which is of course the optimal cost.
 
-For $\k = 1$ we have $\weight(\affectf) = 0$ by defintion of the weight function.
+  Let's suppose that the solution $\affectf$ is an optimal one for every path of length at least $k$. We want to prove that the algorithm is always valid for a path of length $k+1$, we see that:
 
-Let's suppose that the solution $\affectf$ is an optimal one for every path of length at least $k$. We want to prove that the algorithm is always valid for a path of length $k+1$, we see that:
-
-\begin{itemize}
-  \item if $\colf(e_k) \cap \colf(e_{k+1}) = \varnothing$ then we are forced to do a color switch, for every affectation of the edge $\affectf' = (\row{c}{k})$. Since, by ipothesis, the affectation of the edges $\weight(\affectf')$ is optimal, then it will remain optimal for any affectation of the edge $e_{k+1}$ and $\weight(\affectf) = \weight(\affectf') + 1$.
-  \item if $\colf(e_k) \cap \colf(e_{k+1}) \neq \varnothing$
-        \begin{itemize}
-          \item if $c_\k \in \colf(e_{\k+1})$ then the algorithm we give to $e_{\k+1}$ the same color of $e_{\k}$. This will not increase the number of color switch which will remain optimal.
-          \item if $c_\k \in \colf(e_{\k+1})$ then the algorithm will force a color switch even if it would have been possible to give them the same color. Despite this, if we decide to give the same colors to $e_\k$ and $e_{\k+1}$ then we are only anticipating a color switch, and in the end $\weight(\affectf)$ will remain optimal.
-        \end{itemize}
-\end{itemize}
+  \begin{itemize}
+    \item if $\colf(e_k) \cap \colf(e_{k+1}) = \varnothing$ then we are forced to do a color switch, for every affectation of the edge $\affectf' = (\row{c}{k})$. Since, by ipothesis, the affectation of the edges $\weight(\affectf')$ is optimal, then it will remain optimal for any affectation of the edge $e_{k+1}$ and $\weight(\affectf) = \weight(\affectf') + 1$.
+    \item if $\colf(e_k) \cap \colf(e_{k+1}) \neq \varnothing$ we have two cases to treat:
+          \begin{itemize}
+            \item if $c_\k \in \colf(e_{\k+1})$ then the algorithm we give to $e_{\k+1}$ the same color of $e_{\k}$. This will not increase the number of color switch which will remain optimal.
+            \item if $c_\k \notin \colf(e_{\k+1})$ then the algorithm will force a color switch even if it would have been possible to give them the same color. Despite this, if we decide to give the same colors to $e_\k$ and $e_{\k+1}$ then we are only anticipating a color switch, and in the end $\weight(\affectf)$ will remain optimal.
+          \end{itemize}
+  \end{itemize}
+\end{proof}
 
 \subsection{Time Complexity}
 
-We can analyze the time complexity of this procedure from \refname{minpathalgo}. We have two loops of size $k$ (the length of the path). Inside them we make intersection between sets of at most $s$ colors, then the intersection between two sets of that size will take $O(s)$. Finally, the global time complexity will be $O(2 * k * s) = O(k*s)$.
+We can analyze the time complexity of this procedure from the implementation proposed in \cref{algo:minpath}. We have two loops of size $k$ (the length of the path). Inside them we make intersection between sets of at most $s$ colors, then the intersection between two sets of that size will take $O(s)$. Finally, the global time complexity will be $O(2 * k * s) = O(k*s)$.
 
 \subsection{An example run}
 \label{sec:path_ex_run}

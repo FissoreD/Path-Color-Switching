@@ -46,7 +46,7 @@ Apply the previous algorithm on a colored graphs in order the find a path of min
 
 From now on a shortest path is a path with the minimum number of color switches.
 
-The main idea is to build a modified adjency matrix $M$ where 
+The main idea is to build a modified adjacency matrix $M$ where 
 
 - $c_{ij} = (\varnothing, \infty)$ if there is no edge going from $i$ to $j$;
 - $c_{ij} = (c(i,j), 0)$ otherwise. 

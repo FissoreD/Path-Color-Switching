@@ -55,6 +55,10 @@
 \usepackage{mathtools}
 \usepackage{tikz}
 \usepackage{subcaption}
+
+\usepackage{caption}
+\captionsetup[table]{position=below}
+
 \usepackage[capitalise,noabbrev,nameinlink]{cleveref}
 \usetikzlibrary{automata, positioning, arrows}
 
@@ -204,3 +208,5 @@ sorting=ynt
 \setcounter{page}{1}
 }
 \makeatother
+
+\newcommand{\neworrenewcommand}[1]{\providecommand{#1}{}\renewcommand{#1}}

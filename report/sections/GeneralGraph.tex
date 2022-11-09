@@ -1,22 +1,26 @@
 \section{Minimize color switches on Directed Graphs}
 
-The previous section provides a strategy to compute the smallest cost of a given path. The key idea is to delay color switches and in this section we try to rework this algorithm in order to apply it on general directed graph. The goal is to find paths made of a fixed number of edges between two vertices in order to minimize the number of color switches.
+The previous section provides a strategy to compute the smallest cost of a given path. The key idea is to delay color switches and in this section we try to rework this algorithm in order to apply it on general directed graph. The goal is to find paths made of a \textit{fixed} number of edges between two vertices in order to minimize the number of color switches.
 
-\subsection{Preliminaries}
+\subsection{\FW\ algorithm}
+\label{sec:fwalgo}
 
 Floyd \cite[]{floyd} and Warshall \cite{warshall}, in respectively 1959 and 1962, gave an implementation \cite[]{floydalgo} of an algorithm able to compute the shortest path of a directed weighted graph.
 
-Let $\graph$ be a directed graph and $c$, such that for all couple of vertices $i,j$ of $\vset$, if there exsits no arc going from $i$ to $j$ in $\aset$ then  $c(i,j) = \infty$. Let $M$ be the $\vcard \times \vcard$ adjency matrix of $\graph$ such that each cell $c_{ij}$ equals $c(i, j)$. Note that for each $\n \in \vset$, $c(\n, \n) = 0$.
+Let $\graph$ be a directed graph and $c$, such that for all couple of vertices $i,j$ of $\vset$, if there exsits no arc going from $i$ to $j$ in $\aset$ then  $c(i,j) = \infty$. Let $M$ be the $\vcard \times \vcard$ adjacency matrix of $\graph$ such that each cell $c_{ij}$ equals $c(i, j)$. Note that for each $\n \in \vset$, $c(\n, \n) = 0$.
 
 The goal of the algorithm is to update the weight of each cell for every iteration. In particular at time $0$ we know the distance from every vertex to each of its successors and to improve the informations about the global shortest path, we look for path from every couple $i, j \in \vset^2$ passing trhough a third vertex $k$ and take the minimum distance. We have to repeat this procedure $\vcard$ times in order to look for paths of length at most $\vcard$.
-
 $$c_{ij} = \min_{k \in \vset} (c(i, k) + c(k, j))$$
 
 \input{img/tikz/digraph.tex}
 
 \input{img/matrix.tex}
 
-Let's take for example the graph of \cref{fig:digraph}. The corresponding matrix
+Let's take the directed graph represented in \cref{fig:digraph}. The corresponding adjacency matrix is indicated in \cref{tbl:floydit1}. At the iteration 2, the distance from vertex $\n_3$ to vertex $\n_2$ is updated to $-2$ since, while looking for all possible paths passing trhough an intermadiate vertex, there is the path $\path'$ going from $n_3$ to $n_1$ and then from $n_1$ to $n_2$. The overall cost $\path'$ is made of $c_{3,1} + c_{1,2} = 2 + (-4) = -2$ which is less than the direct path $v_3$ to $v_2$ depicted in the adjacency matrix.
+
+\subsection{Paths of fixed length with minimum cost}
+
+\cref{sec:fwalgo}, ... todo talk about semiring from ullman book to find path cost of a path with fixed number of edge
 
 \subsection{Matrix Method}
 

@@ -1,7 +1,9 @@
 \subsection{Minimize color switches in a path}
 \begin{algorithm}[H]
-	\caption{Minimize color switches in a path algorithm}
+	\nextfloat
+	\caption{Shortest path of a path}
 	\label{algo:minpath}
+
 	\KwIn{$\path = \row{\e}{\len}, \colf:=$ a path and the color function}
 	\KwOut{$\affect:=$ a path affectation minimizing the color switches}
 	\def\colSet{colSet}
@@ -21,7 +23,7 @@
 			$\affect[i] \gets \affect[i+1]$ \tcp*{If possible the $R(e_i)$ equals $R(e_{i+1})$}
 		}
 	}
-	\Return $\affect$\;
 
+	\Return $\affect$\;
 \end{algorithm}
 
