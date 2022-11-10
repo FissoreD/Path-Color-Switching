@@ -2,12 +2,14 @@
 
 \section{Definitions and notations}
 
-In the following sections $G = (\vset, \aset)$ is a directed graph where $V = \row{\n}{\vcard}$ is the set of its vertices and $A = \row{\e}{\acard}$ is the set of its arcs. $\vcard$ and $\acard$ represents the cardinality of rispectively $\vset$ and $\aset$. An arc $\e_i \in \aset$ is a pair $(\n_i, \n_j) \in \vset^2$ saying that $\e_i$ goes from $\n_i$ to $\n_j$. This arc is different from another $\e_j = (\n_j, \n_i) \in \aset$.\\
-$\colf$ is the coloring function taking an arc $\e$ and returning the set of colors $\C$ associated to it. By abuse of notation we say that $\colf(\e) = \colf(\n_i, \n_j)$ if $\e = (\n_i, \n_j)$. $\affectf: \aset \rightarrow \mathbb{N} $ is a valid affectation, that is $\affectf(e) = \c$ if and only if $\c \in \colf(e)$. For simplicity, if $S = \row{\e}{\len}$ is a list of $\len$ arcs, then $\colf(S) = \row{\C}{\len}$ and $\affectf(S) = \row{\c}{\len}$. \\
+In this section we fix some notations that will be reused next.\\
+$G = (\vset, \aset)$ is a directed graph where $V = \row{\n}{\vcard}$ is the set of its vertices and $A = \row{\e}{\acard}$ is the set of its arcs. $\vcard$ and $\acard$ represents the cardinality of rispectively $\vset$ and $\aset$. An arc $\e_i \in \aset$ is a pair $(\n_i, \n_j) \in \vset^2$ saying that $\e_i$ goes from $\n_i$ to $\n_j$. The arc $(\n_i, \n_j)$ is different from $(\n_j, \n_i)$.\\
+$\colf$ is the coloring function and takes an arc $\e$ as parameters. It returns the set of colors $\C$ associated to $\e$. By abuse of notation we say that $\colf(\e) = \colf(\n_i, \n_j)$ if $\e = (\n_i, \n_j)$.\\
+$\affectf: \aset \rightarrow \mathbb{N} $ is the affectation function, and $\affectf(e) = \c$ if $\c \in \colf(e)$. For simplicity, if $\path = \row{\e}{\len}$ is a list of consecutive arcs whose length is $\len$, then $\colf(\path) = (\colf(\e_1), \dots, \colf(\e_\len)) = \row{\C}{\len}$ and $\affectf(\path) = (\affectf(\e_1), \dots, \affectf(\e_\len))  = \row{\c}{\len}$.\\
 % An affectation $\affect = \affectf(P)$ is a list of colors, and can rewrited as $\affect = \row{\colgroup}{l}$ where $\colgroup_1$ is the    
-Given a path $\path$ of length $\len$ and its corresponding affectations $\affectf(\path)$, its weight is returned by the cost function $\weight(\affectf(\path))$ defined as follows:
+Given a path $\path$ of length $\len$ and its corresponding affectations $\affect = \affectf(\path)$, the weight of $\affect$ is the number of its color switches. This cost is computed by $\weight(\affectf(\path))$.
 
-$$ \weight(\affectf(\path)) = \sum\limits_{i = 1}^{\k-1} (\c_i \neq \c_{i+1}) $$
+$$ \weight(\affect) = \sum\limits_{i = 1}^{\k-1} (\c_i \neq \c_{i+1}) $$
 
-$\weighto(\affectf(\path))$ is the minimal weight of a path among all the possible affectation $\affect(P)$, this affectation is said to be optimal $\affecto(P)$.
+$\weighto(\affectf(\path))$ is the minimal weight of a path among all the possible affectation $\affect$ of $\path$, $\affecto$ is said to be an optimal affectation.\\
 Finally, we say that a shortest path from $\n_i$ to $\n_j$ in a graph $\graph$ is a path $\path$ starting in $\n_i$ and ending in $\n_j$ whose optimal affectation $\affecto$ is the minimal among all the other possible paths in $\graph$.

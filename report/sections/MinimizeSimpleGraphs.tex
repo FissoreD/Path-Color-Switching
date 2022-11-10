@@ -35,15 +35,14 @@ We can analyze the time complexity of this procedure from the implementation pro
 
 Let's take \cref{fig:path_example}, where $\path = \row{\e}{6}$ and $\colf$ such that
 \begin{align*}
-  \colf(\path) = ( & \{\eAcols\},    \\
-                   & \{\eBcols\},    \\
-                   & \{\eCcols\},    \\
-                   & \{\eDcols\},    \\
-                   & \{\eEcols\},    \\
-                   & \{\eFcols\}   )
+  \colf(\path) = ( & \{\eAcols\}, \{\eBcols\},    \\
+                   & \{\eCcols\}, \{\eDcols\},    \\
+                   & \{\eEcols\}, \{\eFcols\}   )
 \end{align*}
 
-The longest subpath of same color, starting from the vertex $\n_1$, is $\path_1 = (\e_1, \e_2, \e_3)$ such that $R(\e) = \colB$ for all $\e \in \path_1$. Then $\affectf(e_4) = \colC$ and $\affectf(\e_5) = \affectf(\e_6) = \colD$. This affectation $\affect = (\colB, \colB, \colB, \colC, \colD, \colD)$ has $\weight(\affectf) = 2$ and is optimal.
+The longest subpath of same color, starting from the vertex $\n_1$, is $\path_1 = (\e_1, \e_2, \e_3)$ such that $R(\e) = \colB$ for all $\e \in \path_1$. Then $\affectf(e_4) = \colC$ and $\affectf(\e_5) = \affectf(\e_6) = \colD$. This affectation $\affect = (\colB, \colB, \colB, \colC, \colD, \colD)$ has $\weight(\affect) = 2$ and is optimal.
+
+One can note that there can exist other optimal affectations, from \cref{fig:path_example} we can choose $\affect' = (\colA, \colC, \colC, \colC, \colB, \colB)$, but in any case, any other affectations will not be less than  $\weight(H)$.
 
 \subsection{Exstention on cycles}
 
