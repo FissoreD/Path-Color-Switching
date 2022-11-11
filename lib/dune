@@ -1,3 +1,13 @@
 (library
- (name lib)
- (libraries re))
+ (name shortest_path)
+ (modules shortest_path)
+ (libraries graph))
+
+(library
+ (name graph)
+ (modules graph))
+
+(library
+ (name switch_graph)
+ (modules switch_graph)
+ (libraries graph))

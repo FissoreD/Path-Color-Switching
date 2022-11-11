@@ -1,24 +1,3 @@
-let openF y s = "bin/y20" ^ y ^ "/input/day" ^ s ^ ".txt" |> open_in
-let closeF = close_in
-
-(** 
-  Takes an year, a day and a function to parse each line of the the input file. Returns the List of line parsed
-*)
-let read_file year day func =
-  let inp = openF year day in
-  let rec aux () =
-    try
-      let l = input_line inp in
-      func l :: aux ()
-    with End_of_file ->
-      closeF inp;
-      []
-  in
-  aux ()
-
-exception Invalid_input
-exception Switch_not_implemented
-
 module List = struct
   include List
 
@@ -67,7 +46,7 @@ module List = struct
     aux [] start len
 
   let rec index_of elt = function
-    | [] -> raise Invalid_input
+    | [] -> failwith "Bound out of list"
     | hd :: _ when hd = elt -> 0
     | _ :: tl -> 1 + index_of elt tl
 

@@ -1,2 +1,3 @@
 (test
- (name TER))
+ (name test)
+ (libraries shortest_path switch_graph))
