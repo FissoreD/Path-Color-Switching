@@ -7,7 +7,7 @@ caption-justification: centering
 
 # Introduction
 
-Given a path $P$ composed by a sequence of $k$ adjacent edges $(e_1, ..., e_k)$ and a function $C$ returning a set of colors for every edge, we say that a valid affectation $H = (h_1, ..., h_k)$ is a sequence of colors such that each $h_i$ is a color belonging to $C(e_i)$.
+Given a path $P$ composed by a sequence of $k$ adjacent edges $(e_1, ..., e_k)$ and a function $F$ returning a set of colors for every edge, we say that a valid affectation $H = (h_1, ..., h_k)$ is a sequence of colors such that each $h_i$ is a color belonging to $C(e_i)$.
 
 The weight $w$ of a sequence $H$ is given by the number of color switch inside the sequence.
 
