@@ -86,6 +86,8 @@ sorting=ynt
 \renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}
 \fancyfoot{}
 
+\usepackage[bottom]{footmisc}
+
 \fancyhead[LE]{\textsl{\leftmark}}
 \fancyhead[RE, LO]{\textbf{\thepage}}
 \fancyhead[RO]{\textsl{\rightmark}}

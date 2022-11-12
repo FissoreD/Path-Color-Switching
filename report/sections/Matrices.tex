@@ -1,0 +1,99 @@
+\section{Minimize color switches with matrices}
+
+The previous section provides a strategy to compute the smallest cost of a given path. The key idea is to delay color switches and in this section we try to rework this algorithm in order to apply it on general directed graph. The goal is to find paths made of a \textit{fixed} number of edges between two vertices in order to minimize the number of color switches.
+
+\subsection{\FW\ algorithm}
+\label{sec:fwalgo}
+
+Floyd \cite[]{floyd} and Warshall \cite{warshall}, in respectively 1959 and 1962, gave an implementation \cite[]{floydalgo} of an algorithm able to compute the shortest path of a directed weighted graph.
+
+Let $\graph$ be a directed graph and $c$, such that for all couple of vertices $i,j$ of $\vset$, if there exists no arc going from $i$ to $j$ in $\aset$ then  $\weight(i,j) = \infty$. Let $\matr$ be the $\vcard \times \vcard$ adjacency matrix of $\graph$ such that each cell $M_{ij}$ equals $\weight(i, j)$. Note that for each $\n \in \vset$, $\weight(\n, \n) = 0$.
+
+The goal of the algorithm is to update the weight of each cell for every iteration. In particular at time $0$, we have $\matr^1 = \matr$ representing all the shortest path of length \textit{at most} $1$ between two vertex. To improve the information about the global shortest path, we look for path from every couple $i, j \in \vset^2$ passing through a third vertex $k$ and take the minimum distance. Therefore $\matr^2$ will indicate all shortest path for every pair of vertices of length \textit{at most} $2$.
+
+\begin{equation}
+  \label{eq:cellc}
+  \matr_{ij} = \min_{k \in \vset} (\matr_{ik} + \matr_{kj})
+\end{equation}
+
+Globally, the matrix should be updated $\vcard$ times. In fact, except for negative cycles, every shortest path between two vertices will pass through every vertex \textit{at most} one time.
+
+\input{img/tikz/digraph.tex}
+
+\input{img/matrix.tex}
+
+Let's take the directed graph represented in \cref{fig:digraph}. The corresponding adjacency matrix is indicated in \cref{tbl:floydit1}. At the iteration 2, the distance from vertex $\n_3$ to vertex $\n_2$ is updated to $-2$ since, while looking for all possible paths passing through an intermediate vertex, there is the path $\path'$ going from $n_3$ to $n_1$ and then from $n_1$ to $n_2$. The overall cost $\path'$ is made of $c_{3,1} + c_{1,2} = 2 + (-4) = -2$ which is less than the direct path $v_3$ to $v_2$ depicted in the adjacency matrix.
+
+\subsection{Paths of fixed length with minimum cost}
+
+As explained in \cite{floydGeneric} and \cite{cpweb}, the \FW\ algorithm can be generalized in order to compute shortest paths on directed weighted graphs having a fixed number of edges. This approach is based on the theory of semi-rings \cite{ullman}.
+
+Let $\matr$ be the adjacency matrix of a graph whose cells on the diagonal have an infinity weights if there is no self-loop on the considered vertex. We say that $\matr^\len$ is the $\len$-matrix where each cell $M_{ij}$ contains the cost of the shortest path from $i$ to $j$ with \textit{exactly}\footnote{Note that in \cref{sec:fwalgo} we spoke about path of \textit{at most} $k$ edges.} $k$ edges.
+
+The update function of this generalized approach is slightly different from \cref{eq:cellc} since the cost of the cell $c_{ij}$ will depend of its cost at the previous iteration and the original adjacency matrix.
+
+\begin{equation}
+  \matr^k_{ij} = \min_{\n \in \vset} (\matr^{k-1}_{in} + M_{nj})
+\end{equation}
+
+An important remark of this approach is that while finding path with fixed length $k$, we consent to pass more than one time through each vertices (\ie we can have non-simple path).
+
+\subsection{Minimize color switches with matrices}
+
+In this section we propose an adaptation of the generalized \FW\ algorithm in order to solve the shortest path problem minimizing the number of color switches in oriented graphs.
+
+The main strategy as proved in \cref{sec:path_proc} will be to delay color switches as further as possible by keeping trace of the set of colors for every edge.
+
+What will change is the construction of the adjacency matrix $\matr$ since we do not have exact costs associated to edges, but instead a set of colors. The weight of this edge will depend by the chosen affectation compared to the one of its neighbors. $\matr$ is a $\vcard \times \vcard$-matrix where
+
+\begin{equation}
+  M_{ij} = \begin{cases}
+    \colf(ij) \text{, if } ij \in \aset \\
+    \varnothing \text{, otherwise}
+  \end{cases}
+\end{equation}
+
+The cells of the $M^\len$ matrix is a pair \textit{(w, cols)} where: \textit{w} is the cost of the path and \textit{cols} is the set of colors to choose in cell $ij$ minimizing the number of color switches for the current path.
+
+Similarly to the matrix computation illustrated in the previous section, $M^\len$ is computed from the matrix at time $\len-1$ and the adjacency matrix $\matr$. Particularly, for all $i, j \in V$, $\matr^1_{ij} = \{w \gets 0 \textit{ if } M_{ij} \neq \varnothing;\; cols \gets M_{ij}\}$ and the other matrices are computed thanks \cref{algo:nextM}
+
+\begin{algorithm}
+  \nextfloat
+  \caption{Compute $M^{\len + 1}$}
+  \label{algo:nextM}
+
+  \KwIn{$\matr^\len,\; M$ respectively the matrix at time $\len$ and the adjacency matrix}
+  \KwOut{$\matr^{\len + 1}$ the matrix at time $\len + 1$}
+  \def\res{M^{\len+1}}
+
+  $n = len(\matr)$\;
+
+  \tcp{Matrix initialization}
+
+  $\res \gets \text{ new } n \times n \text{ matrix }$\;
+  $\forall i, j \in [0 .. n]^2: \; \res_{ij} \gets \{w \gets \infty;\; cols \gets \varnothing\}$\;
+
+  \tcp{Procedure start}
+
+  \For{$i = 1$ \KwTo $n$}{
+    \For{$j = 1$ \KwTo $n$}{
+      \For{$p = 1$ \KwTo $n$}{
+        $inter\_prov \gets \matr^\len_{ip}.cols \cap \matr_{pj}$\;
+        $cost \gets \matr^\len_{ip}.w + (\text{if } inter\_prov = \varnothing \text{ then } 1 \text{ else } 0)$\;
+        $inter \gets (\text{if } inter\_prov = \varnothing \text{ then } \matr_{pj} \text{ else } inter\_prov)$\;
+        \uIf{$cost < \res_{ij}.w$} {
+          $\res_{ij} \gets \{w \gets cost;\; cols \gets inter\}$\;
+        } \ElseIf {$cost = \res_{ij}.w$}{
+          $\res_{ij}.cols \gets\; inter \cup \res_{ij}.cols$\;
+        }
+      }
+    }
+  }
+  \Return $\res$\;
+
+\end{algorithm}
+
+Firstly, the matrix $\matr^{k+1}$ initialized and each cell as an empty set of colors and an infinity cost. In a second moment for each cell $ij$ we try to find a minimal path passing through a vertex $p \in \matr$. If such path exists (\ie\ the distance is not $\infty$), we have to check the intersection $I$ of the color set of the cell $ip$ at time $k$ and the set of colors returned by the coloring function for the edge $pj$. The cost of the edge is either $0$ if $I$ is non-empty, $1$ otherwise. The subset of colors associated to the edge $pj$ at position $k$ is $I$ if it is non-empty, otherwise $\colf(pj)$.
+The shortest path is obtained by finding the path $ipk$ with minimum associated cost. If there are multiple minima then the colors we can use at vertex $j$ is made by the union of all the colors associated to the vertices with the minimum cost.
+
+% TODO : Why take the union, and why it is the good strategy to find the minimum paths ?
