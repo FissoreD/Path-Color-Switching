@@ -10,12 +10,13 @@ This problem can be solved through a greedy strategy: taking a path $\path$ and 
 \begin{proof}
   Let $\affectf = \row{c}{k}$ be a solution returned by our algorithm, we can easily prove by induction on the length of the path that the solution is optimal.
 
-  For $\k = 1$ we have $\weight(\affectf) = 0$ by defintion of the weight function which is of course the optimal cost.
+  For $\k = 1$ we have $\weight(\affectf) = 0$ by definition of the weight function which is of course the optimal cost.
 
   Let's suppose that the solution $\affectf$ is an optimal one for every path of length at least $k$. We want to prove that the algorithm is always valid for a path of length $k+1$, we see that:
 
   \begin{itemize}
-    \item if $\colf(e_k) \cap \colf(e_{k+1}) = \varnothing$ then we are forced to do a color switch, for every affectation of the edge $\affectf' = (\row{c}{k})$. Since, by ipothesis, the affectation of the edges $\weight(\affectf')$ is optimal, then it will remain optimal for any affectation of the edge $e_{k+1}$ and $\weight(\affectf) = \weight(\affectf') + 1$.
+    \item if $\colf(e_k) \cap \colf(e_{k+1}) = \varnothing$ then we are forced to do a color switch, for every affectation of the edge $\affectf' = (\row{c}{k})$. Since, by hypothesis, the affectation of the edges $\weight(\affectf')$ is optimal, then it will remain optimal for any affectation of the edge $e_{k+1}$ and $\weight(\affectf) = \weight(\affectf') + 1$.
+          % In any case we will have wR = wR' + 1, invertire la frase !
     \item if $\colf(e_k) \cap \colf(e_{k+1}) \neq \varnothing$ we have two cases to treat:
           \begin{itemize}
             \item if $c_\k \in \colf(e_{\k+1})$ then the algorithm we give to $e_{\k+1}$ the same color of $e_{\k}$. This will not increase the number of color switch which will remain optimal.
@@ -44,10 +45,10 @@ The longest subpath of same color, starting from the vertex $\n_1$, is $\path_1 
 
 One can note that there can exist other optimal affectations, from \cref{fig:path_example} we can choose $\affect' = (\colA, \colC, \colC, \colC, \colB, \colB)$, but in any case, any other affectations will not be less than  $\weight(H)$.
 
-\subsection{Exstention on cycles}
+\subsection{Extension on cycles}
 
 A cycle in a path whose starting node coincide with its last one.
-We see that the previous algorithm is no more effective, since we have to keep into accout the potential color switch between the first and the last edge of it.
+We see that the previous algorithm is no more effective, since we have to keep into account the potential color switch between the first and the last edge of it.
 Despite this, the procedure proposed in \cref{sec:path_proc}, can be easily modified to provide an optimal affectation on cycles.
 Let's take the path of \cref{fig:path_example} and imagine that nodes $n_1$ and $n_7$ coincide.
 We now see that the affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal: $\weight(\affectf) = 3$, while the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ as a cost of $2$.
