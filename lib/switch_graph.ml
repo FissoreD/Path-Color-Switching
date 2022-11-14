@@ -36,7 +36,7 @@ module MatrixShortestPath = struct
         for k = 0 to n - 1 do
           let cell = m'.(i).(j) in
           let d, col = calc_dist fm i j k in
-          if d = cell.d then cell.info <- ColorSet.inter col cell.info
+          if d = cell.d then cell.info <- ColorSet.union col cell.info
           else if d < cell.d then (
             cell.d <- d;
             cell.info <- col)
