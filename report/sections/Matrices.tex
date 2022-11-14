@@ -94,6 +94,5 @@ Similarly to the matrix computation illustrated in the previous section, $M^\len
 \end{algorithm}
 
 Firstly, the matrix $\matr^{k+1}$ initialized and each cell as an empty set of colors and an infinity cost. In a second moment for each cell $ij$ we try to find a minimal path passing through a vertex $p \in \matr$. If such path exists (\ie\ the distance is not $\infty$), we have to check the intersection $I$ of the color set of the cell $ip$ at time $k$ and the set of colors returned by the coloring function for the edge $pj$. The cost of the edge is either $0$ if $I$ is non-empty, $1$ otherwise. The subset of colors associated to the edge $pj$ at position $k$ is $I$ if it is non-empty, otherwise $\colf(pj)$.
-The shortest path is obtained by finding the path $ipk$ with minimum associated cost. If there are multiple minima then the colors we can use at vertex $j$ is made by the union of all the colors associated to the vertices with the minimum cost.
 
-% TODO : Why take the union, and why it is the good strategy to find the minimum paths ?
+The shortest path is obtained by finding the path $ipk$ with minimum associated cost. If there are multiple minima then the colors we can use at vertex $j$ is made by the union of all the colors associated to the vertices with the minimum cost.\change{Why take the union, and why it is the good strategy to find the minimum paths ?}\change{Add binary exponentiation}

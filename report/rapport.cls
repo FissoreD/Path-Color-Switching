@@ -102,6 +102,11 @@ sorting=ynt
 
 \pgfmathdeclarefunction{countarray}{1}{\edef\pgfmathresult{\Counter#1\Stopper}}
 
+\usepackage{xargs}     
+\usepackage[textsize=tiny]{todonotes}
+\setlength{\marginparwidth}{2cm}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
 
 \theoremstyle{definition}
 \newtheorem{example}{Example}
