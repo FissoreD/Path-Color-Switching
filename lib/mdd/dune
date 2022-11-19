@@ -15,4 +15,5 @@
 
 (library
  (name stateMddSet)
- (modules stateMddSet))
+ (modules stateMddSet)
+ (libraries mySet))

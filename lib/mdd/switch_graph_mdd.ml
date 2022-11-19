@@ -1,6 +1,14 @@
 module ColorSet = MySet.Make (Int)
 
-type state_type = { w : int; cols : ColorSet.t }
+module StateOrdered = struct
+  type t = { w : int; cols : ColorSet.t }
+
+  let compare a b = compare a.w b.w
+end
+
+module StateSet = MySet.Make (StateOrdered)
+
+type state_type = StateOrdered.t
 
 type graph = {
   graph : Adj_list.graph;
@@ -10,7 +18,7 @@ type graph = {
   col_f : Color_function.color_function;
 }
 
-let root_cnt = { w = 0; cols = ColorSet.full }
+let root_cnt : state_type = { w = 0; cols = ColorSet.full }
 
 let print ?(stdout = stdout) { mdd_layers; _ } =
   List.iter
@@ -23,7 +31,7 @@ let print ?(stdout = stdout) { mdd_layers; _ } =
     |> List.sort (fun (a : state_type Mdd.mdd_tree) b ->
            compare (List.hd a.node) (List.hd b.node)))
 
-let update_function col_f n1 n2 { w; cols } =
+let update_function col_f n1 n2 ({ w; cols } : state_type) : state_type =
   let new_cols = Hashtbl.find col_f (n1, n2) in
   let inter = ColorSet.inter new_cols cols in
   if ColorSet.cardinal inter = 0 then { w = w + 1; cols = new_cols }
@@ -43,11 +51,12 @@ let initiate ?(is_sym = false) (col_f : Color_function.color_function) s =
 let make_iteration g =
   Mdd.update_layers g.get_succ g.update_function g.mdd_layers
 
-let run ?(f = ignore) g n =
-  for _ = 1 to n do
-    make_iteration g;
-    f g
-  done
+let rec run ?(f = ignore) g = function
+  | 0 -> ()
+  | n ->
+      make_iteration g;
+      f g;
+      run ~f g (n - 1)
 
 let read_json ?(src = 0) jspath =
   let open Yojson.Basic.Util in
@@ -72,5 +81,4 @@ let read_json ?(src = 0) jspath =
          let t = member "target" e |> to_int |> minus_one in
          Color_function.add col_function s t (Hashtbl.find tbl_nodes s));
 
-  (* TODO :  *)
   initiate col_function src

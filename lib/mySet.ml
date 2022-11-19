@@ -74,32 +74,4 @@ module Make (Ord : OrderedType) = struct
     | Set a -> iter f a
 
   let exists f = function Full -> true | Set a -> exists f a
-
-  (*
-    val map : (elt -> elt) -> t -> t
-    val fold : (elt -> 'a -> 'a) -> t -> 'a -> 'a
-    val for_all : (elt -> bool) -> t -> bool
-    val filter : (elt -> bool) -> t -> t
-    val filter_map : (elt -> elt option) -> t -> t
-    val partition : (elt -> bool) -> t -> t * t
-    val elements : t -> elt list
-    val min_elt : t -> elt
-    val min_elt_opt : t -> elt option
-    val max_elt : t -> elt
-    val max_elt_opt : t -> elt option
-    val choose : t -> elt
-    val choose_opt : t -> elt option
-    val split : elt -> t -> t * bool * t
-    val find : elt -> t -> elt
-    val find_opt : elt -> t -> elt option
-    val find_first : (elt -> bool) -> t -> elt
-    val find_first_opt : (elt -> bool) -> t -> elt option
-    val find_last : (elt -> bool) -> t -> elt
-    val find_last_opt : (elt -> bool) -> t -> elt option
-    val to_seq_from : elt -> t -> elt Seq.t
-    val to_seq : t -> elt Seq.t
-    val to_rev_seq : t -> elt Seq.t
-    val add_seq : elt Seq.t -> t -> t
-    val of_seq : elt Seq.t -> t 
-*)
 end
