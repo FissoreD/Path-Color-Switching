@@ -1,13 +1,8 @@
 (library
- (name shortest_path)
- (modules shortest_path)
- (libraries graph))
+ (name mySet)
+ (modules mySet))
 
 (library
- (name graph)
- (modules graph))
-
-(library
- (name switch_graph)
- (modules switch_graph)
- (libraries graph))
+ (name color_function)
+ (modules color_function)
+ (libraries mySet))

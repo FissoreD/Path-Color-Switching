@@ -1,4 +1,4 @@
-open Shortest_path
+open Floyd_warshall
 
 let classic () =
   let module FW = FW_Classic in

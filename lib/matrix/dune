@@ -1,0 +1,13 @@
+(library
+ (name floyd_warshall)
+ (modules floyd_warshall)
+ (libraries adj_mat))
+
+(library
+ (name adj_mat)
+ (modules adj_mat))
+
+(library
+ (name switch_graph)
+ (modules switch_graph)
+ (libraries adj_mat yojson color_function))

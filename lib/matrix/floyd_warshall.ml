@@ -1,5 +1,5 @@
 module FW_Classic = struct
-  include Graph.AdjacencyMatrix
+  include Adj_mat
 
   type tfw = { m : unit matrix; mutable mi : unit matrix }
   (** m is the adjacency matrix, mi the matrix at time i *)
