@@ -7,9 +7,11 @@ The goal of this section is to provide a greedy algorithm able to compute an opt
 \label{sec:path_proc}
 This problem can be solved through a greedy strategy: taking a path $\path$ and a coloring function $\colf$, we delay a color switch as much as possible. Tha algorithm is decomposed in two main parts where the first one affect each arc $\e_i$ to a subset of colors of $\colf(\e_i)$ and a second one which make a unique affectation for each arc.
 
-For the first part of the procedure, we start from the colors associated to the first arc and we take the colors of the second arc in order to make the intersection of them. We repeat this operation for all the following arcs until the intersection returns a non-empty set or we do not reach the end of the path. At the $i^{th}$ arc, if the intersection set is empty, we make a color switch. Then we repeat the same procedure from this arc starting with a set of colors equal to $\colf(\e_i)$. This procedure returns for each arc a subset of its associated colors.
+\paragraph*{Procedure part 1.}
+We start from the colors associated to the first arc and we take the colors of the second arc in order to make the intersection of them. We repeat this operation for all the following arcs until the intersection returns a non-empty set or we do not reach the end of the path. At the $i^{th}$ arc, if the intersection set is empty, we make a color switch. Then we repeat the same procedure from this arc starting with a set of colors equal to $\colf(\e_i)$. This procedure returns for each arc a subset of its associated colors.
 
-For the second part of this procedure, we have to make a unique affectation, this is possible by reading the list of set returned by the previous part of the algorithm. For the last arc we take one among all the possible colors. For the next subset of colors related to the before-last arc, we take the same color of the last arc if present, otherwise a random color from its set. We repeat this operation until reaching the first arc of the path.
+\paragraph*{Procedure part 2.}
+We have to make a unique affectation, this is possible by reading the list of set returned by the previous part of the algorithm. For the last arc we take one among all the possible colors. For the next subset of colors related to the before-last arc, we take the same color of the last arc if present, otherwise a random color from its set. We repeat this operation until reaching the first arc of the path.
 
 An implementation of this procedure can be found in \cref{algo:minpath}.
 
@@ -56,7 +58,7 @@ Let's take \cref{fig:path_example}, where $\path = \row{\e}{6}$ and $\colf$ such
                    & \{\eEcols\}, \{\eFcols\}   )
 \end{align*}
 
-Here we give a solution of how the procedure proposed in \cref{sec:path_proc} would solve it. The first procedure will returned a list of subsets equal to
+Here we give a solution of how the procedure proposed in \cref{sec:path_proc} would solve it. The first procedure will return a list of subsets equal to
 \begin{align*}
   \affect' = ( & \{\eAcols\}, \{\colB\},      \\
                & \{\colB\}, \{\colC\},        \\
