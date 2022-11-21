@@ -18,6 +18,8 @@ let print ?(stdout = stdout) { mdd_layers; _ } =
       Printf.fprintf stdout "{state = %d ; w = %d ; cols = " (List.hd node)
         state.w;
       ColorSet.print (Printf.fprintf stdout "%d ") state.cols;
+      Printf.fprintf stdout "; p = ";
+      List.iter (Printf.fprintf stdout "%d ") node;
       Printf.fprintf stdout " }; \n")
     (List.hd !mdd_layers
     |> List.sort (fun (a : state_type Mdd.mdd_tree) b ->
@@ -90,20 +92,19 @@ let read_json ?(src = 0) jspath =
   let col_function = Color_function.init () in
 
   (* Nodes should start with zero value *)
-  let minus_one = ( + ) (-1) in
+  (* let minus_one = ( + ) (-1) in *)
 
   (* Parse nodes and to tbl_node (node_id, col) *)
   json |> member "nodes" |> to_list
   |> List.iter (fun e ->
          Hashtbl.add tbl_nodes
-           (member "id" e |> to_int |> minus_one)
-           (member "scales" e |> to_list |> filter_int |> List.map minus_one
-          |> ColorSet.of_list));
+           (member "id" e |> to_int)
+           (member "scales" e |> to_list |> filter_int |> ColorSet.of_list));
 
   json |> member "links" |> to_list
   |> List.iter (fun e ->
-         let s = member "source" e |> to_int |> minus_one in
-         let t = member "target" e |> to_int |> minus_one in
+         let s = member "source" e |> to_int in
+         let t = member "target" e |> to_int in
          Color_function.add col_function s t (Hashtbl.find tbl_nodes s));
 
   initiate col_function src
