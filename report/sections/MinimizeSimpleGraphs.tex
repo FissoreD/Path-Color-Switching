@@ -1,6 +1,6 @@
 \section{Minimize Switches in Paths}
 
-The goal of this section is to provide a greedy algorithm able to compute an optimal affectation $\affect$ of a given path $\path$. The obtained result, will then be extended to general graphs using the \textbf{XXX matrix}.
+The goal of this section is to provide a greedy algorithm able to compute an optimal affectation $\affect$ of a given path $\path$. The obtained result, will then be extended to general graphs using the matrix technique proposed in \cref{sec:algo_matrix} or the MDD strategy of \cref{sec:algo_mdd}.
 % TODO : give a name to the matrix
 
 \subsection{Procedure}
@@ -30,11 +30,14 @@ An implementation of this procedure can be found in \cref{algo:minpath}.
                   Let's suppose, by means of contradiction, that it exists a better affectation of subsets for the subpath $\row{\e}{\k + 1}$. Without loss of generality, let's suppose that the intersection of the first $\colf(\e_i), 0 \leqslant i \leqslant k$ is not empty, \ie\ there exists a color which is shared by all the $\e_i$ first arcs. The cost of the this subpath is $0$ since all edges can have the same color. If we want to add the new edge $\e{\k + 1}$ to the path without increasing the number of color switch we need that there exists at least a colors in $\colf(\e{\k + 1})$ which is common to all the $\colf(\e_i), 0 \leqslant i \leqslant k$ first edges. However, this is not possible, otherwise the algorithm would have kept this color as a valid option for all the path. A contradiction.
           \end{itemize}
   \end{itemize}
+  We can conclude that the number of color switches returned by the first part of the procedure is minimal.
 \end{proof}
 
 \begin{proof}[Proof (Second part of the procedure)]
-  In the previous proof, we have shown that the number of color switches return by the first part of the algorithm is minimal. We only have to prove that its second part return exactly the an affectation with the sae number of colors switches to conclude that our algorithm is optimal.
-
+  In the previous proof, we have shown that the number of color switches return by the first part of the algorithm is minimal. We only have to prove that its second part return exactly the an affectation with the sae number of colors switches to conclude that our algorithm is optimal.\\
+  Let $\row{\C}{\len}$ be the subset affectation returned by the previous part of the algorithm. Note that, by construction of the first algorithm, for each set $\C_i$, its successor $\C_{i+1}$ is either a subset of $\C_i$ or $\C_i \cap \C_{i+1} = \varnothing$.
+  Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for $\e_\len$. Then for the edge $\e_{\len-1}$, we choose the same color of $\e_len$ if possible and repeat the same procedure until reaching the first edge of the path.\\
+  By definition, the number of color switches of the generated path will be qual to the number of two by two different $i, j \in [0..\len]$ such that $\C_i \cap \C_{i+1} = \varnothing$.
 \end{proof}
 
 \subsection{Time Complexity}
@@ -53,18 +56,26 @@ Let's take \cref{fig:path_example}, where $\path = \row{\e}{6}$ and $\colf$ such
                    & \{\eEcols\}, \{\eFcols\}   )
 \end{align*}
 
-The longest subpath of same color, starting from the vertex $\n_1$, is $\path_1 = (\e_1, \e_2, \e_3)$ such that $R(\e) = \colB$ for all $\e \in \path_1$. Then $\affectf(e_4) = \colC$ and $\affectf(\e_5) = \affectf(\e_6) = \colD$. This affectation $\affect = (\colB, \colB, \colB, \colC, \colD, \colD)$ has $\weight(\affect) = 2$ and is optimal.
+Here we give a solution of how the procedure proposed in \cref{sec:path_proc} would solve it. The first procedure will returned a list of subsets equal to
+\begin{align*}
+  \affect' = ( & \{\eAcols\}, \{\colB\},      \\
+               & \{\colB\}, \{\colC\},        \\
+               & \{\eEcols\}, \{\eFcols\}   )
+\end{align*}
 
-One can note that there can exist other optimal affectations, from \cref{fig:path_example} we can choose $\affect' = (\colA, \colC, \colC, \colC, \colB, \colB)$, but in any case, any other affectations will not be less than  $\weight(H)$.
+Then the second part of the algorithm would return an optimal solution which is, in this case, $\affect = (\colB, \colB, \colB, \colC, \colD, \colD)$, with $\weight(\affect) = 2$.
+
+One can note that there can exist other optimal affectations, from \cref{fig:path_example} we can choose $\affect_2 = (\colA, \colC, \colC, \colC, \colB, \colB)$, but in any case, any other affectations will not be less than  $\weight(H)$.
 
 \subsection{Extension on cycles}
 
 A cycle in a path whose starting node coincide with its last one.
-We see that the previous algorithm is no more effective, since we have to keep into account the potential color switch between the first and the last arc of it.
+We see that the previous algorithm is no more effective, since we have to keep into account the potential color switch between its first and the last arcs.
 Despite this, the procedure proposed in \cref{sec:path_proc}, can be easily modified to provide an optimal affectation on cycles.
 Let's take the path of \cref{fig:path_example} and imagine that nodes $n_1$ and $n_7$ coincide.
-We now see that the affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal: $\weight(\affectf) = 3$, while the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ as a cost of $2$.
-In order to take into account this situation, we assign to the first $P_1$ and the last $P_l$ sub-path of arcs with same colors a set of common colors. Finally if the intersection of $P_1$ and $P_l$ is not empty, we will affect them to a color they share, otherwise, whatever choice of color for $P_1$ and $P_l$ will not influence the final cost of the chosen affectation.
-
-Concretely, take the example in \cref{fig:path_example}, then $P_1 = (\e_1, \e_2, \e_3)$ and $P_l = (\e_5, \e_6)$. Let $C_1 = \bigcap\limits_{\e\in P_1} R(\e)$ and $C_2 = \bigcap\limits_{\e\in P_2} R(\e)$. We know that both $C_1$ and $C_2$ are non-empty. Then since $C_1 \cap C_2 = \{\colB\}$ then we can set $\colB$ to all arcs in $P_1$ and $P_2$ reducing therefore the overall switch number.
+We now see that the affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal: $\weight(\affect) = 3$, while the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ as a cost of $2$.
+\\
+In order to take into account this situation, we keep attention to the intersection between the first and the last set of colors returned by the first part of the procedure. In particular, the subset associated to the first and the last edges, will be given by the intersection of their corresponding sets if non-empty. Otherwise, nothing is change on the given affectation.
+\\
+Concretely, take the example in \cref{fig:path_example}, we intersect $\affectf'(\e_1)$ with $\affectf'(\e_7)$. Since this intersection is non-empty, then $\affectf'(\e_1) = \affectf'(\e_7) = {\colB}$ $P_1 = (\e_1, \e_2, \e_3)$. The final affectation will be return by applying the second part of the procedure.
 
