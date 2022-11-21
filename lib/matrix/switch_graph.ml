@@ -65,8 +65,7 @@ let read_json jspath =
   |> List.iter (fun e ->
          Hashtbl.add tbl_nodes
            (member "id" e |> to_int |> minus_one)
-           (member "scales" e |> to_list |> filter_int |> List.map minus_one
-          |> ColorSet.of_list));
+           (member "scales" e |> to_list |> filter_int |> ColorSet.of_list));
 
   json |> member "links" |> to_list
   |> List.iter (fun e ->

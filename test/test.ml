@@ -14,5 +14,5 @@ let _ =
   sep ();
   Col_switch.main_mdd ();
   Printf.printf "start main_mdd'\n";
-  (* Col_switch.main_mdd' (); *)
+  Col_switch.main_mdd' ();
   close_out stdout'
