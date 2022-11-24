@@ -39,11 +39,13 @@ let main_mdd () =
 
 let main_mdd' ?(stdout = stdout) () =
   let open Switch_graph_mdd in
-  let graph = read_json ~src:1 "./test/graph2.json" in
+  let graph = read_json ~src:2 "./test/graph2.json" in
   print graph;
   Printf.fprintf stdout "------------\n";
   run
     ~f:(fun e ->
-      print e;
+      print ~stdout e;
       Printf.fprintf stdout "------------\n")
-    graph 1
+    graph 100;
+  Printf.fprintf stdout "------------\n";
+  print graph

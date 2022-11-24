@@ -1,8 +1,9 @@
 let sep () = print_endline "------------------------"
 
-let _ =
-  Sys.chdir "../../../";
+let () =
   let stdout' = open_out "./res.txt" in
+  (* Sys.chdir "test"; *)
+  print_endline @@ Sys.getcwd ();
   (* print_endline "1";
      FW.classic ();
      sep ();
@@ -14,5 +15,5 @@ let _ =
   sep ();
   Col_switch.main_mdd ();
   Printf.printf "start main_mdd'\n";
-  Col_switch.main_mdd' ();
+  Col_switch.main_mdd' ~stdout:stdout' ();
   close_out stdout'
