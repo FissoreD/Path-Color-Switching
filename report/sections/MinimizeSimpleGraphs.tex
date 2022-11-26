@@ -7,10 +7,10 @@ The goal of this section is to provide a greedy algorithm able to compute an opt
 \label{sec:path_proc}
 This problem can be solved through a greedy strategy: taking a path $\path$ and a coloring function $\colf$, we delay a color switch as much as possible. Tha algorithm is decomposed in two main parts where the first one affect each arc $\e_i$ to a subset of colors of $\colf(\e_i)$ and a second one which make a unique affectation for each arc.
 
-\paragraph*{Procedure part 1.}
+\paragraph{Procedure part 1.}
 We start from the colors associated to the first arc and we take the colors of the second arc in order to make the intersection of them. We repeat this operation for all the following arcs until the intersection returns a non-empty set or we do not reach the end of the path. At the $i^{th}$ arc, if the intersection set is empty, we make a color switch. Then we repeat the same procedure from this arc starting with a set of colors equal to $\colf(\e_i)$. This procedure returns for each arc a subset of its associated colors.
 
-\paragraph*{Procedure part 2.}
+\paragraph{Procedure part 2.}
 We have to make a unique affectation, this is possible by reading the list of set returned by the previous part of the algorithm. For the last arc we take one among all the possible colors. For the next subset of colors related to the before-last arc, we take the same color of the last arc if present, otherwise a random color from its set. We repeat this operation until reaching the first arc of the path.
 
 An implementation of this procedure can be found in \cref{algo:minpath}.
@@ -44,7 +44,7 @@ An implementation of this procedure can be found in \cref{algo:minpath}.
 
 \subsection{Time Complexity}
 
-We can analyze the time complexity of this procedure from the implementation proposed in \cref{algo:minpath}. We have two loops of size $k$ (the length of the path). Inside them we make intersection between sets of at most $s$ colors, then the intersection between two sets of that size will take $O(s)$. Finally, the global time complexity will be $O(2 * k * s) = O(k*s)$.
+We can analyze the time complexity of this procedure from the implementation proposed in \cref{algo:minpath}. We have two loops of size $k$ (the length of the path). Inside them we make intersection between sets of at most $s$ colors, then the intersection between two sets of that size will take $\bigo(s)$. Finally, the global time complexity will be $\bigo(2 * k * s) = \bigo(k*s)$.
 
 \subsection{An example run}
 \label{sec:path_ex_run}
@@ -72,12 +72,13 @@ One can note that there can exist other optimal affectations, from \cref{fig:pat
 \subsection{Extension on cycles}
 
 A cycle in a path whose starting node coincide with its last one.
-We see that the previous algorithm is no more effective, since we have to keep into account the potential color switch between its first and the last arcs.
-Despite this, the procedure proposed in \cref{sec:path_proc}, can be easily modified to provide an optimal affectation on cycles.
+In this situation, the previous algorithm is no more effective, since we need to keep into account the potential color switch between the first and the last arcs.
+However, the procedure proposed in \cref{sec:path_proc}, can be easily modified to provide an optimal affectation on cycles.
+
 Let's take the path of \cref{fig:path_example} and imagine that nodes $n_1$ and $n_7$ coincide.
-We now see that the affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal: $\weight(\affect) = 3$, while the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ as a cost of $2$.
-\\
-In order to take into account this situation, we keep attention to the intersection between the first and the last set of colors returned by the first part of the procedure. In particular, the subset associated to the first and the last edges, will be given by the intersection of their corresponding sets if non-empty. Otherwise, nothing is change on the given affectation.
-\\
-Concretely, take the example in \cref{fig:path_example}, we intersect $\affectf'(\e_1)$ with $\affectf'(\e_7)$. Since this intersection is non-empty, then $\affectf'(\e_1) = \affectf'(\e_7) = {\colB}$ $P_1 = (\e_1, \e_2, \e_3)$. The final affectation will be return by applying the second part of the procedure.
+The affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal since $\weight(\affect) = 3$, whereas the cost of the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ is $2$.
+
+In order to consider this situation, it is important to look at the intersection between the first and the last set of colors returned by the first part of the procedure. In particular, the subset associated to the extrema arcs of the path, will be modified into the intersection of their corresponding sets if non-empty. Finally we can apply second part of the algorithm.
+
+Concretely, take the example in \cref{fig:path_example}, we intersect $\affectf'(\e_1)$ with $\affectf'(\e_7)$. Since this intersection is non-empty, then $\affectf'(\e_1) = \affectf'(\e_7) = \{\colB\}$. And the resulting affectation will be exactly $H'$.
 
