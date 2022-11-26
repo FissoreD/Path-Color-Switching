@@ -74,4 +74,11 @@ module Make (Ord : OrderedType) = struct
     | Set a -> iter f a
 
   let exists f = function Full -> true | Set a -> exists f a
+
+  let find_opt elt set =
+    match set with Full -> Some elt | Set s -> find_opt elt s
+
+  let fold f s accu = match s with Full -> Full | Set s -> fold f s accu
 end
+
+module ColorSet = Make (Int)

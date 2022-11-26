@@ -1,6 +1,6 @@
 module ColorSet = MySet.Make (Int)
 
-type color_function = {
+type colorFunction = {
   is_sym : bool;
   tbl : (int * int, ColorSet.t) Hashtbl.t;
   get_col : int * int -> ColorSet.t;

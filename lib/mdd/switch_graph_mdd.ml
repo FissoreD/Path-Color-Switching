@@ -1,82 +1,50 @@
-module ColorSet = MySet.Make (Int)
+module ColorSet = MySet.ColorSet
+module MddState = Mdd.Make (StateMddSet)
 
-type state_type = { w : int; mutable cols : ColorSet.t }
+type col_f = ColorFunction.colorFunction
 
 type graph = {
   graph : Adj_list.graph;
-  mdd_layers : state_type Mdd.mdd_layers;
-  update_function : int -> int -> state_type -> state_type;
+  root : MddState.S.t;
+  mdd_layers : MddState.mdd_layers;
+  update_function : StateMddSet.t -> int -> StateMddSet.t2;
+      (** takes a state of the MDD and transition label and compute the content of the next state *)
   get_succ : int -> int list;
-  col_f : Color_function.color_function;
+  col_f : col_f;
 }
 
-let root_cnt : state_type = { w = 0; cols = ColorSet.full }
+let content : StateMddSet.t2 = { w = 0; color = ColorSet.full }
 
-let print ?(stdout = stdout) { mdd_layers; _ } =
-  List.iter
-    (fun ({ node; state; _ } : state_type Mdd.mdd_tree) ->
-      Printf.fprintf stdout "{state = %d ; w = %d ; cols = " (List.hd node)
-        state.w;
-      ColorSet.print (Printf.fprintf stdout "%d ") state.cols;
+let print ?(stdout = stdout) ?(fathers = false) { mdd_layers; _ } =
+  MddState.S.iter
+    (fun ({ name; content; _ } as n) ->
+      Printf.fprintf stdout "{state = %d ; w = %d ; cols = " name content.w;
+      ColorSet.print (Printf.fprintf stdout "%d ") content.color;
       Printf.fprintf stdout "; p = ";
-      List.iter (Printf.fprintf stdout "%d ") node;
+      if fathers then StateMddSet.print ~stdout n;
       Printf.fprintf stdout " }; \n")
-    (List.hd !mdd_layers
-    |> List.sort (fun (a : state_type Mdd.mdd_tree) b ->
-           compare (List.hd a.node) (List.hd b.node)))
+    (List.hd !mdd_layers)
 
-let update_function col_f n1 n2 ({ w; cols } : state_type) : state_type =
-  let new_cols = Hashtbl.find col_f (n1, n2) in
-  let inter = ColorSet.inter new_cols cols in
-  if ColorSet.cardinal inter = 0 then { w = w + 1; cols = new_cols }
-  else { w; cols = inter }
+let update_function (col_f : col_f) (n1 : StateMddSet.t) n2 : StateMddSet.t2 =
+  let new_cols = col_f.get_col (n1.name, n2) in
+  let inter = ColorSet.inter new_cols n1.content.color in
+  if ColorSet.cardinal inter = 0 then { w = n1.content.w + 1; color = new_cols }
+  else { w = n1.content.w; color = inter }
 
-let initiate ?(is_sym = false) (col_f : Color_function.color_function) s =
+let initiate ?(is_sym = false) (col_f : col_f) name =
   let graph = Adj_list.initiate is_sym in
   Hashtbl.iter (fun (v1, v2) _ -> Adj_list.add_neighbors graph v1 v2) col_f.tbl;
   {
     graph;
-    mdd_layers = Mdd.initate s root_cnt;
+    root = List.hd @@ !(MddState.initate name { w = 0; color = ColorSet.Full });
+    mdd_layers = MddState.initate name { w = 0; color = ColorSet.Full };
     get_succ = Adj_list.get_succ graph;
-    update_function = update_function col_f.tbl;
+    update_function = update_function col_f;
     col_f;
   }
 
-module TreeComp = struct
-  type t = state_type Mdd.mdd_tree
-
-  let compare (a : t) (b : t) = compare (List.hd a.node) (List.hd b.node)
-end
-
-module SetState = struct
-  include MySet.Make (TreeComp)
-
-  let add new_elt = function
-    | Full -> Full
-    | Set set as s -> (
-        match find_opt new_elt set with
-        | None -> add new_elt s
-        | Some (old : TreeComp.t) ->
-            if old.state.w < new_elt.state.w then s
-            else if old.state.w > new_elt.state.w then
-              add new_elt (remove old s)
-            else (
-              new_elt.state.cols <-
-                ColorSet.union new_elt.state.cols old.state.cols;
-              new_elt.father <- new_elt.father @ old.father;
-              List.iter
-                (fun (e : state_type Mdd.mdd_tree) ->
-                  Hashtbl.replace e.children (List.hd new_elt.node) new_elt)
-                old.father;
-              add new_elt (remove old s)))
-end
-
 let make_iteration g =
-  Mdd.update_layers
-    (fun (a : TreeComp.t list) (b : TreeComp.t list) ->
-      List.fold_left (Fun.flip SetState.add) (SetState.of_list b) a
-      |> SetState.elements)
-    g.get_succ g.update_function g.mdd_layers
+  MddState.update_layers g.get_succ g.update_function g.mdd_layers
 
 let rec run ?(f = ignore) g = function
   | 0 -> ()
@@ -89,7 +57,7 @@ let read_json ?(src = 0) jspath =
   let open Yojson.Basic.Util in
   let json = Yojson.Basic.from_file jspath in
   let tbl_nodes : (int, ColorSet.t) Hashtbl.t = Hashtbl.create 2048 in
-  let col_function = Color_function.init () in
+  let col_function = ColorFunction.init () in
 
   (* Nodes should start with zero value *)
   (* let minus_one = ( + ) (-1) in *)
@@ -105,6 +73,6 @@ let read_json ?(src = 0) jspath =
   |> List.iter (fun e ->
          let s = member "source" e |> to_int in
          let t = member "target" e |> to_int in
-         Color_function.add col_function s t (Hashtbl.find tbl_nodes s));
+         ColorFunction.add col_function s t (Hashtbl.find tbl_nodes s));
 
   initiate col_function src

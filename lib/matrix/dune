@@ -10,4 +10,4 @@
 (library
  (name switch_graph)
  (modules switch_graph)
- (libraries adj_mat yojson color_function))
+ (libraries adj_mat yojson colorFunction))

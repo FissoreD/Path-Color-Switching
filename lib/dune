@@ -3,6 +3,6 @@
  (modules mySet))
 
 (library
- (name color_function)
- (modules color_function)
+ (name colorFunction)
+ (modules colorFunction)
  (libraries mySet))
