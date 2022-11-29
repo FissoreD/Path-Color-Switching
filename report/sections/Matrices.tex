@@ -1,80 +1,71 @@
 \section{Minimize color switches with matrices}
 
-The previous section provides a strategy to compute the smallest cost of a given path. In has been shown that an optimal strategy is to delay color switches as mush as possible. In this section we try to reuse this concept in order to find paths with a \textit{fixed} number of edges between two vertices minimizing the number of color switches.
+The previous section provides a strategy to compute the smallest cost of a given path. It has been shown that an optimal strategy is to delay color switches as mush as possible. In this section we reuse this concept in order to find paths with a \textit{fixed} number of edges between two vertices minimizing the number of color switches.
 
 \subsection{\FW\ algorithm}
 \label{sec:fwalgo}
 
 Floyd \cite[]{floyd} and Warshall \cite{warshall}, in respectively 1959 and 1962, gave an implementation \cite[]{floydalgo} of an algorithm able to compute the shortest path between any pair of vertices of a directed weighted graph. The solution is found in polynomial time over the number of vertices of the graph.
 
-In particular, let $\graph$ be a directed graph and a cost function $\weight$, such that for all pair of vertices $i,j$ of $\vset$, if there exists no arc going from $i$ to $j$ in $\aset$ then $\weight(i,j) = \infty$ and for each $\n \in \vset$, $\weight(\n, \n) = 0$. Let $\matr$ be the $\vcard \times \vcard$ adjacency matrix of $\graph$ such that each cell $M_{ij}$ equals $\weight(i, j)$.
+In particular, let $\graph$ be a directed graph and a cost function $\weight$, such that for all pair of vertices $i,j$ of $\vset$, if there exists no arc going from $i$ to $j$ in $\aset$ then $\weight(i,j) = \infty$ and for each $\n \in \vset$, $\weight(\n, \n) = 0$. Let $\adjmat$ be the $\vcard \times \vcard$ adjacency matrix of $\graph$ such that each cell $M_{ij}$ equals $\weight(i, j)$.
 
-The goal of the algorithm is to update iteratively the weight of each cell: at time $0$, we have $\matr^1 = \matr$ representing all the shortest path of length \textit{at most} $1$ between two vertices. This information is however should be improved because there can be path of smaller length made of more than one arc. To do this, we seek, for every pair $i, j \in \vset^2$, if a shortest path from $i$ to $j$ passing through a third vertex $k$ exists.
+The goal of the algorithm is to build a new matrix $\matr$ whose cells contains the weight of the shortest path for every pair of vertices. This matrix is updated iteratively: at time $0$, we have $\matr^0 = \adjmat$ representing all the shortest path of length \textit{at most} $1$ between two vertices. This information should however be improved to find out paths of smaller length made of more than one arc. Therefore, for every pair $i, j \in \vset^2$, we seek if a shortest path from $i$ to $j$ passing through a third vertex $k$ exists.
 
 \begin{equation}
   \label{eq:cellc}
   \matr_{ij} = \min_{k \in \vset} (\matr_{ik} + \matr_{kj})
 \end{equation}
 
-At the second iteration, the algorithm has computed all shortest path for every pair of vertices of length \textit{at most} $2$, and its corresponding matrix will be noted with $\matr^2$.
+The second iteration, $\matr^2$, computes all the shortest paths of length \textit{at most} $2$ for every pair of vertices. Globally, the matrix should be updated $\vcard$ times since, except for negative cycles, every shortest path between two vertices will pass through every vertex \textit{at most} one time.
 
-Globally, the matrix should be updated $\vcard$ times since, except for negative cycles, every shortest path between two vertices will pass through every vertex \textit{at most} one time.
-
-The overall time complexity of the \FW\ algorithm is $\bigo(\vcard^3)$.
+The overall time complexity of the \FW\ algorithm is $\bigo(\vcard^3)$, we need to loop $\vcard$ times through a $n \times n$ matrix.
 
 \input{img/tikz/digraph.tex}
 
 \input{img/matrix.tex}
 
-Let's take the directed graph represented in \cref{fig:digraph}. The corresponding adjacency matrix is indicated in \cref{tbl:floydit1}. At the iteration 2, the distance from vertex $\n_3$ to vertex $\n_2$ is updated to $-2$ since, while looking for all possible paths passing through an intermediate vertex, there is the path $\path'$ going from $n_3$ to $n_1$ and then from $n_1$ to $n_2$. The overall cost $\path'$ is made of $c_{3,1} + c_{1,2} = 2 + (-4) = -2$ which is less than the direct path $v_3$ to $v_2$ depicted in the adjacency matrix.
+\paragraph{\FW\ algorithm run} Let's take the directed graph represented in \cref{fig:digraph}. The corresponding matrix $\adjmat$ is indicated in \cref{tbl:floydit1}. At the iteration $4$, the distance from the vertex $\n_1$ to vertex $\n_3$ is updated to $-1$ since there is a shorter path going from $n_1$ to $\n_4$ and then from $\n_4$ to $\n_3$. Its overall cost is given by $c_{1,4} + c_{4,3} = -2 + 1 = -1$ which is less than the direct path $\n_1$ to $\n_3$.
 
 \subsection{Paths of fixed length with minimum cost}
 
-As explained in \cite{floydGeneric} and \cite{cpweb}, the \FW\ algorithm can be generalized in order to compute shortest paths on directed weighted graphs having a \textit{fixed} number of edges. This approach is based on the theory of semi-rings \cite{ullman}.
+As explained in \cite{floydGeneric} and \cite{cpweb}, the \FW\ algorithm can be generalized in order to compute shortest paths on directed weighted graphs having a \textit{fixed} number of edges. This approach is based on the theory of semirings \cite{ullman}.
 
-\paragraph{Semiring} A \textit{semi-ring}\cite{semiring} is a algebraic structure composed by a set of elements $R$ and two binary operators $+$ and $\times$. $(R, +)$ forms a commutative monoid with an identity element $0$ and $(R, \times)$ forms a monoid with an identity element called $1$. A semi-ring differs from a ring because it is not required to have an inverse for the $+$ operation.
+\paragraph{Semiring} A \textit{semiring}\cite{semiring} is a algebraic structure composed by a set of elements $R$ and two binary operators $\oplus$ and $\otimes$. $(R, \oplus)$ forms a commutative monoid with an identity element $z$. $(R, \otimes)$ forms a monoid with an identity element called $e$, it is right distributive over $\oplus$ and $z$ is absorbing over $\otimes$. A semiring differs from a ring because it is not required to have an inverse for the $\oplus$ operation.
 
-
-\paragraph{\FW\ generalized algortithm} Let $\matr$ be the adjacency matrix of a graph whose cells on the diagonal have an infinity weights if there is no self-loop on the considered vertex. We say that $\matr^\len$ is the $\len$-matrix where each cell $M_{ij}$ contains the cost of the shortest path from $i$ to $j$ with \textit{exactly}\footnote{Note that in \cref{sec:fwalgo} we spoke about path of \textit{at most} $k$ edges.} $k$ edges.
-
-The update function of this generalized approach is slightly different from \cref{eq:cellc} since the cost of the cell $c_{ij}$ will depend of its cost at the previous iteration and the original adjacency matrix.
+\paragraph{\FW\ generalized algortithm} Let $\adjmat$ be the adjacency matrix of a graph whose cells on the diagonal have infinity weights if there is no self-loop on the considered vertex. We say that $\matr^\len$ is the matrix where each cell $\matr_{ij}$ contains the cost of the shortest path from $i$ to $j$ with \textit{exactly} $k$ edges\footnote{Note that in \cref{sec:fwalgo} we spoke about path of \textit{at most} $k$ edges.}. The update function of this generalized approach differs from \cref{eq:cellc} since the cost of the cell $c_{ij}$ at time $\len$ will depend of the cost at the previous iteration and the adjacency matrix.
 
 \begin{equation}
-  \matr^k_{ij} = \min_{\n \in \vset} (\matr^{k-1}_{in} + M_{nj})
+  \label{eq:fw_gen}
+  \matr^k_{ij} = \min_{\n \in \vset} (\matr^{k-1}_{i\n} + \adjmat_{\n j})
 \end{equation}
 
-An important remark of this approach is that while finding path with fixed length $k$, we consent to pass more than one time through each vertices (\ie we can have non-simple path).
+The time complexity of this computation is $\bigo(\vcard^3 \len)$, since to pass from $\matr^i$ to $\matr^{i+1}$ we must read $\vcard$ time the $\vcard \times \vcard$ matrix and globally the matrix is updated $\k$ times.
+
+\paragraph{Link with semirings} It is possible to rewrite this equation in a more concise way using the definition of semiring. In fact, if, from \cref{eq:fw_gen}, the $\min$ operator is the $\oplus$ and the $+$ operator is the $\otimes$. We have that $\matr^k = \oplus (\matr^{k-1} \otimes \adjmat)$. We can further simplify the notation and say that $\matr^k = \matr^{k-1} \odot \adjmat = M^{\odot \len}$. Finally, since $\min$ and $+$ are associative, we can improve the previous complexity using the binary exponentiation \cite{binexp} and get $\bigo(\vcard^3 \log \len)$.
+
+% An important remark of this approach is that while finding path with fixed length $k$, we consent to pass more than one time through each vertices (\ie we can have non-simple path).
 
 \subsection{Minimize color switches with matrices}
 \label{sec:algo_matrix}
 
-In this section we propose an adaptation of the generalized \FW\ algorithm in order to solve the shortest path problem minimizing the number of color switches in oriented graphs.
+In this section we propose an adaptation of the generalized \FW\ algorithm in order to compute shortest paths of fixed length minimizing the number of color switches in oriented graphs. This adaptation wants to merge this procedure with the idea of delaying color switches proposed in \cref{sec:path_proc}.
 
-The main strategy as proved in \cref{sec:path_proc} will be to delay color switches as further as possible by keeping trace of the set of colors for every edge.
+The adjacency matrix $\adjmat$ is defined differently, since we do not have exact costs associated to arcs: the cost depends on the color of two adjacent color affectations. In our implementation, $\adjmat$ is represented by the coloring function where $\colf(ij) = \varnothing$ if there is no edge between the two vertices $i$ and $j$.
 
-What will change is the construction of the adjacency matrix $\matr$ since we do not have exact costs associated to edges, but instead a set of colors. The weight of this edge will depend by the chosen affectation compared to the one of its neighbors. $\matr$ is a $\vcard \times \vcard$-matrix where
+The cells of the $\matr^0$ matrix is a pair \textit{(w, cols)} where: \textit{w} is the cost of the path and \textit{cols} is the set of colors minimizing the number of color switches for the path going for each vertex $\n_i$ to $\n_j$.
 
-\begin{equation}
-  M_{ij} = \begin{cases}
-    \colf(ij) \text{, if } ij \in \aset \\
-    \varnothing \text{, otherwise}
-  \end{cases}
-\end{equation}
-
-The cells of the $M^\len$ matrix is a pair \textit{(w, cols)} where: \textit{w} is the cost of the path and \textit{cols} is the set of colors to choose in cell $ij$ minimizing the number of color switches for the current path.
-
-Similarly to the matrix computation illustrated in the previous section, $M^\len$ is computed from the matrix at time $\len-1$ and the adjacency matrix $\matr$. Particularly, for all $i, j \in V$, $\matr^1_{ij} = \{w \gets 0 \textit{ if } M_{ij} \neq \varnothing;\; cols \gets M_{ij}\}$ and the other matrices are computed thanks \cref{algo:nextM}
+Similarly to the matrix computation illustrated in the previous section, $M^\len$ depends on the matrix at time $\len-1$ and the coloring function (\ie\ the modified adjacency matrix). For all $i, j \in V$, $\matr^0_{ij} = \{w \gets 0 \textit{ if } \colf(ij) \neq \varnothing;\; cols \gets \colf(ij)\}$. The $\matr^{k+1}$ is computed by \cref{algo:nextM}.
 
 \begin{algorithm}
   \nextfloat
-  \caption{Compute $M^{\len + 1}$}
+  \caption{Compute $\matr^{\len + 1}$}
   \label{algo:nextM}
 
-  \KwIn{$\matr^\len,\; M$ respectively the matrix at time $\len$ and the adjacency matrix}
+  \KwIn{$\matr^\len,\; \colf$, respectively, the matrix at time $\len$ and the coloring function}
   \KwOut{$\matr^{\len + 1}$ the matrix at time $\len + 1$}
-  \def\res{M^{\len+1}}
+  \def\res{\matr^{\len+1}}
 
-  $n = len(\matr)$\;
+  $n \gets$ the number of vertices of the graph\;
 
   \tcp{Matrix initialization}
 
@@ -86,13 +77,13 @@ Similarly to the matrix computation illustrated in the previous section, $M^\len
   \For{$i = 1$ \KwTo $n$}{
     \For{$j = 1$ \KwTo $n$}{
       \For{$p = 1$ \KwTo $n$}{
-        $inter\_prov \gets \matr^\len_{ip}.cols \cap \matr_{pj}$\;
-        $cost \gets \matr^\len_{ip}.w + (\text{if } inter\_prov = \varnothing \text{ then } 1 \text{ else } 0)$\;
-        $inter \gets (\text{if } inter\_prov = \varnothing \text{ then } \matr_{pj} \text{ else } inter\_prov)$\;
+        $\mathcal{I} \gets \matr^\len_{ip}.cols \cap \colf(pj)$\;
+        $cost \gets \matr^\len_{ip}.w + (\text{if } \mathcal{I} = \varnothing \text{ then } 1 \text{ else } 0)$\;
+        $\mathcal{S} \gets (\text{if } \mathcal{I} = \varnothing \text{ then } \colf(pj) \text{ else } \mathcal{I})$\;
         \uIf{$cost < \res_{ij}.w$} {
-          $\res_{ij} \gets \{w \gets cost;\; cols \gets inter\}$\;
+          $\res_{ij} \gets \{w \gets cost;\; cols \gets \mathcal{S}\}$\;
         } \ElseIf {$cost = \res_{ij}.w$}{
-          $\res_{ij}.cols \gets\; inter \cup \res_{ij}.cols$\;
+          $\res_{ij}.cols \gets\; \mathcal{S} \cup \res_{ij}.cols$\;
         }
       }
     }
@@ -101,6 +92,14 @@ Similarly to the matrix computation illustrated in the previous section, $M^\len
 
 \end{algorithm}
 
-Firstly, the matrix $\matr^{k+1}$ initialized and each cell as an empty set of colors and an infinity cost. In a second moment for each cell $ij$ we try to find a minimal path passing through a vertex $p \in \matr$. If such path exists (\ie\ the distance is not $\infty$), we have to check the intersection $I$ of the color set of the cell $ip$ at time $k$ and the set of colors returned by the coloring function for the edge $pj$. The cost of the edge is either $0$ if $I$ is non-empty, $1$ otherwise. The subset of colors associated to the edge $pj$ at position $k$ is $I$ if it is non-empty, otherwise $\colf(pj)$.
+\paragraph{Analyze of \cref{algo:nextM}}
+The first step of the algorithm is to initiate the resulting matrix $\matr^{k+1}$ such that each cell as an empty set of colors and an infinity cost. After this initialization, we loop over each pair of vertices $ij$ and, as for the generalized version of the \FW\ algorithm, we look for minimal paths passing through each vertex $p \in \vset$. This distance is obtained following the $\weight$ function: if the intersection $\mathcal{I}$ of $\colf(pj)$ and the color set of cell $ip$ of $\matr^\len$ is not empty, we are able to avoid a color switch and therefore, the cost of the path $ip$, $pj$ is the same as the cost of the path $ip$. On the other hand, if the intersection is empty, the cost of the path will be $1$ more than the cost of the path $ip$. $\mathcal{S}$ is the set of colors that can be associated to the arc $pj$. It is equal to $\mathcal{I}$ if $\mathcal{I}$ is non-empty (\ie\ we are delaying the color switch), otherwise, it will be affected to $\colf(pj)$, since any color in $\colf(pj)$ will not avoid a color switch.
 
-The shortest path is obtained by finding the path $ipk$ with minimum associated cost. If there are multiple minima then the colors we can use at vertex $j$ is made by the union of all the colors associated to the vertices with the minimum cost.\change{Why take the union, and why it is the good strategy to find the minimum paths ?}\change{Add binary exponentiation}
+Let $0 \leq p' \leq p \leq \vcard$. While looping over all the intermediate vertex $\n_p$, we can have three possible scenarios:
+\begin{itemize}
+  \item there exists a path passing through $\n_{p'}$ which is less than the path passing through $\n_p$, the path through $n_p$ can be ignored;
+  \item the computed cost is strictly less than all the the previous path passing through $\n_{p'}$, in this case the shortest path between $ij$ will take this new cost and its set of colors will $\mathcal{S}$;
+  \item finally, the cost passing through $\n_i$ equals a previous minimal one. In this case, the cost is not updated, but the colors we can give to the edge $ij$, to reduce the possibility of a switch, will be the union of the colors of the previous best affectations and $mathcal{S}$.
+\end{itemize}
+
+\change{Add binary exponentiation}
