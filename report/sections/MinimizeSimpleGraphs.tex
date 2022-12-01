@@ -80,7 +80,7 @@ However, the procedure proposed in \cref{sec:path_proc}, can be easily modified 
 Let's take the path of \cref{fig:path_example} and imagine that nodes $n_1$ and $n_7$ coincide.
 The affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal since $\weight(\affect) = 3$, whereas the cost of the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ is $2$.
 
-In order to consider this situation, it is important to look at the intersection between the first and the last set of colors returned by the first part of the procedure. In particular, the subset associated to the extrema arcs of the path, will be modified into the intersection of their corresponding sets if non-empty. Finally we can apply second part of the algorithm.
+In order to consider this situation, it is important to look at the intersection between the first and the last set of colors returned by the first part of the procedure. In particular, the subset associated to the extreme arcs of the path, will be modified into the intersection of their corresponding sets if non-empty. Finally, we can apply the second part of the algorithm.
 
 Concretely, take the example in \cref{fig:path_example}, we intersect $\affect_{\C1}$ with $\affect_{\C2}$. Since this intersection $\mathcal{I}$ is non-empty, then $\affect_{\C1} \gets \mathcal{I}$ and $\affect_{\C7} \gets \mathcal{I}$. The resulting affectation will be exactly $H'$ which has the optimal cost.
 

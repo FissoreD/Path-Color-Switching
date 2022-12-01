@@ -1,6 +1,6 @@
 \section{Minimize color switches with matrices}
 
-The previous section provides a strategy to compute the smallest cost of a given path. It has been shown that an optimal strategy is to delay color switches as mush as possible. In this section we reuse this concept in order to find paths with a \textit{fixed} number of edges between two vertices minimizing the number of color switches.
+The previous section provides a strategy to compute the smallest cost of a given path. It has been shown that an optimal strategy is to delay color switches as mush as possible. In this section we reuse this concept in order to find paths with a \textit{fixed} number of edges between two vertices, minimizing the number of color switches.
 
 \subsection{\FW\ algorithm}
 \label{sec:fwalgo}
@@ -9,14 +9,14 @@ Floyd \cite[]{floyd} and Warshall \cite{warshall}, in respectively 1959 and 1962
 
 In particular, let $\graph$ be a directed graph and a cost function $\weight$, such that for all pair of vertices $i,j$ of $\vset$, if there exists no arc going from $i$ to $j$ in $\aset$ then $\weight(i,j) = \infty$ and for each $\n \in \vset$, $\weight(\n, \n) = 0$. Let $\adjmat$ be the $\vcard \times \vcard$ adjacency matrix of $\graph$ such that each cell $M_{ij}$ equals $\weight(i, j)$.
 
-The goal of the algorithm is to build a new matrix $\matr$ whose cells contains the weight of the shortest path for every pair of vertices. This matrix is updated iteratively: at time $0$, we have $\matr^0 = \adjmat$ representing all the shortest path of length \textit{at most} $1$ between two vertices. This information should however be improved to find out paths of smaller length made of more than one arc. Therefore, for every pair $i, j \in \vset^2$, we seek if a shortest path from $i$ to $j$ passing through a third vertex $k$ exists.
+The goal of the algorithm is to build a new matrix $\matr$ whose cells contain the weight of the shortest path for every pair of vertices. This matrix is updated iteratively: at time $0$, we have $\matr^0 = \adjmat$ representing all the shortest path of length \textit{at most} $1$ between two vertices. This information should however be improved to find out paths of smaller length made of more than one arc. Therefore, for every pair $i, j \in \vset^2$, we seek if the shortest path from $i$ to $j$ passing through a third vertex $k$ exists.
 
 \begin{equation}
   \label{eq:cellc}
   \matr_{ij} = \min_{k \in \vset} (\matr_{ik} + \matr_{kj})
 \end{equation}
 
-The second iteration, $\matr^2$, computes all the shortest paths of length \textit{at most} $2$ for every pair of vertices. Globally, the matrix should be updated $\vcard$ times since, except for negative cycles, every shortest path between two vertices will pass through every vertex \textit{at most} one time.
+At the second iteration, we obtain $\matr^2$ which contain all the shortest paths of length \textit{at most} $2$ for every pair of vertices. Globally, the matrix should be updated $\vcard$ times since, except for negative cycles, every shortest path between two vertices will pass through every vertex \textit{at most} one time.
 
 The overall time complexity of the \FW\ algorithm is $\bigo(\vcard^3)$, we need to loop $\vcard$ times through a $n \times n$ matrix.
 
