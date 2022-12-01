@@ -5,41 +5,43 @@ The goal of this section is to provide a greedy algorithm able to compute an opt
 
 \subsection{Procedure}
 \label{sec:path_proc}
-This problem can be solved through a greedy strategy: taking a path $\path$ and a coloring function $\colf$, we delay a color switch as much as possible. Tha algorithm is decomposed in two main parts where the first one affect each arc $\e_i$ to a subset of colors of $\colf(\e_i)$ and a second one which make a unique affectation for each arc.
+This problem can be solved through a greedy strategy: taking a path $\path$ and a coloring function $\colf$, we delay a color switch as much as possible. The algorithm is decomposed in two main parts where the first affects each arc $\e_i$ to a subset of colors of $\colf(\e_i)$ and where the second makes a unique affectation for each arc.
 
 \paragraph{Procedure part 1.}
-We start from the colors associated to the first arc and we take the colors of the second arc in order to make the intersection of them. We repeat this operation for all the following arcs until the intersection returns a non-empty set or we do not reach the end of the path. At the $i^{th}$ arc, if the intersection set is empty, we make a color switch. Then we repeat the same procedure from this arc starting with a set of colors equal to $\colf(\e_i)$. This procedure returns for each arc a subset of its associated colors.
+In this part of the procedure, we affect each arc of a path $\row{\e}{\len}$ to a subset of colors $\row{\C}{\len}$. The colors associated to $\e_1$, noted $\C_1$, are exactly $\colf(\e_1)$. Next, the set of colors $\C_i$ of the arc $\e_i$ ($i > 1$) will be iteratively given by the intersection of $\C_{i-1}$ and $\colf(\e_i)$ if the intersection is non-empty, otherwise, a color switch is imminent and, therefore, $\C_i$ will be $\colf(\e_i)$.
+% We start from the colors associated to the first arc and we take the colors of the second arc in order to make the intersection of them. We repeat this operation for all the following arcs until the intersection returns a non-empty set or we do not reach the end of the path. At the $i^{th}$ arc, if the intersection set is empty, we make a color switch. Then we repeat the same procedure from this arc starting with a set of colors equal to $\colf(\e_i)$. This procedure returns for each arc a subset of its associated colors.
 
 \paragraph{Procedure part 2.}
-We have to make a unique affectation, this is possible by reading the list of set returned by the previous part of the algorithm. For the last arc we take one among all the possible colors. For the next subset of colors related to the before-last arc, we take the same color of the last arc if present, otherwise a random color from its set. We repeat this operation until reaching the first arc of the path.
+In this second part of the procedure, we make a unique color affectation from the the list $\mathcal{L} = \row{\C}{\len}$ returned by the previous procedure. We read the $\mathcal{L}$ from right to left. The color $\c_\len$ affected to the last arc of $\path$ is a color randomly chosen from $\C_\len$. The color of $i^{th}$ arc $\e_{i}$ ($i < \len$) is the color $\c_{i+1}$ affected to the arc $\e_{i+1}$, if $\c_{i+1}$ is in $\C_i$, otherwise, we are facing a color switch, and, therefore, any color of $C_i$ can be indifferently affected to $\e_i$.
 
 An implementation of this procedure can be found in \cref{algo:minpath}.
 
 
 \begin{proof}[Proof (First part of the procedure)]
-  Let $\affect_\C = \row{\C}{\len}$ be a solution returned by the first part of our algorithm, we prove by induction on the length of the path that $\affect_\C$ minimizes the number of color switches. After this first proof, we will show that the number of color switches returned by the second part of the algorithm is the same as the one returned by the first part. \\
-  By definition of the weight function, if $\len = 1$ we have $\weight(\affect_\C) = 0$ which is the optimal cost.\\
-  Let's suppose that $\affect_\C$ is an optimal solution for every path of length at least $\len$. We want to prove that the the new affectation $\affect_\C'$ returned by the algorithm for a path of length $\len+1$ is still optimal. We have to analyze two main situations:
+  Let $\affect_\C = \row{\C}{\len}$ be a solution returned by the first part of our algorithm, we prove, by induction on the length of the path, that $\affect_\C$ minimizes the number of color switches. After this first proof, we will show that the number of color switches returned by the second part of the algorithm is the same as the one returned by the first part. \\
+  By definition of the weight function, if the length $\len$ of the path is $1$ we have $\weight(\affect_\C) = 0$ which is the optimal cost. And therefore any color chosen from $\C_1$ will not cause any color switch.\\
+  Let's suppose that $\affect_\C$ is an optimal solution for every path of length at least $\len$. We want to prove that the the new affectation $\affect_\C'$ returned by the algorithm for a path of length $\len+1$ is still optimal. \\
+  We have to analyze two main situations:
 
   \begin{itemize}
-    \item if $\colf(\e_k) \cap \colf(\e_{k+1}) = \varnothing$ then, for any color $\c_i$ chosen from $\colf(\e_{k+1})$ $\weight(\affect_\C') = \weight(\affect_\C) + 1$, \ie\ a color switch is forced.
+    \item if $\colf(\e_k) \cap \colf(\e_{k+1}) = \varnothing$ then, for any color $\c$ chosen from $\colf(\e_{k+1})$, $\weight(\affect_\C') = \weight(\affect_\C) + 1$, \ie\ a color switch is forced independently on the affectation we have chosen for the first part of the list. Since, by hypothesis, $\affect_\C$ is optimal, $\weight(\affect')$ remains optimal.
     \item otherwise, if $\colf(\e_k) \cap \colf(\e_{k+1}) \neq \varnothing$ we have two sub-cases to treat:
           \begin{itemize}
 
-            \item if it exist a subset of colors $\C_{k+1} \subseteq \colf(\e_{\k+1})$ which is included in $\C_k$, \ie\ there exists at least a color in $\colf(\e_{\k+1})$, allowing us to have $\weight(\affect_\C') = \weight(\affect_\C)$.
+            \item if it exists a subset of colors $\C_{k+1} \subseteq \colf(\e_{\k+1})$ which is included in $\C_k$, \ie\ there exists at least a color in $\colf(\e_{\k+1})$, we are able to avoid a color switch. Therefore the cost of the affectation $H_\C'$ of the new path of length $k+1$ equals $\weight(\affect_\C)$. Again, since the affectation $\affect_\C$ is optimal, and we do not increase the number of color switches then the new affectation $H_\C'$ is still optimal.
 
-            \item this final case is the most interesting to treat because we have $\C_{k} \cap \colf(\e_{\k+1}) = \varnothing$ but of the other hand we have $\colf(\e_{k}) \cap \colf(\e_{\k+1}) \neq \varnothing$. It means that we have done a particular choice of colors associated to the arc $\e_\k$ causing a color switch ($\weight(\affect_\C') = \weight(\affect_\C) + 1$) even if it would have been possible to affect $\e_k$ to the same color of its following arc.\\
-                  Let's suppose, by means of contradiction, that it exists a better affectation of subsets for the subpath $\row{\e}{\k + 1}$. Without loss of generality, let's suppose that the intersection of the first $\colf(\e_i), 0 \leqslant i \leqslant k$ is not empty, \ie\ there exists a color which is shared by all the $\e_i$ first arcs. The cost of the this subpath is $0$ since all edges can have the same color. If we want to add the new edge $\e{\k + 1}$ to the path without increasing the number of color switch we need that there exists at least a colors in $\colf(\e{\k + 1})$ which is common to all the $\colf(\e_i), 0 \leqslant i \leqslant k$ first edges. However, this is not possible, otherwise the algorithm would have kept this color as a valid option for all the path. A contradiction.
+            \item this final case is the most interesting to treat because the intersection between $\C_{k}$ and $\colf(\e_{\len+1})$ is empty, but, on the other hand, $\colf(\e_{\len}) \cap \colf(\e_{\len+1}) \neq \varnothing$. It means that the particular choice of colors associated to the arc $\e_\k$ is causing a color switch even if it would have been possible to make no color break between the $\len^{th}$ arc and the  $(\len+1)^{th}$ arc of $\path$. The cost of the affectation $\affect_\C'$ is therefore, $\weight(\affect_\C) + 1$.\\
+                  Let's suppose, by means of contradiction, that it exists a better affectation $\affect_{\C opt}$ of subsets for $\row{\e}{\len + 1}$. Without loss of generality, let's suppose that the intersection of the colors of the first $\len$ arcs of the path is not empty, \ie\ there exists at least one color shared by all the $\e_i$ ($0 \leq i \leq \len$) first arcs. The cost of the this subpath is $0$ since all of the arcs can have the same color. If we want to add the new arc $\e_{\len + 1}$ to the path, without increasing the number of color switches, it must exist at least one color belonging to $\bigcap\limits_{i = 1}^\len \colf(i)$. However, this condition is not possible, otherwise the algorithm would have kept this subset of color as a valid option for every arcs of the path. A contradiction.
           \end{itemize}
   \end{itemize}
-  We can conclude that the number of color switches returned by the first part of the procedure is minimal.
+  We can conclude that the number of color switches returned by the first part of the procedure is minimal, therefore optimal.
 \end{proof}
 
 \begin{proof}[Proof (Second part of the procedure)]
-  In the previous proof, we have shown that the number of color switches return by the first part of the algorithm is minimal. We only have to prove that its second part return exactly the an affectation with the sae number of colors switches to conclude that our algorithm is optimal.\\
+  In the previous proof, we have shown that the number of color switches return by the first part of the algorithm is minimal. We only have to prove that its second part return an affectation with the same number of colors switches.\\
   Let $\row{\C}{\len}$ be the subset affectation returned by the previous part of the algorithm. Note that, by construction of the first algorithm, for each set $\C_i$, its successor $\C_{i+1}$ is either a subset of $\C_i$ or $\C_i \cap \C_{i+1} = \varnothing$.
-  Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for $\e_\len$. Then for the edge $\e_{\len-1}$, we choose the same color of $\e_len$ if possible and repeat the same procedure until reaching the first edge of the path.\\
-  By definition, the number of color switches of the generated path will be qual to the number of two by two different $i, j \in [0..\len]$ such that $\C_i \cap \C_{i+1} = \varnothing$.
+  Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for the arc $\e_\len$. Then for the arc $\e_{\len-1}$, we choose the same color of $\e_\len$ if possible and repeat the same procedure until reaching the first arc of the path.\\
+  We have, therefore, a color switch only when the intersection of $\C_i$ and $\C_{i+1}$ is empty.
 \end{proof}
 
 \subsection{Time Complexity}
