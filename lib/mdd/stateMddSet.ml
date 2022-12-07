@@ -4,10 +4,12 @@ type t2 = { color : ColorSet.t; w : int }
 
 type t = {
   name : int;
-  children : (int, t) Hashtbl.t;
+  (* children : (int, t) Hashtbl.t; *)
   mutable father : t list;
   content : t2;
 }
+
+let canAdd _ _ = true
 
 let compareForUnion a b : Mdd.action =
   match compare a.content.w b.content.w with
@@ -17,12 +19,12 @@ let compareForUnion a b : Mdd.action =
 
 let mergeAction a b =
   (* let tbl = Hashtbl.copy a.children in *)
-  let tbl = a.children in
-  Hashtbl.iter (fun k v -> Hashtbl.replace tbl k v) b.children;
+  (* let tbl = a.children in *)
+  (* Hashtbl.iter (fun k v -> Hashtbl.replace tbl k v) b.children; *)
   {
     name = a.name;
     father = a.father @ b.father;
-    children = tbl;
+    (* children = tbl; *)
     content =
       {
         w = a.content.w;

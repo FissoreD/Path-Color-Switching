@@ -6,7 +6,7 @@
 (library
  (name switch_graph_mdd)
  (modules switch_graph_mdd)
- (libraries yojson colorFunction adj_list mdd stateMddSet))
+ (libraries yojson colorFunction adj_list mdd stateMddSet stateMddSetAllDiff))
 
 (library
  (name mdd)
@@ -17,3 +17,8 @@
  (name stateMddSet)
  (modules stateMddSet)
  (libraries mySet mdd))
+
+(library
+ (name stateMddSetAllDiff)
+ (modules stateMddSetAllDiff)
+ (libraries stateMddSet))
