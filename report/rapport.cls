@@ -23,7 +23,6 @@
 
 \RequirePackage{geometry,tikz,afterpage}
 
-\usetikzlibrary{calc}
 
 \RequirePackage{titling,fancyhdr}
 \RequirePackage{graphicx}
@@ -43,9 +42,6 @@
 % \usepackage{syntax}
 \usepackage{bm}
 
-
-\usetikzlibrary{positioning} 
-
 \usepackage[colorlinks, citecolor=red!60!green, linkcolor=blue!60!green, urlcolor=magenta]{hyperref}
 
 % \usepackage{algorithm}
@@ -53,14 +49,15 @@
 \usepackage{float}
 % \usepackage{algo}
 \usepackage{mathtools}
-\usepackage{tikz}
 \usepackage{subcaption}
 
 \usepackage{caption}
 \captionsetup[table]{position=below}
 
 \usepackage[capitalise,noabbrev,nameinlink]{cleveref}
-\usetikzlibrary{automata, positioning, arrows}
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows, calc}
 
 
 \usepackage[linesnumbered,ruled]{algorithm2e}

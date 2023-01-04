@@ -1,10 +1,33 @@
 \section{Minimize colors switches with MDD}
 
 \subsection{Multi-Valued Decision Diagram}
-A \textit{Multi-Valued Decision Diagram} is 
+
+A \textit{Multi-Valued Decision Diagram (MDD)}\cite{regin} is a generalization of a \textit{Binary Decision Diagram}. It is represented as a directed acyclic graph whose nodes and arcs are called respectively states and transitions. \mdd s are often used to solve constraint satisfaction problems where each layer of the \mdd\ represents a variable of the problem and the number of transitions exiting from a state is upper bounded by the cardinal of the domain of the considered variable.
+
+Even if the number of states may grow exponentially wrt the number of states, if well coded the problem can be solved with an \mdd\ whose size grows polynomially wrt its input. A well known example of this, is the representation of the language $\mathcal{L}$ accepting binary words with fixed length $k$ having a $1$ in the $n$-th last position (an example is provided at \cref{sec:mdd_example}).
 
 \subsection{MDD strategy}
 \label{sec:algo_mdd}
+The problem of minimizing the number of color switches in a colored graph can be solved with an \mdd. This strategy is less generic then the matrix method: with the \FW\ matrix approach we find shortest paths starting indistinctly from any node of the graph, however the \mdd\ should have a root and therefore this strategy will find all the shortest paths of fixed number of edges from a chosen node.
+
+\begin{equation}
+  \label{eq:record}
+  \text{state} = \{\text{name: String; cost: int; colors: Set of Colors}\}
+\end{equation}
+
+The states of the \mdd\ will be represented by the record depicted in \cref{eq:record} and the root will be $\{\text{colors: Set.Full, cost:} 0\}$, where \textit{name} is the name given to the current node in the graph and \textit{Set.Full} is the set containing all the colors returned by $\colf$.
+
+Let $r$ the node chosen for the root of the \mdd, at the $i^{th}$ iteration a new layer is added to the \mdd, in order to represent the set of shortest paths of length $i$ rooted in $s$.
+
+The algorithm aiming to build the \mdd\ works as follow: for every state $s$ of the current state and for every successor $n$ of $s$ in $G$, let $\mathcal{S} = \colf(s, n) \cap \text{s.colors}$. Let $\mathcal{L}$ be the new layer to build, if $\mathcal{S}$ is non-empty we add to $\mathcal{L}$ the record
+$$\{\text{name: n; cost: s.cost; colors: } \mathcal{S}\}$$ otherwise the record
+$$\{\text{name : n; cost: s.cost} + 1 \text{; colors: \colf(s.name, n)}\}$$ is added.
+
+To avoid the exponential growth of the search tree, an \adhoc\ strategy is applied in order to either ignore all dominated states or to merge two compatible states. A state $s_1$ is dominated by $s_2$ if they have same \textit{name} and $s_1.\text{cost} < s_2.\text{cost}$, every dominated state is removed from $\mathcal{L}$. Two states $s_1$ and $s_2$ are compatible (and removed from $\mathcal{L}$) if they share the same \textit{name} and the same \textit{cost}. In this case a third state $s_3 = \{\text{name: } s_1.\text{name; cost: } s_1.\text{cost; colors: } s_1.\text{colors} \cup s_2.\text{colors}\}$ is built and added in $\mathcal{L}$.
+
+The application of this reduction the \mdd\ ensures us to only have layers whose size is upper bounded by the number of nodes of the graph.
+
+Let $n$ be the cardinal of $\vset$ and $l$ be the length of the path to build, This last remark can be exploited to give an information about the complexity of the algorithm which is bounded by $\bigo(l \cdot n^2)$ since at each layer we have at most $n$ states and for each state we should visit at most $n$ successor states. Moreover, given that $l$ is a fixed parameter, the complexity can be rewritten as $\bigo(n^2)$.
 
 
 \subsection{The all different constraint}

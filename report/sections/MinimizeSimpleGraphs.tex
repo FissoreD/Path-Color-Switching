@@ -20,7 +20,7 @@ An implementation of this procedure can be found in \cref{algo:minpath}.
 \begin{proof}[Proof (First part of the procedure)]
   Let $\affect_\C = \row{\C}{\len}$ be a solution returned by the first part of our algorithm, we prove, by induction on the length of the path, that $\affect_\C$ minimizes the number of color switches. After this first proof, we will show that the number of color switches returned by the second part of the algorithm is the same as the one returned by the first part. \\
   By definition of the weight function, if the length $\len$ of the path is $1$ we have $\weight(\affect_\C) = 0$ which is the optimal cost. And therefore, any color chosen from $\C_1$ will not cause any color switch.\\
-  Let's suppose that $\affect_\C$ is an optimal solution for every path of length at least $\len$. We want to prove that arc new affectation $\affect_\C'$ returned by the algorithm for a path of length $\len+1$ is still optimal. \\
+  Let's suppose that $\affect_\C$ is an optimal solution for every path of length at least $\len$. We want to prove that the new affectation $\affect_\C'$ returned by the algorithm for a path of length $\len+1$ is still optimal. \\
   We have to analyze two main situations:
 
   \begin{itemize}
@@ -38,7 +38,7 @@ An implementation of this procedure can be found in \cref{algo:minpath}.
 \end{proof}
 
 \begin{proof}[Proof (Second part of the procedure)]
-  In the previous proof, we have shown that the number of color switches return by the first part of the algorithm is minimal. We only have to prove that its second part return an affectation with the same number of colors switches.\\
+  In the previous proof, we have shown that the number of color switches return by the first part of the algorithm is minimal. We only have to prove that its second part returns an affectation with the same number of color switches.\\
   Let $\row{\C}{\len}$ be the subset affectation returned by the previous part of the algorithm. Note that, by construction of the first algorithm, for each set $\C_i$, its successor $\C_{i+1}$ is either a subset of $\C_i$ or $\C_i \cap \C_{i+1} = \varnothing$.
   Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for the arc $\e_\len$. Then for the arc $\e_{\len-1}$, we choose the same color of $\e_\len$ if possible and repeat the same procedure until reaching the first arc of the path.\\
   We have, therefore, a color switch only when the intersection of $\C_i$ and $\C_{i+1}$ is empty.
