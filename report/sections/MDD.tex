@@ -12,7 +12,7 @@ The problem of minimizing the number of color switches in a colored graph can be
 
 \begin{equation}
   \label{eq:record}
-  \text{state} = \{\text{name: String; cost: int; colors: Set of Colors}\}
+  \text{state} = \{\text{name: String; cost: Int; colors: Set of Colors}\}
 \end{equation}
 
 The states of the \mdd\ will be represented by the record depicted in \cref{eq:record} and the root will be $\{\text{colors: Set.Full, cost:} 0\}$, where \textit{name} is the name given to the current node in the graph and \textit{Set.Full} is the set containing all the colors returned by $\colf$.
@@ -27,13 +27,32 @@ To avoid the exponential growth of the search tree, an \adhoc\ strategy is appli
 
 The application of this reduction the \mdd\ ensures us to only have layers whose size is upper bounded by the number of nodes of the graph.
 
-Let $n$ be the cardinal of $\vset$ and $l$ be the length of the path to build, This last remark can be exploited to give an information about the complexity of the algorithm which is bounded by $\bigo(l \cdot n^2)$ since at each layer we have at most $n$ states and for each state we should visit at most $n$ successor states. Moreover, given that $l$ is a fixed parameter, the complexity can be rewritten as $\bigo(n^2)$.
+Let $n$ be the cardinal of $\vset$ and $l$ be the length of the path to build, This last remark can be exploited to give an information about the complexity of the algorithm which is bounded by $\bigo(l \cdot n^2)$ since at each layer we have at most $n$ states and for each state we should visit at most $n$ successor states. Moreover, given that $l$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2)$.
 
+
+\change{Add proof ?}
 
 \subsection{The all different constraint}
 
+The all different constraint (\alldiff) is a very used constraint in CP whose goal is to affect each variable to a value of its domain such that there does not exist to variables with same affectation. This constraint is very simple to implement, but sometimes, it can complexify the problem we are dealing with.
+
+Let's take the alphabet $\mathcal{A} = \{a \dots z\}$ an let $\mathcal{L}$ be the set of words of length $3$. The \mdd\ satisfying this problem will have on $4$ states (including the root), whereas the \mdd\ for the same problem with the \alldiff\ constraint on the letter of the words will have $\mid \mathcal{A} \mid \times (\mid \mathcal{A} \mid - 1) \times (\mid \mathcal{A} \mid - 2) + 1$ states. This exponential growth is due to the inability of reducing the with of the layers since each state of the \mdd\ has the particular role to ``memorize'' the letters stored previously in order to avoid any possible repetition.
 
 \subsection{Find simple paths}
 
+In this section we are going to adapt the \mdd\ algorithm provided in \cref{sec:algo_mdd} in order to apply the \alldiff\ constraint on the nodes of the paths. A path now will be valid only if it is ``simple'' that is we can't pass two times or more on any already visited node of the graph.
 
-\subsection{The NValue constraint}
+In order to solve this newly added constraint in the problem, we have to slightly modify the information stored in the states of the \mdd\ in order to remember from which nodes we are coming from. Therefore, a state will now be represented by the record in \cref{eq:record2}
+
+\begin{equation}
+  \label{eq:record2}
+  \text{state} = \{\text{name: String; cost: Int; colors: Set of Colors; parents: Set of Nodes}\}
+\end{equation}
+
+The first part of the algorithm of \cref{sec:algo_mdd} remains valid: when we add a new layer $\mathcal{L}$, we loop through every state $s$ of the previous layer and for every successor $n$ of $s$ we build the new state. The only new operation to do in this situation, is to update the \textit{parent} field of $n$ which will be $\{\text{s.parent } \cup \text{ s.name}\}$\footnote{Note that the \textit{father} field of the root is the empty set.}.
+
+The important modification to focus on, is the \mdd\ reduction. Currently, a state $s_1$ is dominated by a state $s_2$ if they have same \textit{name}, same \textit{parents} and the \textit{cost} of $s_2$ is less than the \textit{cost} of $s_1$, and two states are compatible if the have same \textit{name, parents} and \textit{cost}. This two conditions are useful respectively to remove dominated states and merge compatible states.
+
+We can finally see that the introduction of the \alldiff\ constraint make a complexity blow up from a polynomial to an exponential curve.
+
+% \subsection{The NValue constraint}

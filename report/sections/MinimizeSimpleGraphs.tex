@@ -16,6 +16,7 @@ In this second part of the procedure, we make a unique color affectation from th
 
 An implementation of this procedure can be found in \cref{algo:minpath}.
 
+\input{appendix/algoMinimizePath}
 
 \begin{proof}[Proof (First part of the procedure)]
   Let $\affect_\C = \row{\C}{\len}$ be a solution returned by the first part of our algorithm, we prove, by induction on the length of the path, that $\affect_\C$ minimizes the number of color switches. After this first proof, we will show that the number of color switches returned by the second part of the algorithm is the same as the one returned by the first part. \\
@@ -43,6 +44,7 @@ An implementation of this procedure can be found in \cref{algo:minpath}.
   Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for the arc $\e_\len$. Then for the arc $\e_{\len-1}$, we choose the same color of $\e_\len$ if possible and repeat the same procedure until reaching the first arc of the path.\\
   We have, therefore, a color switch only when the intersection of $\C_i$ and $\C_{i+1}$ is empty.
 \end{proof}
+
 
 \subsection{Time Complexity}
 

@@ -1,19 +1,19 @@
 \begin{tikzpicture}
 
-    \node (root) at (0,0) {0}
-    child {node {1,2}
-            child {
-                    node {4,6}
-                    child {node {9,10,13,14}
-                            child {node {19,20,21,22,28,29,30,31}
-                                    edge from parent node [right] {0,1}}
-                            edge from parent node [right] {0,1}}
-                    edge from parent node [right] {1}}
-            edge from parent node [right] {0,1}
-        };
+  \node (root) at (0,0) {0}
+  child {node {1,2}
+      child {
+          node {4,6}
+          child {node {9,10,13,14}
+              child {node {19,20,21,22,28,29,30,31}
+                  edge from parent node [right] {0,1}}
+              edge from parent node [right] {0,1}}
+          edge from parent node [right] {1}}
+      edge from parent node [right] {0,1}
+    };
 
-    \node (bottomnode) at (0,-7) {tt};
+  \node (bottomnode) at (0,-7) {tt};
 
-    \draw (root-1-1-1-1) -- (bottomnode);
+  \draw (root-1-1-1-1) -- (bottomnode);
 
 \end{tikzpicture}

@@ -99,7 +99,6 @@ Let $0 \leq p' \leq p \leq \vcard$. While looping over all the intermediate vert
 \begin{itemize}
   \item there exists a path passing through $\n_{p'}$ which is less than the path passing through $\n_p$, the path through $n_p$ can be ignored;
   \item the computed cost is strictly less than all the the previous path passing through $\n_{p'}$, in this case the shortest path between $ij$ will take this new cost and its set of colors will $\mathcal{S}$;
-  \item finally, the cost passing through $\n_i$ equals a previous minimal one. In this case, the cost is not updated, but the colors we can give to the edge $ij$, to reduce the possibility of a switch, will be the union of the colors of the previous best affectations and $mathcal{S}$.
+  \item finally, the cost passing through $\n_i$ equals a previous minimal one. In this case, the cost is not updated, but the colors we can give to the edge $ij$, to reduce the possibility of a switch, will be the union of the colors of the previous best affectations and $\mathcal{S}$.
+        \change{Add binary exponentiation}
 \end{itemize}
-
-\change{Add binary exponentiation}
