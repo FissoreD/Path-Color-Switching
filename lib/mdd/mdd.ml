@@ -1,13 +1,10 @@
+(* TODO: rename to decorated state!! *)
 type 'a mdd_tree = {
   node : int list;
   state : 'a;
   mutable children : (int, 'a mdd_tree) Hashtbl.t;
   mutable father : 'a mdd_tree list;
 }
-(**
-    'node_type is the type of the content of a node   
-    'label is the label of a transition between two nodes
-*)
 
 type 'a mdd_layers = 'a mdd_tree list list ref
 

@@ -1,8 +1,8 @@
-\section{Minimize colors switches with MDD}
+\section{Minimize colors switches with MDDs}
 
 \subsection{Multi-Valued Decision Diagram}
 
-A \textit{Multi-Valued Decision Diagram (MDD)}\cite{regin} is a generalization of a \textit{Binary Decision Diagram}. It is represented as a directed acyclic graph whose nodes and arcs are called respectively states and transitions. \mdd s are often used to solve constraint satisfaction problems where each layer of the \mdd\ represents a variable of the problem and the number of transitions exiting from a state is upper bounded by the cardinal of the domain of the considered variable.
+A \textit{Multi-Valued Decision Diagram (MDD)}\cite{regin} is a generalization of a \textit{Binary Decision Diagram}. It is represented as a directed acyclic graph whose nodes and arcs are called respectively states and transitions. \mdd s are often used to solve constraint satisfaction problems where each layer of the \mdd\ represents a variable of the problem and the number of transitions exiting from a state is  by the  by the cardinal of the domain of the considered variable.
 
 Even if the number of states may grow exponentially wrt the number of states, if well coded the problem can be solved with an \mdd\ whose size grows polynomially wrt its input. A well known example of this, is the representation of the language $\mathcal{L}$ accepting binary words with fixed length $k$ having a $1$ in the $n$-th last position (an example is provided at \cref{sec:mdd_example}).
 
@@ -25,7 +25,7 @@ $$\{\text{name : n; cost: s.cost} + 1 \text{; colors: \colf(s.name, n)}\}$$ is a
 
 To avoid the exponential growth of the search tree, an \adhoc\ strategy is applied in order to either ignore all dominated states or to merge two compatible states. A state $s_1$ is dominated by $s_2$ if they have same \textit{name} and $s_1.\text{cost} < s_2.\text{cost}$, every dominated state is removed from $\mathcal{L}$. Two states $s_1$ and $s_2$ are compatible (and removed from $\mathcal{L}$) if they share the same \textit{name} and the same \textit{cost}. In this case a third state $s_3 = \{\text{name: } s_1.\text{name; cost: } s_1.\text{cost; colors: } s_1.\text{colors} \cup s_2.\text{colors}\}$ is built and added in $\mathcal{L}$.
 
-The application of this reduction the \mdd\ ensures us to only have layers whose size is upper bounded by the number of nodes of the graph.
+The application of this reduction the \mdd\ ensures us to only have can grow of at most $|\vset|$ at each level.
 
 Let $n$ be the cardinal of $\vset$ and $l$ be the length of the path to build, This last remark can be exploited to give an information about the complexity of the algorithm which is bounded by $\bigo(l \cdot n^2)$ since at each layer we have at most $n$ states and for each state we should visit at most $n$ successor states. Moreover, given that $l$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2)$.
 
@@ -49,10 +49,11 @@ In order to solve this newly added constraint in the problem, we have to slightl
   \text{state} = \{\text{name: String; cost: Int; colors: Set of Colors; parents: Set of Nodes}\}
 \end{equation}
 
-The first part of the algorithm of \cref{sec:algo_mdd} remains valid: when we add a new layer $\mathcal{L}$, we loop through every state $s$ of the previous layer and for every successor $n$ of $s$ we build the new state. The only new operation to do in this situation, is to update the \textit{parent} field of $n$ which will be $\{\text{s.parent } \cup \text{ s.name}\}$\footnote{Note that the \textit{father} field of the root is the empty set.}.
+The first part of the algorithm of \cref{sec:algo_mdd} remains valid: when we add a new layer $\mathcal{L}$, we loop through every state $s$ of the previous layer and for every successor $n$ of $s$ we build the new state. The only new operation to do in this situation, is to update the \textit{parent} field of $n$ which will be $\{\text{s.parent } \cup \text{ s.name}\}$\footnote{Note that the \textit{parents} field of the root is the empty set.}.
 
-The important modification to focus on, is the \mdd\ reduction. Currently, a state $s_1$ is dominated by a state $s_2$ if they have same \textit{name}, same \textit{parents} and the \textit{cost} of $s_2$ is less than the \textit{cost} of $s_1$, and two states are compatible if the have same \textit{name, parents} and \textit{cost}. This two conditions are useful respectively to remove dominated states and merge compatible states.
+The important modification to focus on, is the \mdd\ reduction. Currently, a state $s_1$ is dominated by a state $s_2$ if they have same \textit{name}, same \textit{parents} (\ie\ $s_1.\text{parents} \Delta s_2.\text{parents} = \varnothing$) and the \textit{cost} of $s_2$ is less than the \textit{cost} of $s_1$, and two states are compatible if the have same \textit{name, parents} and \textit{cost}. This two conditions are useful respectively to remove dominated states and merge compatible states.
 
-We can finally see that the introduction of the \alldiff\ constraint make a complexity blow up from a polynomial to an exponential curve.
+We can finally see that the introduction of the \alldiff\ constraint causes a complexity blow up from a polynomial to an exponential one. In fact, the size of the layers in the \mdd\ can grow of at most $|\vset|$ at each level.
+
 
 % \subsection{The NValue constraint}

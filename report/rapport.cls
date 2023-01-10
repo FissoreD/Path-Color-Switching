@@ -209,7 +209,8 @@ sorting=ynt
 
 \clearpage
 \pagenumbering{arabic}
-\setcounter{page}{1}
+% To start the page counter after the TOC
+% \setcounter{page}{1}
 }
 \makeatother
 
