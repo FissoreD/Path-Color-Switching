@@ -1,6 +1,6 @@
 module ColorSet = MySet.Make (Int)
 
-type color_function = (int * int, ColorSet.t) Hashtbl.t
+type col_f = ColorFunction.colorFunction
 type cell_cnt = ColorSet.t
 
 type graph = {
@@ -11,13 +11,13 @@ type graph = {
 let print ?(stdout = stdout) { mi; _ } = Adj_mat.print ~stdout mi
 let initiate n = Adj_mat.initiate false n ColorSet.empty
 
-let initiate (col_f : color_function) n =
+let initiate (col_f : col_f) n =
   let update_cnt { m; mi } (i, j) cols =
     m.(i).(j) <- { d = 0.; info = cols };
     mi.(i).(j) <- { d = 0.; info = cols }
   in
   let matrix = { m = initiate n; mi = initiate n } in
-  Hashtbl.iter (update_cnt matrix) col_f;
+  Hashtbl.iter (update_cnt matrix) col_f.tbl;
   matrix
 
 let calc_dist fm i j k =
@@ -45,7 +45,7 @@ let make_iteration fm =
   done;
   fm.mi <- m'
 
-let run ?(f = ignore) (am : graph) n =
+let run ?(f = ignore) am n =
   for _ = 1 to n - 1 do
     make_iteration am;
     f am
@@ -55,7 +55,7 @@ let read_json jspath =
   let open Yojson.Basic.Util in
   let json = Yojson.Basic.from_file jspath in
   let tbl_nodes : (int, ColorSet.t) Hashtbl.t = Hashtbl.create 2048 in
-  let col_function : color_function = Hashtbl.create 2048 in
+  let col_function = ColorFunction.init () in
 
   (* Nodes should start with zero value *)
   let minus_one = ( + ) (-1) in
@@ -71,6 +71,6 @@ let read_json jspath =
   |> List.iter (fun e ->
          let s = member "source" e |> to_int |> minus_one in
          let t = member "target" e |> to_int |> minus_one in
-         Hashtbl.add col_function (s, t) (Hashtbl.find tbl_nodes s));
+         ColorFunction.add col_function s t (Hashtbl.find tbl_nodes s));
 
   initiate col_function (Hashtbl.length tbl_nodes)

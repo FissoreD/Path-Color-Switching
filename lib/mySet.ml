@@ -35,6 +35,7 @@ module Make (Ord : OrderedType) = struct
   let add e = function Full -> Full | Set s -> Set (add e s)
   let singleton e = Set (singleton e)
   let remove e = function Full -> Full | Set s -> Set (remove e s)
+  let filter p = function Full -> Full | Set s -> Set (filter p s)
 
   let diff a b =
     match (a, b) with
@@ -74,4 +75,11 @@ module Make (Ord : OrderedType) = struct
     | Set a -> iter f a
 
   let exists f = function Full -> true | Set a -> exists f a
+
+  let find_opt elt set =
+    match set with Full -> Some elt | Set s -> find_opt elt s
+
+  let fold f s accu = match s with Full -> Full | Set s -> fold f s accu
 end
+
+module ColorSet = Make (Int)

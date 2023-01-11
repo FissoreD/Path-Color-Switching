@@ -11,7 +11,7 @@ let () =
      sep ();
      Col_switch.main ();
      sep ();
-     Col_switch.main' ~stdout:stdout' ();*)
+     Col_switch.main' ~stdout:stdout' (); *)
   sep ();
   Col_switch.main_mdd ();
   Printf.printf "start main_mdd'\n";

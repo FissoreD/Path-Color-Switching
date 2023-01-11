@@ -1,4 +1,4 @@
 (executable
  (name test)
  (public_name TEST)
- (libraries floyd_warshall switch_graph switch_graph_mdd))
+ (libraries floyd_warshall switch_graph switch_graph_mdd stateMddSet))
