@@ -27,23 +27,25 @@ let run
   in
   let module M = (val m : Switch_graph_mdd.M) in
   let open Switch_graph_mdd.Make (M) in
-  let print_function e =
+  let print_result e =
     print ~fathers:!print_fathers e;
     Printf.fprintf stdout "------------\n"
   in
-  for depth = if !loop then 1 else !path_length to !path_length do
-    let depth = ref depth in
-    let time_start = Sys.time () in
-    let graph = read_json ~src:!src !file_path in
-    run ~f:(if !verbose then print_function else ignore) graph !depth;
+  let graph = read_json ~src:!src !file_path in
+  let time_start = Sys.time () in
+  for depth = 1 to !path_length do
+    make_iteration graph;
+    if (((not !loop) && depth = !path_length) || !loop) && !verbose then
+      print_result graph;
     let time_end = Sys.time () in
-    if !print_last && not !verbose then print_function graph;
-    Printf.printf
-      "The src is : %d, the chosen depth is %d with a running time of %f ! "
-      !src !depth (time_end -. time_start);
-    if !to_count_paths then
-      Printf.printf "Total path found = %d\n" (count_paths graph)
-    else Printf.printf "\n"
+    if !print_last && not !verbose then print_result graph;
+    if ((not !loop) && depth = !path_length) || !loop then (
+      Printf.printf
+        "The src is : %d, the path length is %d with a running time of %f ! "
+        !src depth (time_end -. time_start);
+      if !to_count_paths then
+        Printf.printf "Total paths found = %d\n" (count_paths graph)
+      else Printf.printf "\n")
   done
 
 let () =
@@ -74,9 +76,7 @@ let () =
         ( "-f",
           Set_string file_path,
           " Set the file path to read the input to parse." );
-        ( "-loop",
-          Set_string file_path,
-          " The algorithm computes paths from 1 to -length" );
+        ("-loop", Set loop, " The algorithm computes paths from 1 to -length");
       ]
   in
   let usage_msg =
