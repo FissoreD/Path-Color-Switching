@@ -4,16 +4,12 @@ module IntSet = MySet.ColorSet
 module Make (M : Mdd.State) = struct
   module MddState = Mdd.Make (M)
 
-  type col_f = ColorFunction.colorFunction
-
   type graph = {
     graph : Adj_list.graph;
     root : MddState.S.t;
     last_layer : MddState.mdd_layers;
-    update_function : M.t -> int -> M.t2;
-        (** takes a state of the MDD and transition label and compute the content of the next state *)
     get_succ : int -> int list;
-    col_f : col_f;
+    col_f : ColorFunction.colorFunction;
   }
 
   let content : M.t2 = { w = 0; color = ColorSet.full }
@@ -28,29 +24,20 @@ module Make (M : Mdd.State) = struct
         Printf.fprintf stdout " }; \n")
       !last_layer
 
-  let update_function (col_f : col_f) (n1 : M.t) n2 : M.t2 =
-    let new_cols = col_f.get_col (n1.name, n2) in
-    let inter = ColorSet.inter new_cols n1.content.color in
-    if ColorSet.cardinal inter = 0 then
-      { w = n1.content.w + 1; color = new_cols }
-    else { w = n1.content.w; color = inter }
-
-  let initiate ?(is_sym = false) (col_f : col_f) name =
+  let initiate ?(is_sym = false) (col_f : ColorFunction.colorFunction) name =
     let graph = Adj_list.initiate is_sym in
     Hashtbl.iter
       (fun (v1, v2) _ -> Adj_list.add_neighbors graph v1 v2)
       col_f.tbl;
     {
       graph;
-      root = !(MddState.initate name { w = 0; color = ColorSet.Full });
-      last_layer = MddState.initate name { w = 0; color = ColorSet.Full };
+      root = MddState.S.singleton { father = []; name; content };
+      last_layer = ref (MddState.S.singleton { father = []; name; content });
       get_succ = Adj_list.get_succ graph;
-      update_function = update_function col_f;
       col_f;
     }
 
-  let make_iteration g =
-    MddState.update_layers g.get_succ g.update_function g.last_layer
+  let make_iteration g = MddState.update_layers g.get_succ g.col_f g.last_layer
 
   let count_paths { last_layer; _ } =
     let res = ref 0 in

@@ -22,10 +22,6 @@ module Make (T : State) = struct
 
   type mdd_layers = S.t ref
 
-  let initate name content : mdd_layers =
-    let r : S.t = S.singleton { father = []; name; content } in
-    ref r
-
   let add set s2 =
     (* All the fathers of node, will replace the child old_n with new_n *)
     (* let replaceFather (new_n : T.t) (old_n : T.t) =
@@ -49,38 +45,43 @@ module Make (T : State) = struct
             (* replaceFather s2 s1; *)
             S.add s2 (S.remove s1 set))
 
-  let add_elt_to_layer = S.fold (fun (e : S.elt) (acc : S.t) -> add acc e)
-
   (** 
     Takes a list of labels, an update function and a node.  
     For each label, it adds a transition to a new child whose 
     state is computed through the udpate function
   *)
-  let add_succ labels update_function father =
+  let add_succ succ_names give_color_and_cost father =
     List.fold_left
-      (fun acc label ->
-        if T.canAdd label father then
+      (fun acc successor ->
+        if T.canAdd successor father then
           let node : T.t =
             {
-              name = label;
+              name = successor;
               father = [ father ];
-              (* children = Hashtbl.create 2048; *)
-              content = update_function father label;
+              content = give_color_and_cost successor;
             }
           in
-          (* Hashtbl.replace father.children label node; *)
           add acc node
         else acc)
-      S.empty labels
+      S.empty succ_names
 
   (** take an mdd as a list of layers, and compute a new layer from the last layer of the mdd *)
-  let update_layers get_succ update_function (last_layer : mdd_layers) =
+  let update_layers get_succ col_f (last_layer : mdd_layers) =
+    let update_function (col_f : ColorFunction.colorFunction) (n1 : T.t) n2 :
+        T.t2 =
+      let new_cols = col_f.get_col (n1.name, n2) in
+      let inter = ColorSet.inter new_cols n1.content.color in
+      if ColorSet.cardinal inter = 0 then
+        { w = n1.content.w + 1; color = new_cols }
+      else { w = n1.content.w; color = inter }
+    in
     let build_new_layer e =
       let new_layer = ref S.empty in
       S.iter
         (fun (e : T.t) ->
-          let succ = add_succ (get_succ e.name) update_function e in
-          new_layer := add_elt_to_layer succ !new_layer)
+          let succ = add_succ (get_succ e.name) (update_function col_f e) e in
+          new_layer :=
+            S.fold (fun (e : S.elt) (acc : S.t) -> add acc e) succ !new_layer)
         e;
       !new_layer
     in

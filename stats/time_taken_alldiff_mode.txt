@@ -1,7 +1,7 @@
-The src is : 1, the path length is 1 with a running time of 0.000018 ! 
-The src is : 1, the path length is 2 with a running time of 0.000111 ! 
-The src is : 1, the path length is 3 with a running time of 0.000507 ! 
-The src is : 1, the path length is 4 with a running time of 0.007409 ! 
-The src is : 1, the path length is 5 with a running time of 0.118010 ! 
-The src is : 1, the path length is 6 with a running time of 0.797683 ! 
-The src is : 1, the path length is 7 with a running time of 10.642790 !
+The src is : 1, the path length is 1 with a running time of 0.000017 ! Total paths found = 2
+The src is : 1, the path length is 2 with a running time of 0.000090 ! Total paths found = 11
+The src is : 1, the path length is 3 with a running time of 0.000405 ! Total paths found = 94
+The src is : 1, the path length is 4 with a running time of 0.006371 ! Total paths found = 728
+The src is : 1, the path length is 5 with a running time of 0.085300 ! Total paths found = 6654
+The src is : 1, the path length is 6 with a running time of 0.665271 ! Total paths found = 58752
+The src is : 1, the path length is 7 with a running time of 11.942536 ! Total paths found = 522003
