@@ -29,7 +29,7 @@ The \textit{is\_sym} field is used internally to know if the graph is not direct
 
 In fact, the \textit{color\_function} record can be seen as an classical \textit{Java} object in the light \textit{OCaml} functional style.
 
-\paragraph{A state of a MDD.} The states of a MDD are implemented with a functor\cite{ocamlfunctor} parametrized by a module implementing the \textit{merge} operation, since we have to know if, having two states, we have to merge them, to keep the first or the second state.
+\paragraph{A state of a \mdd.} The states of a MDD are implemented with a functor\cite{ocamlfunctor} parametrized by a module implementing the \textit{merge} operation, since we have to know if, having two states, we have to merge them, to keep the first or the second state.
 
 \begin{minted}{ocaml}
   type action = MERGE | REPLACE | IGNORE

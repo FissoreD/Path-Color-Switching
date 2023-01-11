@@ -1,48 +1,58 @@
 \section{MDD example}
 \label{sec:mdd_example}
-In this section we provide an example
+In this section we provide an example of a \mdd\ reduction for the language $\mathcal{L} = \{\omega \in \{0, 1\}^4 \mid \omega[2] = 1\}$, that are all the binary of length $4$ with a $1$ in the second position as a constraint. In \cref{fig:mmd1} we have the full \mdd\ representation, and we can immediately see that the red branches can be ignored since they do not respect the constraint. After their elimination (\cref{fig:mmd2}), we see that the nodes $19$ and $20$ have same father and are both accepting states. Therefore, they are compatible and apt to be merged (a same reasoning case be made on the pairs of nodes $21$ and $22$, $28$ and $29$, $30$ and $31$ with their respectively fathers). In $\cref{fig:mmd3}$, we see that the two sub-paths going from state $4$ to \textit{tt} can be merged: they both lead to the accepting state and their suffix is identical w.r.t the labels on their edges. We continue this way until the reduction operation in no more feasible in order to obtain the final \mdd\ depicted in \cref{fig:mmd5}.
 
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}[b]{0.95\linewidth}
+	\begin{subfigure}[b]{1\linewidth}
 		\centering
-		\input{appendix/mddPlots/mddFull.tex}
+		\scalebox{.8}{
+			\input{appendix/mddPlots/mddFull.tex}
+		}
 		\caption{Complete \mdd}
 		\label{fig:mmd1}
 	\end{subfigure}
 \end{figure}
 
 \begin{figure}[!htb]\ContinuedFloat
-	\begin{subfigure}[b]{.45\linewidth}
+	\def\scale{.65}
+	\centering
+	\begin{subfigure}[b]{.34\linewidth}
 		\centering
-		\input{appendix/mddPlots/mddReduce1.tex}
-		\caption{Reduction $1$}
+		\scalebox{\scale}{
+			\input{appendix/mddPlots/mddReduce1.tex}
+		}
+		\caption{Deletion of dead branches}
 		\label{fig:mmd2}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{.45\linewidth}
+	\begin{subfigure}[b]{.34\linewidth}
 		\centering
-		\input{appendix/mddPlots/mddReduce2.tex}
-		\caption{Reduction $2$}
+		\scalebox{\scale}{
+			\input{appendix/mddPlots/mddReduce2.tex}
+		}
+		\caption{Reduction $1$}
 		\label{fig:mmd3}
 	\end{subfigure}
-\end{figure}
-
-\begin{figure}[!htb]\ContinuedFloat
-	\begin{subfigure}[b]{.45\linewidth}
+	\hfil
+	\begin{subfigure}[b]{.15\linewidth}
 		\centering
-		\input{appendix/mddPlots/mddReduce3.tex}
-		\caption{Reduction $3$}
+		\scalebox{\scale}{
+			\input{appendix/mddPlots/mddReduce3.tex}
+		}
+		\caption{Reduction $2$}
 		\label{fig:mmd4}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{.45\linewidth}
+	\begin{subfigure}[b]{.15\linewidth}
 		\centering
-		\input{appendix/mddPlots/mddReduce4.tex}
-		\caption{Final reduction}
+		\scalebox{\scale}{
+			\input{appendix/mddPlots/mddReduce4.tex}
+		}
+		\caption{Reduction $3$}
 		\label{fig:mmd5}
 	\end{subfigure}
 
-	\caption{\mdd\ for $\mathcal{L} = \{\omega \in \{0, 1\}^4 \mid \omega[2] = 1\}$}
+	\caption{\mdd\ for $\mathcal{L}$}
 	\label{fig:mmd}
 \end{figure}

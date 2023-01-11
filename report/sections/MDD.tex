@@ -1,4 +1,4 @@
-\section{Minimize colors switches with MDDs}
+\section{Minimize colors switches with \mdd s}
 
 \subsection{Multi-Valued Decision Diagram}
 
@@ -6,7 +6,7 @@ A \textit{Multi-Valued Decision Diagram (MDD)}\cite{regin} is a generalization o
 
 Even if the number of states may grow exponentially wrt the number of states, if well coded the problem can be solved with an \mdd\ whose size grows polynomially wrt its input. A well known example of this, is the representation of the language $\mathcal{L}$ accepting binary words with fixed length $k$ having a $1$ in the $n$-th last position (an example is provided at \cref{sec:mdd_example}).
 
-\subsection{MDD strategy}
+\subsection{The \mdd\ strategy}
 \label{sec:algo_mdd}
 The problem of minimizing the number of color switches in a colored graph can be solved with an \mdd. This strategy is less generic then the matrix method: with the \FW\ matrix approach we find shortest paths starting indistinctly from any node of the graph, however the \mdd\ should have a root and therefore this strategy will find all the shortest paths of fixed number of edges from a chosen node.
 
