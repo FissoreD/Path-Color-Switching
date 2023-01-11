@@ -35,6 +35,7 @@ module Make (Ord : OrderedType) = struct
   let add e = function Full -> Full | Set s -> Set (add e s)
   let singleton e = Set (singleton e)
   let remove e = function Full -> Full | Set s -> Set (remove e s)
+  let filter p = function Full -> Full | Set s -> Set (filter p s)
 
   let diff a b =
     match (a, b) with

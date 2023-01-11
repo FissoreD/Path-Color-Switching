@@ -16,3 +16,5 @@ let compare a b =
   match cmp a.name b.name with
   | 0 -> IntSet.compare (make_father_set a.father) (make_father_set b.father)
   | n -> n
+
+let clean = not clean

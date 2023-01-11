@@ -17,22 +17,14 @@ let compareForUnion a b : Mdd.action =
   | 0 -> MERGE
   | _ -> KEEP_S2
 
-let mergeAction a b =
-  (* let tbl = Hashtbl.copy a.children in *)
-  (* let tbl = a.children in *)
-  (* Hashtbl.iter (fun k v -> Hashtbl.replace tbl k v) b.children; *)
+let mergeAction { name; father; content = { w; color } } b =
   {
-    name = a.name;
-    father = a.father @ b.father;
-    (* children = tbl; *)
-    content =
-      {
-        w = a.content.w;
-        color = ColorSet.union a.content.color b.content.color;
-      };
+    name;
+    father = father @ b.father;
+    content = { w; color = ColorSet.union color b.content.color };
   }
 
-let compare a b = compare a.name b.name
+let compare _a _b = compare _a.name _b.name
 
 let rec print ?(stdout = stdout) { name; father; _ } =
   Printf.fprintf stdout "%d " name;
@@ -41,3 +33,4 @@ let rec print ?(stdout = stdout) { name; father; _ } =
   Printf.fprintf stdout "]"
 
 let content : t2 = { w = 0; color = ColorSet.Full }
+let clean = false

@@ -1,4 +1,4 @@
 (executable
  (public_name TER)
  (name main)
- (libraries re switch_graph_mdd))
+ (libraries re switch_graph_mdd stateMddSet stateMddSetAllDiff))
