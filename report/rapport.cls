@@ -31,6 +31,12 @@
 \RequirePackage{amssymb}
 \RequirePackage{xspace}
 \usepackage{multicol}
+% To read csv files
+% \usepackage{filecontents}
+% To plot graphs
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+
 
 \usepackage[utf8]{inputenc}
 % \usepackage[T1]{fontenc}

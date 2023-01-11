@@ -7,22 +7,22 @@ The previous algorithms have been implemented in \textit{OCaml}, following the p
 \paragraph{The color\_function type.} Working with the implementation of the proposed algorithms, we remarked that a clear type for the color function would have improved a lot the clarity of the code.
 
 \begin{minted}{ocaml}
-  type color_function = {
-    is_sym : bool;
-    tbl : (int * int, ColorSet.t) Hashtbl.t;
-    get_col : int * int -> ColorSet.t;
-  }
+  type action =
+    | MERGE  (** MERGE : we have to remove t1, and add `mergeAction s1 s2`*)
+    | KEEP_S1  (** We have to keep the content of s1*)
+    | KEEP_S2  (** We have to keep the content of s2*)
 
-  let get tbl (v1, v2) =
-    Option.value ~default:ColorSet.empty (Hashtbl.find_opt tbl (v1, v2))
+  module type State = sig
+    type t2 = { color : ColorSet.t; w : int }
+    type t = { name : int; mutable father : t list; content : t2 }
 
-  let init ?(is_sym = false) () =
-    let tbl = Hashtbl.create 2048 in
-    { is_sym; tbl; get_col = get tbl }
-
-  let add { tbl; is_sym; _ } v1 v2 col =
-    Hashtbl.replace tbl (v1, v2) col;
-    if is_sym then Hashtbl.replace tbl (v2, v1) col
+    val canAdd : int -> t -> bool
+    val compareForUnion : t -> t -> action
+    val mergeAction : t -> t -> t
+    val compare : t -> t -> int
+    val print : ?stdout:out_channel -> t -> unit
+    val clean : bool
+  end
 \end{minted}
 
 The \textit{is\_sym} field is used internally to know if the graph is not directed: in this case every edge $\langle a, b \rangle$ of the undirected graph is transformed to a couple of directed arcs $(a,b)$ and $(b,a)$. The \textit{tbl} field is an hash-table where to a couple of nodes we associate the set of colors of the arc they represent. The \textit{get\_col} which is a function taking a couple of node which gives back either the set of colors of the arc if the arc between the two nodes exists otherwise the empty set. Finally, the \textit{color\_function} can be instantiated through the \textit{init} function and the \textit{add} function allows to add new arcs of the graph to it.
@@ -32,18 +32,21 @@ In fact, the \textit{color\_function} record can be seen as an classical \textit
 \paragraph{A state of a \mdd.} The states of a MDD are implemented with a functor\cite{ocamlfunctor} parametrized by a module implementing the \textit{merge} operation, since we have to know if, having two states, we have to merge them, to keep the first or the second state.
 
 \begin{minted}{ocaml}
-  type action = MERGE | REPLACE | IGNORE
+  type action =
+    | MERGE  (** MERGE : we have to remove t1, and add `mergeAction s1 s2`*)
+    | KEEP_S1  (** We have to keep the content of s1*)
+    | KEEP_S2  (** We have to keep the content of s2*)
 
-  module type OrderedType = sig
-    type t
-  
-    val merge : t -> t -> action
+  module type State = sig
+    type t2 = { color : ColorSet.t; w : int }
+
+    type t = { name : int; mutable father : t list; content : t2; }
+
+    val canAdd : int -> t -> bool
+    val compareForUnion : t -> t -> action
+    val mergeAction : t -> t -> t
     val compare : t -> t -> int
-  end
-  
-  module Make (Ord : OrderedType) = struct
-    module MySet = MySet.Make (Ord)
-    include MySet
+    val print : ?stdout:out_channel -> t -> unit
   end
 \end{minted}
 
@@ -51,16 +54,22 @@ This functor is particularly useful if we want to implement the classic algorith
 
 Moreover, we can verify if two states are compatible, \ie\ ready to be merged, through the \textit{compare} function. In fact, a layer of a \mdd\ is a set of states. We know if two state are to be merged if the \textit{compare} method returns $0$.
 
-\paragraph{The mdd\_tree record.} The last but not the least, important data structure is the \textit{mdd\_tree}, the heart of the \mdd\ procedure implementation.
+\paragraph{The \mdd\ functor.} The last but not the least, important data structure is the \mdd\ functor, the heart of the \mdd\ procedure implementation. This functor is parametrized by a \textit{State} of a \mdd.
 
 \begin{minted}{ocaml}
-  type 'a mdd_tree = {
-    node : int list;
-    state : 'a;
-    mutable children : (int, 'a mdd_tree) Hashtbl.t;
-    mutable father : 'a mdd_tree list;
-  }
+  module Make : functor (T : State) ->
+    sig
+      ...
+      type mdd_layers = MySet.Make(T).t ref
+      val add : S.t -> S.elt -> S.t
+      val add_succ : int list -> (int -> T.t2) -> T.t -> S.t
+      val update_layers :
+        (int -> int list) ->
+        ColorFunction.colorFunction -> mdd_layers -> unit
+    end
 \end{minted}
+
+This functor signature need an implementation of some useful function, such as the \textit{update\_function}, the \textit{initiate}, \textit{make\_iteration}, the \textit{count\_paths} and the \textit{run} functions.
 
 A \textit{mdd\_tree} is a recursive data structure made of a state, the root of the current sub \mdd, a hash-table of children a list of fathers of the current state. Thanks to this \dots\change{Rename mdd\_tree to decorated state and add mdd\_layer}
 
