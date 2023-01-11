@@ -1,70 +1,71 @@
-The src is : 1, the path length is 1 with a running time of 0.005007 ! Total path found = 2
-The src is : 1, the path length is 2 with a running time of 0.006196 ! Total path found = 11
-The src is : 1, the path length is 3 with a running time of 0.005343 ! Total path found = 87
-The src is : 1, the path length is 4 with a running time of 0.006111 ! Total path found = 451
-The src is : 1, the path length is 5 with a running time of 0.008659 ! Total path found = 2014
-The src is : 1, the path length is 6 with a running time of 0.012333 ! Total path found = 6975
-The src is : 1, the path length is 7 with a running time of 0.014027 ! Total path found = 22868
-The src is : 1, the path length is 8 with a running time of 0.016230 ! Total path found = 76842
-The src is : 1, the path length is 9 with a running time of 0.013136 ! Total path found = 259791
-The src is : 1, the path length is 10 with a running time of 0.012366 ! Total path found = 874533
-The src is : 1, the path length is 11 with a running time of 0.014218 ! Total path found = 2957856
-The src is : 1, the path length is 12 with a running time of 0.016220 ! Total path found = 9982845
-The src is : 1, the path length is 13 with a running time of 0.017746 ! Total path found = 33672700
-The src is : 1, the path length is 14 with a running time of 0.021129 ! Total path found = 113410388
-The src is : 1, the path length is 15 with a running time of 0.024570 ! Total path found = 381642962
+src, length, time, paths number
+1, 1, 0.005007, 2
+1, 2, 0.006196, 11
+1, 3, 0.005343, 87
+1, 4, 0.006111, 451
+1, 5, 0.008659, 2014
+1, 6, 0.012333, 6975
+1, 7, 0.014027, 22868
+1, 8, 0.016230, 76842
+1, 9, 0.013136, 259791
+1, 10, 0.012366, 874533
+1, 11, 0.014218, 2957856
+1, 12, 0.016220, 9982845
+1, 13, 0.017746, 33672700
+1, 14, 0.021129, 113410388
+1, 15, 0.024570, 381642962
 
-The src is : 2, the path length is 1 with a running time of 0.005686 ! Total paths found = 2
-The src is : 2, the path length is 2 with a running time of 0.006264 ! Total paths found = 15
-The src is : 2, the path length is 3 with a running time of 0.006077 ! Total paths found = 90
-The src is : 2, the path length is 4 with a running time of 0.007269 ! Total paths found = 535
-The src is : 2, the path length is 5 with a running time of 0.010190 ! Total paths found = 2281
-The src is : 2, the path length is 6 with a running time of 0.016347 ! Total paths found = 11874
-The src is : 2, the path length is 7 with a running time of 0.014363 ! Total paths found = 72575
-The src is : 2, the path length is 8 with a running time of 0.015923 ! Total paths found = 466731
-The src is : 2, the path length is 9 with a running time of 0.013366 ! Total paths found = 3029839
-The src is : 2, the path length is 10 with a running time of 0.012287 ! Total paths found = 19678700
+2, 1, 0.005686, 2
+2, 2, 0.006264, 15
+2, 3, 0.006077, 90
+2, 4, 0.007269, 535
+2, 5, 0.010190, 2281
+2, 6, 0.016347, 11874
+2, 7, 0.014363, 72575
+2, 8, 0.015923, 466731
+2, 9, 0.013366, 3029839
+2, 10, 0.012287, 19678700
 
-The src is : 3, the path length is 1 with a running time of 0.005901 ! Total paths found = 13
-The src is : 3, the path length is 2 with a running time of 0.012413 ! Total paths found = 79
-The src is : 3, the path length is 3 with a running time of 0.009977 ! Total paths found = 487
-The src is : 3, the path length is 4 with a running time of 0.010455 ! Total paths found = 2184
-The src is : 3, the path length is 5 with a running time of 0.015592 ! Total paths found = 10299
-The src is : 3, the path length is 6 with a running time of 0.017475 ! Total paths found = 54833
-The src is : 3, the path length is 7 with a running time of 0.014084 ! Total paths found = 310481
-The src is : 3, the path length is 8 with a running time of 0.013599 ! Total paths found = 1813131
-The src is : 3, the path length is 9 with a running time of 0.018530 ! Total paths found = 10620803
-The src is : 3, the path length is 10 with a running time of 0.014538 ! Total paths found = 62320949
+3, 1, 0.005901, 13
+3, 2, 0.012413, 79
+3, 3, 0.009977, 487
+3, 4, 0.010455, 2184
+3, 5, 0.015592, 10299
+3, 6, 0.017475, 54833
+3, 7, 0.014084, 310481
+3, 8, 0.013599, 1813131
+3, 9, 0.018530, 10620803
+3, 10, 0.014538, 62320949
 
-The src is : 4, the path length is 1 with a running time of 0.005823 ! Total paths found = 2
-The src is : 4, the path length is 2 with a running time of 0.007026 ! Total paths found = 15
-The src is : 4, the path length is 3 with a running time of 0.005326 ! Total paths found = 89
-The src is : 4, the path length is 4 with a running time of 0.007268 ! Total paths found = 525
-The src is : 4, the path length is 5 with a running time of 0.009921 ! Total paths found = 2496
-The src is : 4, the path length is 6 with a running time of 0.014748 ! Total paths found = 12723
-The src is : 4, the path length is 7 with a running time of 0.011223 ! Total paths found = 74878
-The src is : 4, the path length is 8 with a running time of 0.012274 ! Total paths found = 471069
-The src is : 4, the path length is 9 with a running time of 0.014472 ! Total paths found = 3018084
-The src is : 4, the path length is 10 with a running time of 0.012838 ! Total paths found = 19347983
+4, 1, 0.005823, 2
+4, 2, 0.007026, 15
+4, 3, 0.005326, 89
+4, 4, 0.007268, 525
+4, 5, 0.009921, 2496
+4, 6, 0.014748, 12723
+4, 7, 0.011223, 74878
+4, 8, 0.012274, 471069
+4, 9, 0.014472, 3018084
+4, 10, 0.012838, 19347983
 
-The src is : 5, the path length is 1 with a running time of 0.006587 ! Total paths found = 2
-The src is : 5, the path length is 2 with a running time of 0.008114 ! Total paths found = 11
-The src is : 5, the path length is 3 with a running time of 0.006979 ! Total paths found = 99
-The src is : 5, the path length is 4 with a running time of 0.007269 ! Total paths found = 530
-The src is : 5, the path length is 5 with a running time of 0.010529 ! Total paths found = 2486
-The src is : 5, the path length is 6 with a running time of 0.016168 ! Total paths found = 9235
-The src is : 5, the path length is 7 with a running time of 0.020099 ! Total paths found = 33532
-The src is : 5, the path length is 8 with a running time of 0.020356 ! Total paths found = 120482
-The src is : 5, the path length is 9 with a running time of 0.015689 ! Total paths found = 439278
-The src is : 5, the path length is 10 with a running time of 0.016216 ! Total paths found = 1599611
+5, 1, 0.006587, 2
+5, 2, 0.008114, 11
+5, 3, 0.006979, 99
+5, 4, 0.007269, 530
+5, 5, 0.010529, 2486
+5, 6, 0.016168, 9235
+5, 7, 0.020099, 33532
+5, 8, 0.020356, 120482
+5, 9, 0.015689, 439278
+5, 10, 0.016216, 1599611
 
-The src is : 6, the path length is 1 with a running time of 0.006144 ! Total paths found = 2
-The src is : 6, the path length is 2 with a running time of 0.006837 ! Total paths found = 32
-The src is : 6, the path length is 3 with a running time of 0.006914 ! Total paths found = 248
-The src is : 6, the path length is 4 with a running time of 0.008581 ! Total paths found = 1498
-The src is : 6, the path length is 5 with a running time of 0.012741 ! Total paths found = 10175
-The src is : 6, the path length is 6 with a running time of 0.015882 ! Total paths found = 79640
-The src is : 6, the path length is 7 with a running time of 0.019461 ! Total paths found = 628435
-The src is : 6, the path length is 8 with a running time of 0.013708 ! Total paths found = 5004030
-The src is : 6, the path length is 9 with a running time of 0.012521 ! Total paths found = 39804451
-The src is : 6, the path length is 10 with a running time of 0.021474 ! Total paths found = 317486698
+6, 1, 0.006144, 2
+6, 2, 0.006837, 32
+6, 3, 0.006914, 248
+6, 4, 0.008581, 1498
+6, 5, 0.012741, 10175
+6, 6, 0.015882, 79640
+6, 7, 0.019461, 628435
+6, 8, 0.013708, 5004030
+6, 9, 0.012521, 39804451
+6, 10, 0.021474, 317486698
