@@ -22,10 +22,10 @@ let run
       src;
       loop;
     } =
-  let m : (module Switch_graph_mdd.M) =
+  let m : (module Mdd.State) =
     if !all_diff then (module StateMddSetAllDiff) else (module StateMddSet)
   in
-  let module M = (val m : Switch_graph_mdd.M) in
+  let module M = (val m : Mdd.State) in
   let open Switch_graph_mdd.Make (M) in
   let print_result e =
     print ~fathers:!print_fathers e;

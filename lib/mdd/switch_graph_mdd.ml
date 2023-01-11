@@ -1,19 +1,7 @@
 module ColorSet = MySet.ColorSet
 module IntSet = MySet.ColorSet
 
-module type M = sig
-  type t2 = { color : MySet.ColorSet.t; w : int }
-  type t = { name : int; mutable father : t list; content : t2 }
-
-  val compareForUnion : t -> t -> Mdd.action
-  val mergeAction : t -> t -> t
-  val print : ?stdout:out_channel -> t -> unit
-  val canAdd : int -> t -> bool
-  val compare : t -> t -> int
-  val clean : bool
-end
-
-module Make (M : M) = struct
+module Make (M : Mdd.State) = struct
   module MddState = Mdd.Make (M)
 
   type col_f = ColorFunction.colorFunction

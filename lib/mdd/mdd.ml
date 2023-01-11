@@ -7,19 +7,14 @@ type action =
 
 module type State = sig
   type t2 = { color : ColorSet.t; w : int }
-
-  type t = {
-    name : int;
-    (* children : (int, t) Hashtbl.t; *)
-    mutable father : t list;
-    content : t2;
-  }
+  type t = { name : int; mutable father : t list; content : t2 }
 
   val canAdd : int -> t -> bool
   val compareForUnion : t -> t -> action
   val mergeAction : t -> t -> t
   val compare : t -> t -> int
   val print : ?stdout:out_channel -> t -> unit
+  val clean : bool
 end
 
 module Make (T : State) = struct
