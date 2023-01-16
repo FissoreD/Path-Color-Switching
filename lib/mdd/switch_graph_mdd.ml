@@ -1,26 +1,26 @@
 module ColorSet = MySet.ColorSet
 module IntSet = MySet.ColorSet
 
-module Make (M : Mdd.State) = struct
-  module MddState = Mdd.Make (M)
+module Make (State : Mdd.State) = struct
+  module MddState = Mdd.Make (State)
 
   type graph = {
     graph : Adj_list.graph;
-    root : MddState.S.t;
+    root : MddState.Set.t;
     last_layer : MddState.mdd_layers;
     get_succ : int -> int list;
     col_f : ColorFunction.colorFunction;
   }
 
-  let content : M.t2 = { w = 0; color = ColorSet.full }
+  let content : State.t2 = { w = 0; color = ColorSet.full }
 
   let print ?(stdout = stdout) ?(fathers = false) { last_layer; _ } =
-    MddState.S.iter
+    MddState.Set.iter
       (fun ({ name; content; _ } as n) ->
         Printf.fprintf stdout "{state = %d ; w = %d ; cols = " name content.w;
         ColorSet.print (Printf.fprintf stdout "%d ") content.color;
         Printf.fprintf stdout "; p = ";
-        if fathers then M.print ~stdout n;
+        if fathers then State.print ~stdout n;
         Printf.fprintf stdout " }; \n")
       !last_layer
 
@@ -31,35 +31,50 @@ module Make (M : Mdd.State) = struct
       col_f.tbl;
     {
       graph;
-      root = MddState.S.singleton { father = []; name; content };
-      last_layer = ref (MddState.S.singleton { father = []; name; content });
+      root = MddState.Set.singleton { father = []; name; content };
+      last_layer = ref (MddState.Set.singleton { father = []; name; content });
       get_succ = Adj_list.get_succ graph;
       col_f;
     }
 
   let make_iteration g = MddState.update_layers g.get_succ g.col_f g.last_layer
 
-  let count_paths { last_layer; _ } =
+  let min_layer { last_layer; _ } =
+    MddState.Set.fold
+      (fun state acc ->
+        let similars = MddState.Set.filter (fun s -> s.name = state.name) acc in
+        if MddState.Set.cardinal similars = 0 then MddState.Set.add state acc
+        else if (MddState.Set.choose similars).content.w > state.content.w then
+          MddState.Set.fold MddState.Set.remove similars acc
+          |> MddState.Set.add state
+        else if (MddState.Set.choose similars).content.w < state.content.w then
+          acc
+        else MddState.Set.add state acc)
+      !last_layer MddState.Set.empty
+
+  let keep_min_in_last_layer graph = graph.last_layer := min_layer graph
+
+  let count_paths graph =
     let res = ref 0 in
-    let rec aux (l : M.t) =
-      if l.father = [] then incr res;
-      List.iter aux l.father
+    let rec aux ({ father; _ } : State.t) =
+      if father = [] then incr res;
+      List.iter aux father
     in
-    MddState.S.iter aux !last_layer;
+    MddState.Set.iter aux (min_layer graph);
     !res
 
   let clean { last_layer; _ } =
-    if M.clean then (
-      let mins = Hashtbl.create @@ MddState.S.cardinal !last_layer in
-      MddState.S.iter
+    if State.clean then (
+      let mins = Hashtbl.create @@ MddState.Set.cardinal !last_layer in
+      MddState.Set.iter
         (fun e ->
           Hashtbl.replace mins e.name
             (min e.content.w
                (Option.value ~default:max_int @@ Hashtbl.find_opt mins e.name)))
         !last_layer;
       last_layer :=
-        MddState.S.filter
-          (fun (e : M.t) -> e.content.w <= Hashtbl.find mins e.name)
+        MddState.Set.filter
+          (fun (e : State.t) -> e.content.w <= Hashtbl.find mins e.name)
           !last_layer)
 
   let rec run ?(f = ignore) g = function

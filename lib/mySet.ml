@@ -37,6 +37,10 @@ module Make (Ord : OrderedType) = struct
   let remove e = function Full -> Full | Set s -> Set (remove e s)
   let filter p = function Full -> Full | Set s -> Set (filter p s)
 
+  let choose = function
+    | Full -> invalid_arg "Can't choose in full set"
+    | Set s -> choose s
+
   let diff a b =
     match (a, b) with
     | Full, Set _ -> Full
@@ -80,6 +84,7 @@ module Make (Ord : OrderedType) = struct
     match set with Full -> Some elt | Set s -> find_opt elt s
 
   let fold f s accu = match s with Full -> Full | Set s -> fold f s accu
+  let find_first_opt f = function Full -> None | Set s -> find_first_opt f s
 end
 
 module ColorSet = Make (Int)

@@ -34,7 +34,9 @@ let run
   let graph = read_json ~src:!src !file_path in
   let time_start = Sys.time () in
   for depth = 1 to !path_length do
+    print_endline "";
     make_iteration graph;
+    if !path_length = depth then keep_min_in_last_layer graph;
     if (((not !loop) && depth = !path_length) || !loop) && !verbose then
       print_result graph;
     let time_end = Sys.time () in

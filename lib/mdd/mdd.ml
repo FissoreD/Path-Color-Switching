@@ -18,32 +18,27 @@ module type State = sig
 end
 
 module Make (T : State) = struct
-  module S = MySet.Make (T)
+  module Set = MySet.Make (T)
 
-  type mdd_layers = S.t ref
+  type mdd_layers = Set.t ref
 
   let add set s2 =
     (* All the fathers of node, will replace the child old_n with new_n *)
-    (* let replaceFather (new_n : T.t) (old_n : T.t) =
-         List.iter
-           (fun (f : T.t) -> Hashtbl.replace f.children old_n.name new_n)
-           old_n.father
-       in *)
-    match S.find_opt s2 set with
-    | None -> S.add s2 set
+    match Set.find_opt s2 set with
+    | None -> Set.add s2 set
     | Some s1 -> (
         match T.compareForUnion s1 s2 with
         | MERGE ->
             let new_node = T.mergeAction s1 s2 in
             (* replaceFather new_node s1;
                replaceFather new_node s2; *)
-            S.add new_node (S.remove s1 set)
+            Set.add new_node (Set.remove s1 set)
         | KEEP_S1 ->
             (* replaceFather s1 s2; *)
             set
         | KEEP_S2 ->
             (* replaceFather s2 s1; *)
-            S.add s2 (S.remove s1 set))
+            Set.add s2 (Set.remove s1 set))
 
   (** 
     Takes a list of labels, an update function and a node.  
@@ -63,7 +58,7 @@ module Make (T : State) = struct
           in
           add acc node
         else acc)
-      S.empty succ_names
+      Set.empty succ_names
 
   (** take an mdd as a list of layers, and compute a new layer from the last layer of the mdd *)
   let update_layers get_succ col_f (last_layer : mdd_layers) =
@@ -76,12 +71,14 @@ module Make (T : State) = struct
       else { w = n1.content.w; color = inter }
     in
     let build_new_layer e =
-      let new_layer = ref S.empty in
-      S.iter
+      let new_layer = ref Set.empty in
+      Set.iter
         (fun (e : T.t) ->
           let succ = add_succ (get_succ e.name) (update_function col_f e) e in
           new_layer :=
-            S.fold (fun (e : S.elt) (acc : S.t) -> add acc e) succ !new_layer)
+            Set.fold
+              (fun (e : Set.elt) (acc : Set.t) -> add acc e)
+              succ !new_layer)
         e;
       !new_layer
     in
