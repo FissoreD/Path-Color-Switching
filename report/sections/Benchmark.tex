@@ -1,18 +1,56 @@
 \section{A benchmark of the \textit{MDD} implementation}
 
-We have been provided, by Spotify, a graph representing a sample of the problem this company is dealing with. This graph is on the form of a \textit{json} where
+We have been provided, by Spotify, a graph representing a sample of the problem this company is dealing with. This graph is on the form of a \textit{json} where a list of nodes are associated to colors and a list of pairs $(\e_1, \e_2)$ representing the arcs of the graph.
 
-\subsection{Solution number}
+The \mdd\ version of the algorithm has been tested on this graph in order to obtain some of statistics, in particular we have tested the number of solutions and the time taken to get them for a given path length. The source of the path taken into account, in order to build the results, is the node $1$. The are no big differences of performance for other sources.
 
 \input{sections/stats/path_number_plot.tex}
 
-\paragraph{The classic algorithm.}
+\paragraph{Time and number of solutions}
+In \cref{img:plots_1} and \cref{img:plots_2}, we can see that the number of solutions computed by respectively the classic algorithm or the algorithm with the \alldiff\ constraint plots a curve with an exponential growth. However, we can also remark that the introduction of the \alldiff\ constraint reduce drastically the number of solutions, in particular, for a path with $10$ edges, there are about $9 \times 10^5$ solutions in the classic version against the about $3 \times 10^4$ of the \alldiff\ version. It is quite normal to obtain this difference, since, as said in the previous sections, the \alldiff\ constraints more the domain of the variables.
 
-\paragraph{The \alldiff\ version.}
+Another interesting phenomenon, which confirms the complexities of the algorithms, is that computing the solutions for the classic version takes a number of time which grows linearly with the length of the path. On the other hand, the \alldiff\ version goes enough fast to compute paths of length up to $6$, but, we need about $8$ seconds for path of length $7$, $2$ minutes for paths of length $8$, $25$ minutes for paths of length $9$, therefore with an exponential trend.
 
-\subsection{Time evaluation}
+\begin{table}
+  \centering
+  \begin{subtable}{.47\linewidth}
+    \centering
+    \begin{tabular}{cccc}
+      \textit{length} & min\_cost & \textit{max\_cost} \\
+      \hline
+      $1$             & $0$       & $0$                \\
+      $2$             & $0$       & $0$                \\
+      $3$             & $0$       & $0$                \\
+      $4$             & $0$       & $2$                \\
+      $5$             & $0$       & $3$                \\
+      $50$            & $0$       & $1$                \\
+      $1000$          & $0$       & $1$                \\
+    \end{tabular}
+    \caption{Classic algorithm}
+  \end{subtable}
+  \quad
+  \begin{subtable}{.47\linewidth}
+    \centering
+    \begin{tabular}{cccc}
+      \textit{length} & min\_cost & \textit{max\_cost} \\
+      \hline
+      $1$             & $0$       & $0$                \\
+      $2$             & $0$       & $0$                \\
+      $3$             & $0$       & $1$                \\
+      $4$             & $0$       & $2$                \\
+      $5$             & $0$       & $3$                \\
+      $6$             & $0$       & $4$                \\
+      $7$             & $0$       & $5$                \\
+    \end{tabular}
+    \caption{\alldiff\ version}
+  \end{subtable}
 
-\paragraph{The classic algorithm.}
+  \caption[short]{Number of solution stats}
+  \label{tbl:sol_stats}
+\end{table}
 
-\paragraph{The \alldiff\ version.}
-% \input{sections/stats/time_plots.tex}
+\paragraph{Cost of the paths for a given length}
+
+In this paragraph we want to give some results about the cost of the paths, computed through the \cref{eq:costf}. It is interesting to see that thanks to this property, we can deduce some properties of the graph and the behavior of the of the algorithm in these situations.
+
+Lets look at the results proposed in \cref{tbl:sol_stats}.
