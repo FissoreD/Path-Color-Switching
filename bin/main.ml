@@ -8,6 +8,7 @@ type params = {
   to_count_paths : bool ref;
   src : int ref;
   loop : bool ref;
+  stats : bool ref;
 }
 
 let run
@@ -21,6 +22,7 @@ let run
       loop;
       print_last;
       verbose;
+      stats;
     } =
   let m : (module Mdd.State) =
     if !all_diff then (module StateMddSetAllDiff) else (module StateMddSet)
@@ -48,7 +50,10 @@ let run
         !src depth (time_end -. !time_start);
       if !to_count_paths then
         Printf.printf "Total paths found = %d\n" (count_paths graph));
-    time_start := !time_start +. Sys.time () -. time_end
+    if (!path_length = depth || !loop) && !stats then (
+      let a, b = cost_stat graph in
+      Printf.printf "Min cost: %d, Max cost: %d\n" a b;
+      time_start := !time_start +. Sys.time () -. time_end)
   done
 
 let () =
@@ -62,6 +67,7 @@ let () =
   let print_fathers = ref false in
   let to_count_paths = ref false in
   let loop = ref false in
+  let stats = ref false in
   let speclist =
     align
       [
@@ -80,6 +86,7 @@ let () =
           Set_string file_path,
           " Set the file path to read the input to parse." );
         ("-loop", Set loop, " The algorithm computes paths from 1 to -length");
+        ("-stats", Set stats, " Prints the min and the max cost of paths");
       ]
   in
   let usage_msg =
@@ -98,4 +105,5 @@ let () =
       src;
       print_last;
       loop;
+      stats;
     }

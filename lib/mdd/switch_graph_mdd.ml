@@ -104,4 +104,13 @@ module Make (State : Mdd.State) = struct
            ColorFunction.add col_function s t (Hashtbl.find tbl_nodes s));
 
     initiate col_function src
+
+  let cost_stat graph =
+    let min_weight, max_weight = (ref max_int, ref (-1)) in
+    MddState.Set.iter
+      (fun e ->
+        min_weight := min !min_weight e.content.w;
+        max_weight := max !max_weight e.content.w)
+      !(graph.last_layer);
+    (!min_weight, !max_weight)
 end
