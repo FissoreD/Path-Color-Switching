@@ -16,11 +16,11 @@ let run
       print_fathers;
       file_path;
       path_length;
-      print_last;
-      verbose;
       to_count_paths;
       src;
       loop;
+      print_last;
+      verbose;
     } =
   let m : (module Mdd.State) =
     if !all_diff then (module StateMddSetAllDiff) else (module StateMddSet)
@@ -32,22 +32,23 @@ let run
     Printf.fprintf stdout "------------\n"
   in
   let graph = read_json ~src:!src !file_path in
-  let time_start = Sys.time () in
+  let time_start = ref (Sys.time ()) in
   for depth = 1 to !path_length do
     print_endline "";
     make_iteration graph;
-    if !path_length = depth then keep_min_in_last_layer graph;
+    let time_end = Sys.time () in
+    if false && !path_length = depth then keep_min_in_last_layer graph;
     if (((not !loop) && depth = !path_length) || !loop) && !verbose then
       print_result graph;
-    let time_end = Sys.time () in
-    if !print_last && not !verbose then print_result graph;
+    if !print_last && (not !verbose) && !path_length = depth then
+      print_result graph;
     if ((not !loop) && depth = !path_length) || !loop then (
       Printf.printf
-        "The src is : %d, the path length is %d with a running time of %f ! "
-        !src depth (time_end -. time_start);
+        "The src is : %d, the path length is %d with a running time of %f ! \n"
+        !src depth (time_end -. !time_start);
       if !to_count_paths then
-        Printf.printf "Total paths found = %d\n" (count_paths graph)
-      else Printf.printf "\n")
+        Printf.printf "Total paths found = %d\n" (count_paths graph));
+    time_start := !time_start +. Sys.time () -. time_end
   done
 
 let () =
