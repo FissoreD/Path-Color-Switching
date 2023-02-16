@@ -48,7 +48,7 @@ Here, we want to give a formal proof to show that the stated procedure returns a
 
 \subsection{Time Complexity}
 
-We can analyze the time complexity of this procedure from the implementation proposed in \cref{algo:minpath}. We have two loops of size $k$ (the length of the path). Inside them we make intersection between sets of at most $| \C |$, knowing that the intersection between two sets of size $| \C |$ is $\bigo(| \C |)$. The final time complexity is therefore $\bigo(2 * k * | \C |) = \bigo(k * | \C |)$.
+We can analyze the time complexity of this procedure from the implementation proposed in \cref{algo:minpath}. We have two loops of size $k$ (the length of the path). Inside them we make intersection between sets of at most $| \C |$, knowing that the intersection between two sets of size $| \C |$ is $\bigo(| \C |)$. The final time complexity is therefore $\bigo(2 * k * | \C |) = \bigo(k * | \C |)$ which is an optimal time complexity wrt the input of the problem.
 
 \subsection{An example run}
 \label{sec:path_ex_run}
