@@ -21,7 +21,7 @@ Let $r$ the node chosen for the root of the \mdd, at the $i^{th}$ iteration a ne
 
 The algorithm aiming to build the \mdd\ works as follow: for every state $s$ of the current state and for every successor $n$ of $s$ in $G$, let $\mathcal{S} = \colf(s, n) \cap \text{s.colors}$. Let $\mathcal{L}$ be the new layer to build, if $\mathcal{S}$ is non-empty we add to $\mathcal{L}$ the record
 $$\{\text{name: n; cost: s.cost; colors: } \mathcal{S}\}$$ otherwise the record
-$$\{\text{name : n; cost: s.cost} + 1 \text{; colors: \colf(s.name, n)}\}$$ is added.
+$$\{\text{name : n; cost: s.cost} + 1 \text{; colors:} \colf(\text{s.name, n})\}$$ is added.
 
 To avoid the exponential growth of the search tree, an \adhoc\ strategy is applied in order to either ignore all dominated states or to merge two compatible states. A state $s_1$ is dominated by $s_2$ if they have same \textit{name} and $s_1.\text{cost} < s_2.\text{cost}$, every dominated state is removed from $\mathcal{L}$. Two states $s_1$ and $s_2$ are compatible (and removed from $\mathcal{L}$) if they share the same \textit{name} and the same \textit{cost}. In this case a third state $s_3 = \{\text{name: } s_1.\text{name; cost: } s_1.\text{cost; colors: } s_1.\text{colors} \cup s_2.\text{colors}\}$ is built and added in $\mathcal{L}$.
 

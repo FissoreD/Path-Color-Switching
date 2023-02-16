@@ -31,25 +31,6 @@ In fact, the \textit{color\_function} record can be seen as an classical \textit
 
 \paragraph{A state of a \mdd.} The states of a MDD are implemented with a functor\cite{ocamlfunctor} parametrized by a module implementing the \textit{merge} operation, since we have to know if, having two states, we have to merge them, to keep the first or the second state.
 
-\begin{minted}{ocaml}
-  type action =
-    | MERGE  (** MERGE : we have to remove t1, and add `mergeAction s1 s2`*)
-    | KEEP_S1  (** We have to keep the content of s1*)
-    | KEEP_S2  (** We have to keep the content of s2*)
-
-  module type State = sig
-    type t2 = { color : ColorSet.t; w : int }
-
-    type t = { name : int; mutable father : t list; content : t2; }
-
-    val canAdd : int -> t -> bool
-    val compareForUnion : t -> t -> action
-    val mergeAction : t -> t -> t
-    val compare : t -> t -> int
-    val print : ?stdout:out_channel -> t -> unit
-  end
-\end{minted}
-
 This functor is particularly useful if we want to implement the classic algorithm, or the \alldiff\ variant, in both case, in every case, we will only need to respectively implement the \textit{merge} function.
 
 Moreover, we can verify if two states are compatible, \ie\ ready to be merged, through the \textit{compare} function. In fact, a layer of a \mdd\ is a set of states. We know if two state are to be merged if the \textit{compare} method returns $0$.

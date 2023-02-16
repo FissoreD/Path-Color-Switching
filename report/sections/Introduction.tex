@@ -1,18 +1,24 @@
 \section{Problem description}
 
+The goal of this project is to analyze and find a solution to a problem of Spotify\footnote{\url{https://open.spotify.com/}} in collaboration with Mr. Jean-Charles Régin\footnote{\url{http://www.constraint-programming.com/people/regin/}}. The goal of this problem is to generate sequences of musical chords with some known constraints. Due to the company secret, we have not been communicated the application of this problem in the real world, but we can explain explain the subject of the problem in term of a graph problem.
+
+We are given a directed graph $\graphdef$ and a finite set of colors $\C$. Each arc of the graph is associated to a subset of $\C$. Let $\path = \row{\n}{n}$ be a path from starting from $\n_1$ and ending in $\n_n$, an assignement of $\path$ is the selection of a unique color $\c$ for each couple of adjacent nodes $\n_i, \n_{i+1}$ in $\path$ such that $\c$ belongs to the colors of the edge $(\n_i, \n_{i+1})$. The cost (or weight) of a path is the number of \textit{color switches} (or color break) in $\path$, that is the number of times we find two adjacent edges with different colors assignements. A path with minimal cost is a path minimizing the number of colors switches.
+
+The goal of the problem is to compute, for a given starting node $\n_i \in \vset$ and a given ending node $\n_j \in \vset$ the set of paths from $\n_i$ to $\n_j$ with minimal cost.
+
 \section{Definitions and notations}
 
-In this section we fix some notations that will be reused next.\\
-$G = (\vset, \aset)$ is a directed graph where $V = \row{\n}{\vcard}$ is the set of its vertices and $A = \row{\e}{\acard}$ is the set of its arcs. $\vcard$ and $\acard$ represents the cardinality of respectively $\vset$ and $\aset$. An arc $\e_i \in \aset$ is a pair $(\n_i, \n_j) \in \vset^2$ saying that $\e_i$ goes from $\n_i$ to $\n_j$. The arc $(\n_i, \n_j)$ is different from $(\n_j, \n_i)$.\\
-$\colf$ is the coloring function and takes an arc $\e$ as parameters. It returns the set of colors $\C$ associated to $\e$. By abuse of notation we say that $\colf(\e) = \colf(\n_i, \n_j)$ if $\e = (\n_i, \n_j)$.\\
-$\affectf: \aset \rightarrow \mathbb{N} $ is the affectation function, and $\affectf(e) = \c$ if $\c \in \colf(e)$. For simplicity, if $\path = \row{\e}{\len}$ is a list of consecutive arcs whose length is $\len$, then $\colf(\path) = (\colf(\e_1), \dots, \colf(\e_\len)) = \row{\C}{\len}$ and $\affectf(\path) = (\affectf(\e_1), \dots, \affectf(\e_\len))  = \row{\c}{\len}$.\\
+In this section we fix some notations that will be reused in the following sections.\\
+As said in the previous section, $\C$ represents a finite set of colors and $\graphdef$ is a directed graph where $\vset = \row{\n}{\vcard}$ is the set of its vertices and $\aset = \row{\e}{\acard}$ is the set of its arcs; $\vcard$ and $\acard$ represent the cardinality of respectively $\vset$ and $\aset$. An arc $\e_i \in \aset$ is made of an ordered pair $(\n_i, \n_j) \in \vset \times \vset$ of adjacent vertices, therefore, the arc $(\n_i, \n_j)$ is different from the arc $(\n_j, \n_i)$.\\
+$\colf : \aset \rightarrow 2^\C$ is the coloring function mapping each arc to its corresponding subset of colors. By abuse of notation we say that $\colf(\e) = \colf(\n_i, \n_j)$ if $\e = (\n_i, \n_j)$.\\
+$\affectf: \aset \rightarrow \C$ is a function representing an assignement of a color $\c \in \colf(\e)$ for the current arc $\e$. For simplicity, if $\path = \row{\e}{\len}$ is a list of consecutive arcs whose length is $\len$, then $\colf(\path) = (\colf(\e_1), \dots, \colf(\e_\len)) = \row{\C}{\len}$ and $\affectf(\path) = (\affectf(\e_1), \dots, \affectf(\e_\len))  = \row{\c}{\len}$.\\
 % An affectation $\affect = \affectf(P)$ is a list of colors, and can rewritten as $\affect = \row{\colgroup}{l}$ where $\colgroup_1$ is the    
-Given a path $\path$ of length $\len$ and its corresponding affectations $\affect = \affectf(\path)$, the weight of $\affect$ is the number of its color switches. This cost is computed by $\weight(\affectf(\path))$.
+Given a path $\path$ of length $\len$ and its corresponding assignement $\affect = \affectf(\path)$, the cost of $\affect$ is given by $\weight(\affect)$. The definition of the cost function $\weight : \C[] \rightarrow \mathbb{N}$ is depicted in \cref{eq:costf}.
 
 \begin{equation}
-  \label{eq:costf}
-  \weight(\affect) = \sum\limits_{i = 1}^{\k-1} (\c_i \neq \c_{i+1})
+	\label{eq:costf}
+	\weight(\affect) = \sum\limits_{i = 1}^{\k-1} (\text{if } \c_i \neq \c_{i+1} \text{ then } 1 \text{ else } 0)
 \end{equation}
 
-$\weighto(\affect)$ is the minimal weight of a path among all the possible affectation $\affect$ of $\path$, $\affecto$ is an optimal affectation.\\
-Finally, we say that a shortest path from $\n_i$ to $\n_j$ in a graph $\graph$ is a path $\path$ starting in $\n_i$ and ending in $\n_j$ whose optimal affectation $\affecto$ is the minimal among all the other possible paths in $\graph$.
+An assignement $\affecto$ is the minimal, and therefore optimal, if there does not exists a second assignement $\affect'$ such that $\weight(\affect') < \weight(\affecto)$.\\
+Finally, we say that $\patho$ with optimal assignement $\affecto$ is the minimal path in $\graph$, if there does not exist a second path $\path'$ in $\graph$, with same extremities as $\patho$, having an optimal cost smaller than $\affecto$.
