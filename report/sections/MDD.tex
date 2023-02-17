@@ -2,43 +2,58 @@
 
 In this section we will provide a second approach to the problem using the \textit{MDD} data structure in order to compute the shortest paths of \textit{fixed} length for path starting from a given vertex of the graph.
 
-% TO BE CONTINUED
-
 \subsection{Multi-Valued Decision Diagram}
 
-A \textit{Multi-Valued Decision Diagram (MDD)}\cite{regin} is a generalization of a \textit{Binary Decision Diagram}. It is represented as a directed acyclic graph whose nodes and arcs are called respectively states and transitions. \mdd s are often used to solve constraint satisfaction problems where each layer of the \mdd\ represents a variable of the problem and the number of transitions exiting from a state is  by the  by the cardinal of the domain of the considered variable.
+A \textit{Multi-Valued Decision Diagram (MDD)}\cite{regin} is a generalization of a \textit{Binary Decision Diagram}. It is represented as a directed acyclic graph whose nodes and arcs are called respectively states and transitions. \mdd s are often used to solve constraint satisfaction problems where each layer of the \mdd\ represents a variable of the problem and the number of transitions exiting from a state is upper bounded by the cardinal of the domain of the considered variable.
 
-Even if the number of states may grow exponentially wrt the number of states, if well coded the problem can be solved with an \mdd\ whose size grows polynomially wrt its input. A well known example of this, is the representation of the language $\mathcal{L}$ accepting binary words with fixed length $k$ having a $1$ in the $n$-th last position (an example is provided at \cref{sec:mdd_example}).
+Even if the number of states may grow exponentially wrt the number of states, if well encoded the problem can be solved with an \mdd\ whose size grows polynomially wrt its input. A well known example of this, is the representation of the language $\mathcal{L}$ accepting binary words with \textit{fixed} length $k$ having a $1$ in the $n$-th last position (an example is provided at \cref{sec:mdd_example}).
 
 \subsection{The \mdd\ strategy}
 \label{sec:algo_mdd}
-The problem of minimizing the number of color switches in a colored graph can be solved with an \mdd. This strategy is less generic then the matrix method: with the \FW\ matrix approach we find shortest paths starting indistinctly from any node of the graph, however the \mdd\ should have a root and therefore this strategy will find all the shortest paths of fixed number of edges from a chosen node.
+The problem of minimizing the number of color switches in a colored graph can be solved with an \mdd. This strategy is less generic then the matrix method: with the \FW\ matrix approach we compute the shortest paths from all the nodes of the graph, however the \mdd\ should have a root and therefore this strategy will find all the shortest paths of \textit{fixed} number of edges from a chosen node.
 
 \begin{equation}
   \label{eq:record}
-  \text{state} = \{\text{name: String; cost: Int; colors: Set of Colors}\}
+  \stateType{\mddState{\text{String}}{\text{Int}}{\text{Set of Colors}}}
 \end{equation}
 
-The states of the \mdd\ will be represented by the record depicted in \cref{eq:record} and the root will be $\{\text{colors: Set.Full, cost:} 0\}$, where \textit{name} is the name given to the current node in the graph and \textit{Set.Full} is the set containing all the colors returned by $\colf$.
+The states of the \mdd\ will be represented by the record depicted in \cref{eq:record} and the root of the \mdd\ will have $\mddState{\C}{0}{n}$ where $n$ is the name of the starting node of the paths. The $\C$ is the set containing all the colors of the problem.
 
-Let $r$ the node chosen for the root of the \mdd, at the $i^{th}$ iteration a new layer is added to the \mdd, in order to represent the set of shortest paths of length $i$ rooted in $s$.
+Let $\mddRoot$ be the node chosen for the root of the \mdd, at each iteration $i$ a new layer is added to the \mdd. The $i^{th}$ layer represents the set of shortest paths of length $i$ rooted in $\mddRoot$.
 
-The algorithm aiming to build the \mdd\ works as follow: for every state $s$ of the current state and for every successor $n$ of $s$ in $G$, let $\mathcal{S} = \colf(s, n) \cap \text{s.colors}$. Let $\mathcal{L}$ be the new layer to build, if $\mathcal{S}$ is non-empty we add to $\mathcal{L}$ the record
-$$\{\text{name: n; cost: s.cost; colors: } \mathcal{S}\}$$ otherwise the record
-$$\{\text{name : n; cost: s.cost} + 1 \text{; colors:} \colf(\text{s.name, n})\}$$ is added.
+\def\currState{s}
+\def\currStateName{n_i}
+\def\nextState{n_j}
 
-To avoid the exponential growth of the search tree, an \adhoc\ strategy is applied in order to either ignore all dominated states or to merge two compatible states. A state $s_1$ is dominated by $s_2$ if they have same \textit{name} and $s_1.\text{cost} < s_2.\text{cost}$, every dominated state is removed from $\mathcal{L}$. Two states $s_1$ and $s_2$ are compatible (and removed from $\mathcal{L}$) if they share the same \textit{name} and the same \textit{cost}. In this case a third state $s_3 = \{\text{name: } s_1.\text{name; cost: } s_1.\text{cost; colors: } s_1.\text{colors} \cup s_2.\text{colors}\}$ is built and added in $\mathcal{L}$.
+The algorithm which builds the \mdd\ works as follow: for every state $\currState$ with name $\currStateName$ of the current layer and for every successor $\nextState$ of $\currStateName$ in $\graph$, let $\mathcal{S} = \colf(\currStateName, \nextState) \cap \text{\currState.colors}$. Let $\layer$ be the new layer to build, if $\mathcal{S}$ is non-empty we add to $\layer$ the state
 
-The application of this reduction the \mdd\ ensures us to only have can grow of at most $|\vset|$ at each level.
+$$\mddState{\nextState}{\currState\text{.cost}}{\mathcal{S}}$$
 
-Let $n$ be the cardinal of $\vset$ and $l$ be the length of the path to build, This last remark can be exploited to give an information about the complexity of the algorithm which is bounded by $\bigo(l \cdot n^2)$ since at each layer we have at most $n$ states and for each state we should visit at most $n$ successor states. Moreover, given that $l$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2)$.
+otherwise the new state
 
+$$\mddState{\nextState}{\currState\text{.cost} + 1}{\colf(\currStateName, \nextState)}$$
 
-\change{Add proof ?}
+is added\footnote{Note that $\currStateName$ and $\nextState$ are two nodes belonging to the graph $\graph$.}.
+
+\paragraph{\mdd\ reduction} Let $\layer$ be the current layer of an \mdd, to avoid the exponential growth of the search tree, an \adhoc\ strategy is applied in order to either ignore dominated states or to merge two \compatibleState\ states. A state $s_1$ is dominated by $s_2$ if they have same \textit{name} and the cost of $s_1$ is smaller than the cost of $s_2$, the dominated states are removed from $\layer$. Two states $s_1$ and $s_2$ are \compatibleState\ if they share the same \textit{name} and the same \textit{cost}. In this case, $s_1$ and $s_2$ are removed from $\layer$ and a third state $s_3 = \mddState{s_1\text{.name}}{s_1.\text{cost}}{s_1\text{.colors} \cup s_2\text{.colors}}$ is added to $\layer$.\\
+Finally, the application of the domination and the \compatibleState\ laws ensures that the \mdd\ to only have layers with a size upper-bounded by $|\vset|$.
+
+\begin{proof}[\normalfont\textbf{Proof sketch of the algorithm}]
+  For each new-created state, we set its color to the subset of the colors in common with its father. This is equivalent to the \textit{Part A} of the procedure depicted in \cref{sec:path_proc}. We only have to show that the \mdd\ reduction is valid for two states $s_1$ and $s_2$.
+  \begin{description}
+    \item[Case 1:] $s_1$ dominates $s_2$. In this case, the algorithm is going to remove the state $s_2$, it means that, starting from the root $\mddRoot$, we have found two different paths going to the node $s_1\textit{.name}$ (that is the same of $s_2\text{.name}$) but the path going to $s_2$ is more expensive than the path $s_1$. We can therefore ignore $s_2$ from the current layer.
+    \item[Case 2:] $s_1$ and $s_2$ are \compatibleState. In this situation we see that we build a new state $s_3$ having the same \textit{name} and \textit{cost} of $s_1$ (that are the same of $s_2$), but whose colors are the union of the colors of $s_1$ and $s_2$. This union is motivate by the fact that we are saying \change{Continue this proof !}
+  \end{description}
+  We can conclude that the reduction phase is valid. In the end we can all the minimal-cost paths from the root $\mddRoot$ of the \mdd\ by applying the \textit{part B} of the procedure of \cref{sec:path_proc}.
+\end{proof}
+
+\paragraph{Time complexity of this procedure} Let $\vcard$ be the cardinal of $\vset$ and $\len$ be the length of the path to build, thanks to the application of the \mdd\ reduction, we can determined that the overall time complexity is $\bigo(\len \cdot \vcard^2 \cdot | \C |)$ since at each layer we have at most $\vcard$ states and for each state we should visit at most $\vcard$ successors and for each new-created state, we have to perform an intersection between the colors of each state. Given that $\len$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2 \times | \C |)$.
 
 \subsection{The all different constraint}
 
-The all different constraint (\alldiff) is a very used constraint in CP whose goal is to affect each variable to a value of its domain such that there does not exist to variables with same affectation. This constraint is very simple to implement, but sometimes, it can complexify the problem we are dealing with.
+% TODO
+
+The all different constraint (\alldiff) is a very used constraint in constraint programming (CP). The goal of this constraint is to affect each variable to a value of its domain such that there does not exist to variables with same assignment. Even if \alldiff\ is simple to implement sometime it can complexify the problem we are dealing with.
 
 Let's take the alphabet $\mathcal{A} = \{a \dots z\}$ an let $\mathcal{L}$ be the set of words of length $3$. The \mdd\ satisfying this problem will have on $4$ states (including the root), whereas the \mdd\ for the same problem with the \alldiff\ constraint on the letter of the words will have $\mid \mathcal{A} \mid \times (\mid \mathcal{A} \mid - 1) \times (\mid \mathcal{A} \mid - 2) + 1$ states. This exponential growth is due to the inability of reducing the with of the layers since each state of the \mdd\ has the particular role to ``memorize'' the letters stored previously in order to avoid any possible repetition.
 
@@ -50,7 +65,7 @@ In order to solve this newly added constraint in the problem, we have to slightl
 
 \begin{equation}
   \label{eq:record2}
-  \text{state} = \{\text{name: String; cost: Int; colors: Set of Colors; parents: Set of Nodes}\}
+  \stateType{\mddStateDiff{\text{String}}{\text{Int}}{\text{Set of Colors}}{\text{Set of Nodes}}}
 \end{equation}
 
 The first part of the algorithm of \cref{sec:algo_mdd} remains valid: when we add a new layer $\mathcal{L}$, we loop through every state $s$ of the previous layer and for every successor $n$ of $s$ we build the new state. The only new operation to do in this situation, is to update the \textit{parent} field of $n$ which will be $\{\text{s.parent } \cup \text{ s.name}\}$\footnote{Note that the \textit{parents} field of the root is the empty set.}.

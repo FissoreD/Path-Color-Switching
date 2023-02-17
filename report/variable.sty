@@ -60,3 +60,19 @@
 
 \def\mdd{\textit{MDD}}
 \def\alldiff{\textit{allDiff}}
+
+\def\mddRoot{r}
+
+\newcommand{\mddState}[3]{
+  \{\text{name: } #1, \text{ cost: } #2, \text{ colors: } #3 \}
+}
+
+\newcommand{\mddStateDiff}[4]{
+  \{\text{name: } #1, \text{ cost: } #2, \text{ colors: } #3, \text{ parents: } #4 \}
+}
+
+\newcommand{\stateType}[1]{\text{type state } \triangleq #1}
+
+\def\compatibleState{$s$-compatible}
+
+\def\layer{\mathcal{L}}
