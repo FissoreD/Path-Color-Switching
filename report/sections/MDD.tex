@@ -21,19 +21,15 @@ The states of the \mdd\ will be represented by the record depicted in \cref{eq:r
 
 Let $\mddRoot$ be the node chosen for the root of the \mdd, at each iteration $i$ a new layer is added to the \mdd. The $i^{th}$ layer represents the set of shortest paths of length $i$ rooted in $\mddRoot$.
 
-\def\currState{s}
-\def\currStateName{n_i}
-\def\nextState{n_j}
+The algorithm which builds the \mdd\ works as follow: for every state $\currState$ with name $\currStateName$ of the current layer and for every successor $\nextStateName$ of $\currStateName$ in $\graph$, let $\mathcal{S} = \colf(\currStateName, \nextStateName) \cap \currState\text{.colors}$. Let $\layer$ be the new layer to build, if $\mathcal{S}$ is non-empty we add to $\layer$ the state
 
-The algorithm which builds the \mdd\ works as follow: for every state $\currState$ with name $\currStateName$ of the current layer and for every successor $\nextState$ of $\currStateName$ in $\graph$, let $\mathcal{S} = \colf(\currStateName, \nextState) \cap \text{\currState.colors}$. Let $\layer$ be the new layer to build, if $\mathcal{S}$ is non-empty we add to $\layer$ the state
-
-$$\mddState{\nextState}{\currState\text{.cost}}{\mathcal{S}}$$
+$$\nextState = \mddState{\nextStateName}{\currState\text{.cost}}{\mathcal{S}}$$
 
 otherwise the new state
 
-$$\mddState{\nextState}{\currState\text{.cost} + 1}{\colf(\currStateName, \nextState)}$$
+$$\nextState = \mddState{\nextStateName}{\currState\text{.cost} + 1}{\colf(\currStateName, \nextStateName)}$$
 
-is added\footnote{Note that $\currStateName$ and $\nextState$ are two nodes belonging to the graph $\graph$.}.
+is added\footnote{Note that $\currStateName$ and $\nextStateName$ are two nodes belonging to the graph $\graph$.}.
 
 \paragraph{\mdd\ reduction} Let $\layer$ be the current layer of an \mdd, to avoid the exponential growth of the search tree, an \adhoc\ strategy is applied in order to either ignore dominated states or to merge two \compatibleState\ states. A state $s_1$ is dominated by $s_2$ if they have same \textit{name} and the cost of $s_1$ is smaller than the cost of $s_2$, the dominated states are removed from $\layer$. Two states $s_1$ and $s_2$ are \compatibleState\ if they share the same \textit{name} and the same \textit{cost}. In this case, $s_1$ and $s_2$ are removed from $\layer$ and a third state $s_3 = \mddState{s_1\text{.name}}{s_1.\text{cost}}{s_1\text{.colors} \cup s_2\text{.colors}}$ is added to $\layer$.\\
 Finally, the application of the domination and the \compatibleState\ laws ensures that the \mdd\ to only have layers with a size upper-bounded by $|\vset|$.
@@ -47,32 +43,33 @@ Finally, the application of the domination and the \compatibleState\ laws ensure
   We can conclude that the reduction phase is valid. In the end we can all the minimal-cost paths from the root $\mddRoot$ of the \mdd\ by applying the \textit{part B} of the procedure of \cref{sec:path_proc}.
 \end{proof}
 
-\paragraph{Time complexity of this procedure} Let $\vcard$ be the cardinal of $\vset$ and $\len$ be the length of the path to build, thanks to the application of the \mdd\ reduction, we can determined that the overall time complexity is $\bigo(\len \cdot \vcard^2 \cdot | \C |)$ since at each layer we have at most $\vcard$ states and for each state we should visit at most $\vcard$ successors and for each new-created state, we have to perform an intersection between the colors of each state. Given that $\len$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2 \times | \C |)$.
+\paragraph{Time complexity of this procedure} Let $\vcard$ be the cardinal of $\vset$ and $\len$ be the length of the path to build, thanks to the application of the \mdd\ reduction, we can determined that the overall time complexity is $\bigo(\len \cdot \vcard^2 \cdot \mid \C \mid)$ since at each layer we have at most $\vcard$ states and for each state we should visit at most $\vcard$ successors and for each new-created state, we have to perform an intersection between the colors of each state. Given that $\len$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2 \times \mid \C \mid)$.
+
+\subsection{An example run}
 
 \subsection{The all different constraint}
 
 % TODO
 
-The all different constraint (\alldiff) is a very used constraint in constraint programming (CP). The goal of this constraint is to affect each variable to a value of its domain such that there does not exist to variables with same assignment. Even if \alldiff\ is simple to implement sometime it can complexify the problem we are dealing with.
+The all different constraint (\alldiff) is a very used constraint in constraint programming (CP). The goal of this constraint is to assign each considered variable to a value of its domain such that there does not exist two variables with same assignment. Even if \alldiff\ is simple to implement sometime it can considerably increase the time complexity of the problem we are dealing with.
 
-Let's take the alphabet $\mathcal{A} = \{a \dots z\}$ an let $\mathcal{L}$ be the set of words of length $3$. The \mdd\ satisfying this problem will have on $4$ states (including the root), whereas the \mdd\ for the same problem with the \alldiff\ constraint on the letter of the words will have $\mid \mathcal{A} \mid \times (\mid \mathcal{A} \mid - 1) \times (\mid \mathcal{A} \mid - 2) + 1$ states. This exponential growth is due to the inability of reducing the with of the layers since each state of the \mdd\ has the particular role to ``memorize'' the letters stored previously in order to avoid any possible repetition.
+Let's take the alphabet $\mathcal{A} = \{a \dots z\}$ and let $\mathcal{L}$ be the set of words of length $3$. The \mdd\ representing all the words of the problem will have $4$ states (the root plus one state per letter in the word). On the other hand, if we add the \alldiff\ constraint on the letters of the words, the corresponding \mdd\ will have $\mid \mathcal{A} \mid \times (\mid \mathcal{A} \mid - 1) \times (\mid \mathcal{A} \mid - 2) + 1$ states. This exponential growth is justified by the inability to efficiently apply the reduction operation on the layer of the \mdd\: in every layer, each state of the \mdd\ has the particular role to ``memorize'' the letters stored previously in order to avoid any possible repetition.
 
 \subsection{Find simple paths}
 
-In this section we are going to adapt the \mdd\ algorithm provided in \cref{sec:algo_mdd} in order to apply the \alldiff\ constraint on the nodes of the paths. A path now will be valid only if it is ``simple'' that is we can't pass two times or more on any already visited node of the graph.
+A variation of the color-switching problem of the graph is the application of the \alldiff\ constraint on the nodes of the graph. The goal of this section is to adapt the \mdd\ algorithm provided in \cref{sec:algo_mdd} in order to apply the \alldiff\ constraint. A path now will be valid only if it is ``simple'' that is we can't pass two times or more on any already visited node.
 
-In order to solve this newly added constraint in the problem, we have to slightly modify the information stored in the states of the \mdd\ in order to remember from which nodes we are coming from. Therefore, a state will now be represented by the record in \cref{eq:record2}
+The main modification we must apply to the previous algorithm is to slightly modify the information stored in the states of the \mdd: a state must remember the sequence of nodes visited to join it from the root. The new state will be represented by the record in \cref{eq:record2}
 
 \begin{equation}
   \label{eq:record2}
   \stateType{\mddStateDiff{\text{String}}{\text{Int}}{\text{Set of Colors}}{\text{Set of Nodes}}}
 \end{equation}
 
-The first part of the algorithm of \cref{sec:algo_mdd} remains valid: when we add a new layer $\mathcal{L}$, we loop through every state $s$ of the previous layer and for every successor $n$ of $s$ we build the new state. The only new operation to do in this situation, is to update the \textit{parent} field of $n$ which will be $\{\text{s.parent } \cup \text{ s.name}\}$\footnote{Note that the \textit{parents} field of the root is the empty set.}.
+The first part of the algorithm of \cref{sec:algo_mdd} remains valid: when we add a new layer $\mathcal{L}$, we loop through every state $\currState$ of the previous layer and, for every successor $\nextStateName$ of $\currStateName = \currState\text{.name}$, we build the new state $\nextState$. The only new operation to do in this variation, is to update the \textit{parents} field of $\nextState$ which will be set to $\currState\text{.parent } \cup \{\currStateName\}$\footnote{Note that the \textit{parents} field of the root is the empty set.}.
 
-The important modification to focus on, is the \mdd\ reduction. Currently, a state $s_1$ is dominated by a state $s_2$ if they have same \textit{name}, same \textit{parents} (\ie\ $s_1.\text{parents} \Delta s_2.\text{parents} = \varnothing$) and the \textit{cost} of $s_2$ is less than the \textit{cost} of $s_1$, and two states are compatible if the have same \textit{name, parents} and \textit{cost}. This two conditions are useful respectively to remove dominated states and merge compatible states.
+Furthermore, the \mdd\ reduction should be modified to keep into account the \textit{fathers} of each state. Let $s_1$, $s_2$ be two states belonging to the same layer of the \mdd\; $s_1$ dominates $s_2$ if they have same \textit{name}, same \textit{parents}\footnote{The symmetrical difference between the set of parents of $s_1$ and the set of parents of $s_2$ is empty} and the \textit{cost} of $s_1$ is smaller than the \textit{cost} of $s_2$, moreover $s_1$ and $s_2$ are \compatibleState\ if the have same \textit{name, parents} and \textit{cost}.
 
-We can finally see that the introduction of the \alldiff\ constraint causes a complexity blow up from a polynomial to an exponential one. In fact, the size of the layers in the \mdd\ can grow of at most $|\vset|$ at each level.
-
+\paragraph{Time complexity} The \alldiff\ constraint forces to compute paths of length at most $\mid \vset \mid$, since a longer path should contain repetitions of nodes. A path of length $\mid \vset \mid$ passing exactly one time per node is called an \textit{Hamiltonian Path} and compute such a path is a \textit{NP-Complete} problem.
 
 % \subsection{The NValue constraint}
