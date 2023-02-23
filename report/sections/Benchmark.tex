@@ -1,48 +1,50 @@
 \section{A benchmark of the \textit{MDD} implementation}
 
-We have been provided, by Spotify, a graph representing a sample of the problem this company is dealing with. This graph is on the form of a \textit{json} where a list of nodes are associated to colors and a list of pairs $(\e_1, \e_2)$ representing the arcs of the graph.
+We have been provided, by Spotify, a graph representing a sample of the problem this company is dealing with. This graph is on the form of a \textit{json} where a list of nodes are associated to a set of colors and a list of pairs $(\e_1, \e_2)$ representing the arcs of the graph. Note that in this representation, if we give the color to the nodes and not to the edges, the problem doesn't change a lot, since, starting from a node $\e_i \in \vset$, the set colors of the edge $(e_i, e_j)$ such that $e_j$ is a successor of $\e_i$, is the set of colors of the node $e_i$.
 
-The \mdd\ version of the algorithm has been tested on this graph in order to obtain some of statistics, in particular we have tested the number of solutions and the time taken to get them for a given path length. The source of the path taken into account, in order to build the results, is the node $1$. The are no big differences of performance for other sources.
+The \mdd\ version of the algorithm has been tested on this graph in order to obtain some of statistics. In particular we have tested the number of solutions and the time taken for a given path length. The source of the path taken into account, in order to build the results, is the node $1$. The are no big differences of performance for other nodes taken as root of the \mdd.
 
 \input{sections/stats/path_number_plot.tex}
 
-\paragraph{Time and number of solutions}
-In \cref{img:plots_1} and \cref{img:plots_2}, we can see that the number of solutions computed by respectively the classic algorithm or the algorithm with the \alldiff\ constraint plots a curve with an exponential growth. However, we can also remark that the introduction of the \alldiff\ constraint reduce drastically the number of solutions, in particular, for a path with $10$ edges, there are about $9 \times 10^5$ solutions in the classic version against the about $3 \times 10^4$ of the \alldiff\ version. It is quite normal to obtain this difference, since, as said in the previous sections, the \alldiff\ constraints more the domain of the variables.
+\paragraph{Number of solutions}
+In \cref{img:plots_1} and \cref{img:plots_2}, we can see that the number of solutions computed by respectively the classic algorithm and the algorithm with the \alldiff\ constraint give a curve with an exponential growth. However, we can also remark that the introduction of the \alldiff\ constraint reduces drastically the number of solutions, in particular, for a path with $10$ edges, there are about $9 \times 10^5$ solutions in the classic version against the about $3 \times 10^4$ of the \alldiff\ version. This difference is justified, as said in the previous sections, by the fact that the \alldiff\ constraints more the domain of the variables.
 
-Another interesting phenomenon, which confirms the complexities of the algorithms, is that computing the solutions for the classic version takes a number of time which grows linearly with the length of the path. On the other hand, the \alldiff\ version goes enough fast to compute paths of length up to $6$, but, we need about $8$ seconds for path of length $7$, $2$ minutes for paths of length $8$, $25$ minutes for paths of length $9$, therefore with an exponential trend.
+\paragraph{Time comparison} Another statistic we can analyze from the given input is the time taken to find the solutions. The time for the classic version of the algorithm is linear wrt the length of the path. On the other hand, the \alldiff\ version growth is exponential confirming the complexity given in the previous sections.
 
 \begin{table}
   \centering
   \begin{subtable}{.47\linewidth}
     \centering
-    \begin{tabular}{cccc}
-      \textit{length} & min\_cost & \textit{max\_cost} \\
+    \begin{tabular}{ccc}
+      \textit{length} & \textit{min\_cost} & \textit{max\_cost} \\
       \hline
-      $1$             & $0$       & $0$                \\
-      $2$             & $0$       & $0$                \\
-      $3$             & $0$       & $0$                \\
-      $4$             & $0$       & $2$                \\
-      $5$             & $0$       & $3$                \\
-      $50$            & $0$       & $1$                \\
-      $1000$          & $0$       & $1$                \\
+      $1$             & $0$                & $0$                \\
+      $2$             & $0$                & $0$                \\
+      $3$             & $0$                & $0$                \\
+      $4$             & $0$                & $2$                \\
+      $5$             & $0$                & $3$                \\
+      $50$            & $0$                & $1$                \\
+      $1000$          & $0$                & $1$                \\
     \end{tabular}
     \caption{Classic algorithm}
+    \label{tbl:sol_stats1}
   \end{subtable}
   \quad
   \begin{subtable}{.47\linewidth}
     \centering
-    \begin{tabular}{cccc}
-      \textit{length} & min\_cost & \textit{max\_cost} \\
+    \begin{tabular}{ccc}
+      \textit{length} & \textit{min\_cost} & \textit{max\_cost} \\
       \hline
-      $1$             & $0$       & $0$                \\
-      $2$             & $0$       & $0$                \\
-      $3$             & $0$       & $1$                \\
-      $4$             & $0$       & $2$                \\
-      $5$             & $0$       & $3$                \\
-      $6$             & $0$       & $4$                \\
-      $7$             & $0$       & $5$                \\
+      $1$             & $0$                & $0$                \\
+      $2$             & $0$                & $0$                \\
+      $3$             & $0$                & $1$                \\
+      $4$             & $0$                & $2$                \\
+      $5$             & $0$                & $3$                \\
+      $6$             & $0$                & $4$                \\
+      $7$             & $0$                & $5$                \\
     \end{tabular}
     \caption{\alldiff\ version}
+    \label{tbl:sol_stats2}
   \end{subtable}
 
   \caption[short]{Number of solution stats}
@@ -50,7 +52,5 @@ Another interesting phenomenon, which confirms the complexities of the algorithm
 \end{table}
 
 \paragraph{Cost of the paths for a given length}
-
-In this paragraph we want to give some results about the cost of the paths, computed through the \cref{eq:costf}. It is interesting to see that thanks to this property, we can deduce some properties of the graph and the behavior of the of the algorithm in these situations.
-
-Lets look at the results proposed in \cref{tbl:sol_stats}.
+In this paragraph we want to give some results about the cost of the paths calculated through the \cref{eq:costf}. It is interesting to see that thanks to this property, we can deduce some characteristics of the graph and the behavior of the algorithm in these situations. The tables depicted in \cref{tbl:sol_stats} represent the cost of the shortest paths for a given path length. In particular let's take into account \cref{tbl:sol_stats1}, since we are dealing with \mdd s, we can see that there always exists a path of cost zero for a given node at the end of the path. On the other hand, among all the paths through the nodes of the graph, we see that the paths with maximum cost are not very high.
+For the paths with the \alldiff\ constraint, we can deduce that \dots\change{TODO}

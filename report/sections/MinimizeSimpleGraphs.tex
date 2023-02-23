@@ -17,7 +17,7 @@ An implementation of this procedure, containing both part of the algorithm, can 
 
 Here, we want to give a formal proof to show that the stated procedure returns an optimal assignement for any given path. This proof is decomposed in two parts, one for each subpart of the global algorithm. In the first part we show that the list $\mathcal{L}$ minimizes the number of color switches and in second part we show that the cost of the assignement returned by \textit{part B} is the same of the one returned by \textit{part A}.
 
-\begin{proof}[Proof of \textit{part A}]
+\begin{proof}[\normalfont\textbf{Proof of \textit{part A}}]
 	\def\solPartOne{\affect}
 	Let $\solPartOne = \row{\C}{\len}$ be the solution returned by \textit{part A}, we prove, by induction on the length of the path, that $\solPartOne$ minimizes the number of color switches. \\
 	By definition of the weight function, if the length $\len$ of the path is $1$, then $\path = (e_1)$ and we have $\weight(\solPartOne) = 0$ which is the optimal cost: any color chosen from $\colf(\e_1)$ will cause no color switch.\\
@@ -38,7 +38,7 @@ Here, we want to give a formal proof to show that the stated procedure returns a
 	We can conclude that the number of color switches returned by the first part of the procedure is minimal, therefore, optimal.
 \end{proof}
 
-\begin{proof}[Proof of \textit{part B}]
+\begin{proof}[\normalfont\textbf{Proof of \textit{part B}}]
 	In the previous proof, we have shown that the number of color switches returned by \textit{part A} is minimal. We only have to prove that the second part of the procedure returns an assignement with the same number of color switches.\\
 	Let $\mathcal{L} = \row{\C}{\len}$ be the subset affectation returned by \textit{part A}. By construction of the \textit{part A}, for each set $\C_i$ of $\mathcal{L}$, either $\C_{i+1}$ is a subset of $\C_i$ or $\C_i \cap \C_{i+1} = \varnothing$.
 	Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for the arc $\e_\len$. Then for the arc $\e_{\len-1}$, we choose the same color of $\e_\len$ if possible and repeat the same procedure until reaching the first arc of the path.\\

@@ -35,21 +35,20 @@ is added\footnote{Note that $\currStateName$ and $\nextStateName$ are two nodes 
 Finally, the application of the domination and the \compatibleState\ laws ensures that the \mdd\ to only have layers with a size upper-bounded by $|\vset|$.
 
 \begin{proof}[\normalfont\textbf{Proof sketch of the algorithm}]
-  For each new-created state, we set its color to the subset of the colors in common with its father. This is equivalent to the \textit{Part A} of the procedure depicted in \cref{sec:path_proc}. We only have to show that the \mdd\ reduction is valid for two states $s_1$ and $s_2$.
+  The main idea of this algorithm is to use \mdd s to find shortest paths. Each time we add a new state, we set its color to the subset of the colors in common with its father. This is equivalent to the \textit{Part A} of the procedure depicted in \cref{sec:path_proc}. Given two states $s_1$ and $s_2$, we have to show that the \mdd\ reduction is valid.
   \begin{description}
-    \item[Case 1:] $s_1$ dominates $s_2$. In this case, the algorithm is going to remove the state $s_2$, it means that, starting from the root $\mddRoot$, we have found two different paths going to the node $s_1\textit{.name}$ (that is the same of $s_2\text{.name}$) but the path going to $s_2$ is more expensive than the path $s_1$. We can therefore ignore $s_2$ from the current layer.
-    \item[Case 2:] $s_1$ and $s_2$ are \compatibleState. In this situation we see that we build a new state $s_3$ having the same \textit{name} and \textit{cost} of $s_1$ (that are the same of $s_2$), but whose colors are the union of the colors of $s_1$ and $s_2$. This union is motivate by the fact that we are saying \change{Continue this proof !}
+    \item[Case 1:] $s_1$ dominates $s_2$. In this case, the algorithm will remove the state $s_2$, it means that, starting from the root $\mddRoot$, we have found two different paths going to the node $s_1\textit{.name}$ (that is the same of $s_2\text{.name}$) but the path going to $s_2$ is has an higher cost than the path going to $s_1$. We can therefore ignore $s_2$ from the current layer.
+    \item[Case 2:] $s_1$ and $s_2$ are \compatibleState. Let $\len$ the length of the layer of $s_1$ and $s_2$, by definition $\len$ is also the length of the path from the root to the states $s_1$ and $s_2$. In this situation we build a new state $s_3$ having the same \textit{name} $n_\len$ and \textit{cost} of $s_1$ (that are the same of $s_2$), but whose colors are the union of the colors of $s_1$ and $s_2$. Let $n_{\len+1}$ be a successor of $n_\len$. The path of smallest cost going to $n_{\len+1}$ can either pass trough $s_1$ and/or $s_2$, it depends on $s_1\text{.colors} \cap \colf(n_\len, n_{\len+1})$ and $s_2\text{.colors} \cap \colf(n_\len, n_{\len+1})$, but in every case the best choice is exactly equivalent to $(s_1\text{.colors} \cup s_2\text{.colors}) \cap \colf(n_\len, n_{\len+1})$ where the union of the colors of $s_1$ and $s_2$ is the set of colors in $s_3$.
   \end{description}
-  We can conclude that the reduction phase is valid. In the end we can all the minimal-cost paths from the root $\mddRoot$ of the \mdd\ by applying the \textit{part B} of the procedure of \cref{sec:path_proc}.
+  We can conclude that the reduction phase is valid. In the end we can find all the minimal-cost paths from the root $\mddRoot$ of the \mdd\ by applying the \textit{part B} of the procedure of \cref{sec:path_proc}.
 \end{proof}
 
 \paragraph{Time complexity of this procedure} Let $\vcard$ be the cardinal of $\vset$ and $\len$ be the length of the path to build, thanks to the application of the \mdd\ reduction, we can determined that the overall time complexity is $\bigo(\len \cdot \vcard^2 \cdot \mid \C \mid)$ since at each layer we have at most $\vcard$ states and for each state we should visit at most $\vcard$ successors and for each new-created state, we have to perform an intersection between the colors of each state. Given that $\len$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2 \times \mid \C \mid)$.
 
 \subsection{An example run}
+\change{TODO}
 
 \subsection{The all different constraint}
-
-% TODO
 
 The all different constraint (\alldiff) is a very used constraint in constraint programming (CP). The goal of this constraint is to assign each considered variable to a value of its domain such that there does not exist two variables with same assignment. Even if \alldiff\ is simple to implement sometime it can considerably increase the time complexity of the problem we are dealing with.
 

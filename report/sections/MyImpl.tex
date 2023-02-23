@@ -2,7 +2,7 @@
 
 The previous algorithms have been implemented in \textit{OCaml} and here we want to provide a sketch of the main data structures used to fulfill the requirements.
 
-\paragraph{MySet.} A useful data structure extending the classical \textit{Set} module of \textit{OCaml}. In particular, when we start to build a path, in order to maintain the \textit{standard} update function over colors for each couple on adjacent nodes of a path, we need to represent the ``\textit{Full}'' set (\ie\ the complement of $\varnothing$). \textit{MySet} adds this specifications. The classical operation over sets have been overrode if needed, so that, for example, the intersection of a set $\mathcal{S}$ and the \textit{Full} set gives $\mathcal{S}$ and their union gives \textit{Full}. The main advantage of sets in \textit{OCaml} is that they are an immutable data structure. In fact, every binary operation over a set does not modify the current set, but it builds rapidly a fresh copy with the wanted content. This is very useful in our \mdd\ implementation, for example, since the \textit{parents} filed of each child of a state should contain the intersection of the colors of the father and the colors of the current arc.\change{TODO: say that Full is the full set of colors}
+\paragraph{MySet.} A useful data structure extending the classical \textit{Set} module of \textit{OCaml}. In particular, when we start to build a path, in order to maintain the \textit{standard} update function over colors for each couple on adjacent nodes of a path, we need to represent the ``\textit{Full}'' set. The classical operation over sets have been overrode if needed, so that, for example, the intersection of a set $\mathcal{S}$ and the \textit{Full} set gives $\mathcal{S}$ and their union gives \textit{Full}. The main advantage of sets in \textit{OCaml} is that they are an immutable data structure. In fact, every binary operation over a set does not modify the current set, but it builds rapidly a fresh copy with the wanted content. This is useful in our \mdd\ implementation, for example, since the \textit{colors} of each state should contain the intersection of the colors of the father and the colors of the current arc. We use the \textit{Full} set to represent the set $\C$ of all the colors inside the graph.
 
 \paragraph{The coloring function $\colf$.} Working with the implementation of the proposed algorithms, we remarked that a clear type for the color function would have improved a lot the clarity of the code.
 
@@ -25,33 +25,32 @@ The previous algorithms have been implemented in \textit{OCaml} and here we want
     if is_sym then Hashtbl.replace tbl (v2, v1) col
 \end{minted}
 
-The \textit{is\_sym} field is used internally to know if the graph is not directed: in this case every edge $\langle a, b \rangle$ of the undirected graph is transformed to a couple of directed arcs $(a,b)$ and $(b,a)$. The \textit{tbl} field is an hash-table where to a couple of nodes we associate the set of colors of the arc they represent. The \textit{get\_col} which is a function taking a couple of node which gives back either the set of colors of the arc if the arc between the two nodes exists otherwise the empty set. Finally, the \textit{color\_function} can be instantiated through the \textit{init} function and the \textit{add} function allows to add new arcs of the graph to it.
+The \textit{is\_sym} field is used internally to know if the graph is undirected: in this case every edge $(a, b)$ of the undirected graph is transformed to a couple of directed arcs $(a,b)$ and $(b,a)$. The \textit{tbl} field is an hash-table where to each couple of nodes we associate the set of colors of the arc they represent. The \textit{get\_col} is a function taking a couple of node which gives back either the set of colors of the arc if the arc between the two nodes exists otherwise the empty set. Finally, the \textit{color\_function} can be instantiated through the \textit{init} function and the \textit{add} function allows to add new arcs of the graph to it.
 
-In fact, the \textit{color\_function} record can be seen as an classical \textit{Java} object in the light \textit{OCaml} functional style.
+\paragraph{A state of a \mdd.} A state of a \mdd\ is represented by the following module-type:
 
-\paragraph{A state of a \mdd.} The states of a MDD are implemented with a functor\cite{ocamlfunctor} parametrized by a module implementing the \textit{merge} operation, since we have to know if, having two states, we have to merge them, to keep the first or the second state.
+\begin{minted}{ocaml}
+  module type State = sig
+    type t2 = { color : ColorSet.t; w : int }
+    type t = { name : int; mutable father : t list; content : t2 }
 
-This functor is particularly useful if we want to implement the classic algorithm, or the \alldiff\ variant, in both case, in every case, we will only need to respectively implement the \textit{merge} function.
+    val compareForUnion : t -> t -> action
+    val mergeAction : t -> t -> t
+  end
+\end{minted}
 
-Moreover, we can verify if two states are compatible, \ie\ ready to be merged, through the \textit{compare} function. In fact, a layer of a \mdd\ is a set of states. We know if two state are to be merged if the \textit{compare} method returns $0$.
+They have a type \texttt{t} (following the Ocaml conventions) containing the name of the current node, the list of father\footnote{The list is empty if we are implementing the classic algorithm without the \alldiff\ variant} and a content which is made of a set of colors and the cost of the current state \texttt{w}.
 
-\paragraph{The \mdd\ functor.} The last but not the least, important data structure is the \mdd\ functor, the heart of the \mdd\ procedure implementation. This functor is parametrized by a \textit{State} of a \mdd.
+\paragraph{The \mdd\ functor.} The final important data structure is the \mdd\ functor. This functor takes as parameter the implementation of a \textit{State} of a \mdd.
 
 \begin{minted}{ocaml}
   module Make : functor (T : State) ->
     sig
       ...
-      type mdd_layers = MySet.Make(T).t ref
-      val add : S.t -> S.elt -> S.t
-      val add_succ : int list -> (int -> T.t2) -> T.t -> S.t
-      val update_layers :
-        (int -> int list) ->
-        ColorFunction.colorFunction -> mdd_layers -> unit
+      val initiate : ColorFunction.colorFunction -> int -> graph
+      val make_iteration : graph -> unit
+      val run : graph -> int -> unit
     end
 \end{minted}
 
-This functor signature need an implementation of some useful function, such as the \textit{update\_function}, the \textit{initiate}, \textit{make\_iteration}, the \textit{count\_paths} and the \textit{run} functions.
-
-A \textit{mdd\_tree} is a recursive data structure made of a state, the root of the current sub \mdd, a hash-table of children a list of fathers of the current state. Thanks to this \dots\change{Rename mdd\_tree to decorated state and add mdd\_layer}
-
-\paragraph{Others}\change{Matrix mathod, adjacency matrix}
+This functor signature implements some useful functions such as the \textit{initiate} function, the \textit{make\_iteration} function which add the new layer to the \mdd, the \textit{run} function which finds all the paths of a given length.
