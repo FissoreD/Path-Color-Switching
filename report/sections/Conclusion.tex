@@ -1,8 +1,7 @@
 \section{Conclusion}
 
+In this report we have given a solution to the problem provided by \textit{Spotify}. We are able to compute in optimal time an affectation minimizing the number of color switches of a given path and we can find shortest paths on generic graph. The \alldiff\ constraint adds an exponential blow up to the global time complexity, but this is reducible to the computation of \textit{Hamiltonian Paths}, a problem known to be computationally hard to solve. All the algorithms provided have been proved. We can see that the \mdd\ data structure is an optimal solution to have a compact representation of the problem we are dealing with.
+
 \subsection{Go further}
-The \textit{NValue} constraint...
 
-Coq implementation of fst algo
-
-Make example of mdd algorithm run
+In this report we have not treated some additional constraints we can add to the problem, for example we can replace the \alldiff\ whe the \textit{N-Value} constraint, that is, we are allowed to pass through each node at most $x$ times, where $x$ is the value of the constraint. We can add a constraint to each node to be visited at most $x$ times\dots Another perspective could be to generate some non-trivial problem instances to test the algorithm and see more deeply its behavior on different entries.
