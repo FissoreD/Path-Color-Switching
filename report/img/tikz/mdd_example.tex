@@ -1,0 +1,40 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    [
+      level 1/.style = {sibling distance = 8cm},
+      level 2/.style = {sibling distance = 4cm},
+      level 3/.style = {sibling distance = 2cm},
+      level 4/.style = {sibling distance = 1cm},
+    ]
+
+    \node (root) at (0,0) {$\mddState{v_1}{0}{\colA, \colB, \colC}$}
+    child {node (A) {$\mddState{v_2}{0}{\colB, \colC}$}
+        child {
+            node {$\mddState{v_3}{1}{\colA}$}
+            child {node {$\mddState{v_4}{1}{\colA}$}
+                edge from parent node [left] {$v_4$}}
+            edge from parent node [left] {$v_3$}}
+        edge from parent node [left] {$v_2$}
+      }
+    child {node {$\mddState{v_5}{0}{\colA, \colB}$}
+        child {
+            node (B) {$\mddState{v_6}{0}{\colA, \colC}$}
+            child {node {$\mddState{v_7}{0}{\colC}$}
+                child {node {$\mddState{v_3}{1}{\colA}$}
+                    child {node {$\mddState{v_4}{1}{\colA}$}
+                        edge from parent node [left] {$v_4$}}
+                    edge from parent node [left] {$v_3$}}
+                edge from parent node [left] {$v_7$}}
+            edge from parent node [left] {$v_6$}}
+        edge from parent node [right] {$v_5$}
+      };
+
+    \draw (A) -- node[below,black,opacity=1] {$v_6$} (B);
+
+
+  \end{tikzpicture}
+
+  \caption{\mdd\ for \cref{fig:col-graph}}
+  \label{fig:mdd-example}
+\end{figure}

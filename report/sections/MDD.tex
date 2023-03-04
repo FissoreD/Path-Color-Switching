@@ -46,7 +46,15 @@ Finally, the application of the domination and the \compatibleState\ laws ensure
 \paragraph{Time complexity of this procedure} Let $\vcard$ be the cardinal of $\vset$ and $\len$ be the length of the path to build, thanks to the application of the \mdd\ reduction, we can determined that the overall time complexity is $\bigo(\len \cdot \vcard^2 \cdot \mid \C \mid)$ since at each layer we have at most $\vcard$ states and for each state we should visit at most $\vcard$ successors and for each new-created state, we have to perform an intersection between the colors of each state. Given that $\len$ is a fixed parameter, the complexity can be simplified to $\bigo(n^2 \times \mid \C \mid)$.
 
 \subsection{An example run}
-\change{TODO}
+\input{img/tikz/graph_example.tex}
+\input{img/tikz/mdd_example.tex}
+
+To better understand the idea behind this algorithm, we provide an example. Let's take the \cref{fig:col-graph}.
+In order to simplify this representation, we give the color to the nodes and not to the edges. The colors of an edge $(\n_i, \n_j)$ is given by the set of colors associated to the node $\n_i$, therefore, in the example, the colors associated to the edge $(\n_1, \n_2)$ are \textit{\colA, \colB} and \textit{\colC}.
+
+Let's now compute the shortest paths of length $5$ from the node $v_1$. We start to initiate the \mdd\ with root $\mddRoot = \mddState{v_1}{0}{\textit{\colA, \colB, \colC}}$. We have now to build the first layer and the two neighbors of $v_1$ are $v_2$ and $v_5$. We build the two new states associated to these two nodes and will get respectively $\mddState{v_2}{0}{\textit{\colB, \colC}}$ and $\mddState{v_5}{0}{\textit{\colA, \colB}}$, note that in both states the cost is zero since the intersection with the colors of the father is not empty. We now build the second layer and note that the $v_2$ and $v_5$ have a common neighbor which is $v_6$. This will build two states that will be analyzed for reduction. The two new states are $\mddState{v_6}{0}{\textit{\colA}}$ and $\mddState{v_6}{0}{\textit{\colC}}$. Since both states have same cost and name, they are \compatibleState\ and can be merged to form the new state $\mddState{v_6}{0}{\textit{\colA, \colC}}$. We have now another states to add since $v_2$ has also $v_3$ has a neighbor. In particular this build a new state with cost one since the intersection of the colors of the states of $v_2$ and the colors of $v_3$ is empty. We can continue this way until we end un with the \mdd\ depicted in \cref{fig:mdd-example}.
+
+From the \mdd\ we can see all the paths of length smaller or equal to $5$ and get the cost of them. For example we can see that there exists a path of cost $0$ from $v_1$ to $v_7$ with length $3$, there exists a path of cost $1$ from $v_1$ to $v_4$ of length $3$ and the unique path of length $5$ from $v_1$ to $v_4$ has cost $1$.
 
 \subsection{The all different constraint}
 

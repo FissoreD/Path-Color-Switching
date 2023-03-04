@@ -1,0 +1,47 @@
+\tikzset{
+  node split radius/.initial=1,
+  node split color 1/.initial=\colA,
+  node split color 2/.initial=\colB,
+  node split color 3/.initial=\colC,
+  node split half/.style={node split={#1,#1+180}},
+  node split/.style args={#1,#2}{
+      path picture={
+          \tikzset{
+            x=($(path picture bounding box.east)-(path picture bounding box.center)$),
+            y=($(path picture bounding box.north)-(path picture bounding box.center)$),
+            radius=\pgfkeysvalueof{/tikz/node split radius}}
+          \foreach \ang[count=\iAng, remember=\ang as \prevAng (initially #1)] in {#2,360+#1}
+          \fill[line join=round, draw, fill=\pgfkeysvalueof{/tikz/node split color \iAng}]
+          (path picture bounding box.center)
+          --++(\prevAng:\pgfkeysvalueof{/tikz/node split radius})
+          arc[start angle=\prevAng, end angle=\ang] --cycle;
+        }
+    }
+}
+
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}[c/.style={shape=circle, draw, minimum size=0.4cm}]
+
+      \node[c, label=above:$\n_1$, node split={120,240,360}] (A) at (0, 2) {};
+      \node[c, label=above:$\n_2$, node split half=90, node split color 1=\colB, node split color 2=\colC] (B) at (2, 2) {};
+      \node[c, label=above:$\n_3$, fill=\colA] (C) at (4, 2) {};
+      \node[c, label=above:$\n_4$, fill=\colA] (G) at (6, 2) {};
+
+      \node[c, label=below:$\n_5$, node split half=90] (D) at (0, 0) {};
+      \node[c, label=below:$\n_6$, node split half=90, node split color 2=\colC] (E) at (2, 0) {};
+      \node[c, label=below:$\n_7$, fill=\colC] (F) at (4, 0) {};
+
+      \draw[thick, -to] (A) -- (B);
+      \draw[thick, -to] (B) -- (C);
+      \draw[thick, -to] (A) -- (D);
+      \draw[thick, -to] (D) -- (E);
+      \draw[thick, -to] (E) -- (F);
+      \draw[thick, -to] (F) -- (C);
+      \draw[thick, -to] (B) -- (E);
+      \draw[thick, -to] (C) -- (G);
+    \end{tikzpicture}
+  \end{center}
+  \caption{A colored graph example}
+  \label{fig:col-graph}
+\end{figure}
