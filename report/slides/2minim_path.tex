@@ -14,25 +14,40 @@
 
 \end{frame}
 
+\def\partOne{
+  \begin{itemize}
+    \item $\affectf(\e_1) = \colf(\e_1)$
+    \item $\affectf(\e_i) = \colf(\e_i) \cap \affectf(\e_{i-1}) \texttt{ if not empty else } \colf(\e_i)$
+  \end{itemize}
+}
+
+\def\partTwo{
+  \begin{itemize}
+    \item $\affectf(\e_1) = \colf(\e_1)$
+    \item $\affectf(\e_i) = \colf(\e_i) \cap \affectf(\e_{i-1}) \texttt{ if not empty else } \colf(\e_i)$
+  \end{itemize}
+}
+
+\def\partTwo{
+  \begin{itemize}
+    \item $\affect(\e_\k) = \texttt{a rnd elt from } \affectf(\e_\k)$
+    \item $\affect(\e_i) = \affect(\e_{i + 1}) \texttt{ if it is in } \affectf(\e_i) \texttt{ else } \affectf(\e_i)\texttt{.peek()}$
+  \end{itemize}
+}
+
 \begin{frame}
   \frametitle{Algorithm}
 
   Let $\path=\row{\e}{\k}$ a path\\
   Let $\affectf: \aset \rightarrow 2^\C$ a function such that:
 
-  \begin{itemize}
-    \item $\affectf(\e_1) = \colf(\e_1)$
-    \item $\affectf(\e_i) = \colf(\e_i) \cap \affectf(\e_{i-1}) \texttt{ if not empty else } \colf(\e_i)$\footnote{$\forall i > 1$}
-  \end{itemize}
+  \partOne
 
   \mysep{}
 
   \uncover<2->{
     $\affect: \aset \rightarrow \C$ the function minimizing $\weight(\path)$ such that:
-    \begin{itemize}
-      \item $\affect(\e_\k) = \texttt{ a rnd elt from } \affectf(\e_\k)$
-      \item $\affect(\e_i) = \affect(\e_i + 1) \texttt{ if } \affect(\e_i + 1) \in \affectf(\e_i) \texttt{ else rnd from } \affectf(\e_i)$
-    \end{itemize}
+    \partTwo
   }
 \end{frame}
 
@@ -44,18 +59,29 @@
       \centering
       \only<1-3>{
         \buildPathGraph{{\eAcols}/2/a/b}{{\eBcols}/3/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
-      }
+      }%
       \only<4-5>{
         \buildPathGraph{{\eAcols}/2/a/b}{{\colB}/1/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
-      }
+      }%
       \only<6-11>{
         \buildPathGraph{{\eAcols}/2/a/b}{{\colB}/1/b/c}{{\colB}/1/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+      }%
+      \only<12-13>{
+        \buildPathGraph{{\eAcols}/2/a/b}{{\colB}/1/b/c}{{\colB}/1/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\colD}/1/f/g}
+      }%
+      \only<14-16>{
+        \buildPathGraph{{\eAcols}/2/a/b}{{\colB}/1/b/c}{{\colB}/1/c/d}{{\eDcols}/1/d/e}{{\colD}/1/e/f}{{\colD}/1/f/g}
+      }%
+      \only<17->{
+        \buildPathGraph{{\colB}/1/a/b}{{\colB}/1/b/c}{{\colB}/1/c/d}{{\eDcols}/1/d/e}{{\colD}/1/e/f}{{\colD}/1/f/g}
       }
     }
     \caption{
       \only<1>{A path $\path$}%
       \only<2-10>{Computing $\affectf(\path)$}%
-      \only<11>{Computing $\affect(\path)$}}
+      \only<11-16>{Computing $\affect(\path)$}%
+      \only<17->{Minimum cost assignation}%
+    }
   \end{figure}
 
   \only<1>{Start to compute $\affectf(\path)$}
@@ -66,18 +92,56 @@
   \only<8>{$\affectf(\e_5) = \colf(\e_5) \texttt{ since } \colf(\e_5) \cap \affectf(\e_4) = \varnothing$}
   \only<9>{$\affectf(\e_6) = \colf(\e_6) \cap \affectf(\e_5) \texttt{ since not empty}$}
   \only<10>{Start to compute $\affect(\path)$}
-  \only<11>{$\affect(\e_6) = \colD$}
-  \only<12-13>{$\affect(\e_5) = \colD \texttt{ since } \colD \in \affectf(\e_5)$}
-  \only<14>{Nothing to do for $\e_4, \e_3$ and $\e_2$ since they only have $1$ color}
-  \only<15>{$\affect(\e_1) = \colB \texttt{ since } \colB \in \affectf(\e_1)$}
-
-
+  \only<11-12>{$\affect(\e_6) = \colD$}
+  \only<13-14>{$\affect(\e_5) = \colD \texttt{ since } \colD \in \affectf(\e_5)$}
+  \only<15>{Nothing to do for $\e_4, \e_3$ and $\e_2$ since they only have $1$ color}
+  \only<16>{$\affect(\e_1) = \affect(\e_2) \texttt{ since } \colB \in \affectf(\e_1)$}
+  \only<17>{End}
+  \only<18>{$\weight(\path) = 2$}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{Proof}
+  \frametitle{Proof sketch}
 
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Time Complexity}
+
+  \only<1-2>{
+    The algo is made by two sub-procedures:
+    \mysep{}
+  }
+
+  \only<1>{
+    Recall the first part:
+    \partOne
+  }
+  \only<2>{
+    Recall the second part:
+    \partTwo
+  }
+
+  \uncover<1-2>{
+    \mysep{}
+  }
+
+  Complexity:
+  \begin{itemize}[<+->]
+    \item First part : $\bigo(\k * |\C|)$
+    \item Second part : $\bigo(\k * \log |\C|)$
+  \end{itemize}
+
+  \only<3->{
+    \mysep{}
+    \centering
+    Global complexity: \alert{$\bigo(\k * |\C|)$}.
+
+    This complexity is optimal wrt the entry of the problem.
+  }
 
 
 \end{frame}
