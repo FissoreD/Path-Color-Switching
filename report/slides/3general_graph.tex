@@ -1,41 +1,38 @@
 \begin{frame}
   \frametitle{Minimize \colorSwitch\ in Graph}
 
+  \textit{Strategy:} Use the \mdd\ data structure
+
+  \mysep{}
+
+  A state of a \mdd\ is:
+  $$\mddState{\text{String}}{\text{Int}}{\text{Set of Colors}}$$
+
+  Algo:
   \begin{itemize}
-    \item Example
-  \end{itemize}
-  
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Algorithm with Matrixes}
-
-  \begin{itemize}
-    \item Complexity
-  \end{itemize}
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Algo with \mdd}
-
-  \begin{itemize}
-    \item Complexity
+    \item The root = $\mddState{\source}{0}{\C}$
+    \item Construction of the layer $\layer_{i+1}$: $\forall \texttt{state} \in \layer_i, \n \in \texttt{succ(state.name)}, \layer_{i+1}.add(\mddState{\n}{state.cost + (\colf(\texttt{state.name}, \n) \cap \texttt{state.colors}) = \varnothing ? 1 : 0}{\colf(\texttt{state.name}, \n) \cap \texttt{state.colors} = \varnothing} ? \colf(\texttt{state.name}, \n) : \colf(\texttt{state.name}, \n) \cap \texttt{state.colors})$
   \end{itemize}
 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Proof}
+  \frametitle{\mdd\ reduction}
 
-  
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof and Complexity}
+
+
 
 \end{frame}
 
 \begin{frame}
   \frametitle{The \alldiff\ variant}
 
-  
+
 
 \end{frame}

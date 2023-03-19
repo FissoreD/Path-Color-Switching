@@ -96,38 +96,60 @@
   \only<13-14>{$\affect(\e_5) = \colD \texttt{ since } \colD \in \affectf(\e_5)$}
   \only<15>{Nothing to do for $\e_4, \e_3$ and $\e_2$ since they only have $1$ color}
   \only<16>{$\affect(\e_1) = \affect(\e_2) \texttt{ since } \colB \in \affectf(\e_1)$}
-  \only<17>{End}
-  \only<18>{$\weight(\path) = 2$}
+  % \only<17>{End}
+  \only<18>{\centering $\weight(\path) = 2$}
 \end{frame}
 
+\def\originGraphPath{
+  \begin{figure}[!htb]
+    \resizebox{0.9\textwidth}{!}{%
+      \centering
+      \buildPathGraph{{\eAcols}/2/a/b}{{\eBcols}/3/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+    }
+  \end{figure}
+}
 
 \begin{frame}
   \frametitle{Proof sketch}
 
+  \begin{proof}[Algo Part 1.]
+    Induction proof on the length $\k$ of $\path$.\\
+    \only<2>{
+      If $k = 1$ then $\weight(\path) = 0$ which is optimal.
+    }
+    \only<3-5>{
+      We suppose the algo to be true for an arbitrary length $\k$.\\
+    }
+    \only<3>{
+      If $\colf(\e_\k) \cap \colf(\e_{\k + 1}) = \varnothing$
+      \originGraphPath{}
+    }
+    \only<4>{
+      If $\affectf(\e_\k) \cap \colf(\e_{\k + 1}) \neq \varnothing$
+      \originGraphPath{}
+    }
+    \only<5>{
+      If $\affectf(\e_\k) \cap \colf(\e_{\k + 1}) = \varnothing$ and $\colf(\e_\k) \cap \colf(\e_{\k + 1}) \neq \varnothing$
+      \originGraphPath{}
+    }
+    \uncover<6>{Done}
+  \end{proof}
 
+  \uncover<6>{
+    \begin{proof}[Algo Part 2.]
+      The number of \colorSwitch\ inside $\affectf$ is the same as the number of \colorSwitch\ inside $\affect$.
+    \end{proof}
+  }
 
 \end{frame}
 
 \begin{frame}
   \frametitle{Time Complexity}
 
-  \only<1-2>{
-    The algo is made by two sub-procedures:
-    \mysep{}
-  }
-
-  \only<1>{
-    Recall the first part:
-    \partOne
-  }
-  \only<2>{
-    Recall the second part:
-    \partTwo
-  }
-
-  \uncover<1-2>{
-    \mysep{}
-  }
+  \only<1-2>{The algo is made by two sub-procedures:\mysep{}}
+  \only<1>{Recall the first part:\partOne}
+  \only<2>{Recall the second part:\partTwo}
+  \uncover<1-2>{\mysep{}}
 
   Complexity:
   \begin{itemize}[<+->]
