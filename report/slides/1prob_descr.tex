@@ -1,0 +1,49 @@
+\let\originalepigraph\epigraph
+\renewcommand\epigraph[2]%
+{\setlength{\epigraphwidth}{0.7\textwidth}\originalepigraph{#1}{#2}}
+
+\begin{frame}
+  \frametitle{Problem Description}
+
+  \epigraph{
+    We want to generate sequences of musical ``chords'' with some known constraints as well as control on the complexity of the sequence.
+  }{Spotify}
+
+  \uncover<2->{
+    \begin{description}
+      \item[Input] An oriented graph whose arcs are colored with a set of colors, two nodes of the graphs $\source$ and $\target$.
+      \item[Output] A path $\path$ going from $s$ to $t$ and which minimizes the number of color switch.
+    \end{description}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definitions \& notations}
+
+  \begin{description}[leftmargin=1.5cm]
+    \uncover<1->{
+    \item[\textnormal{\textit{Color switch (\colorSwitch)}}:] given two adjacent arcs $\e_1$ and $\e_2$ colored respectively with $\c_1$ and $\c_2$, we have a color \colorSwitch\ if $\c_1 \neq \c_2$.}
+      \uncover<2->{
+    \item[$\graph = (\vset,\aset)$:] A directed graph where $\vset$ is the set of its nodes and $\aset$ is the set of its arcs.
+    \item[$\C$:] A finite set of colors.
+    \item[$\colf$:] The coloring function defined as $\colf : \aset \rightarrow 2^\C$.
+    \item[$\path=\row{\n}{\k}$:] A path going from $\n_1$ to $\n_\k$.
+      }
+      \uncover<3->{
+    \item[$\weight(\path)$:] The cost of the path $\path$ which is given by the sum of its \colorSwitch.
+      }
+  \end{description}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem decomposition}
+
+  The problem can decomposed in small parts:
+
+  \begin{itemize}
+    \item Minimize \colorSwitch\ on paths;
+    \item Minimize \colorSwitch\ on graphs.
+  \end{itemize}
+
+\end{frame}

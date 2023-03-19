@@ -1,0 +1,83 @@
+\begin{frame}
+  \frametitle{Minimize \colorSwitch\ on Paths}
+
+  \begin{figure}[!htb]
+    \resizebox{0.9\textwidth}{!}{%
+      \centering
+      \buildPathGraph{{\eAcols}/2/a/b}{{\eBcols}/3/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+    }
+    \caption{A path $\path$}
+  \end{figure}
+
+
+  What is the color assignation minimizing $\weight(\path)$?
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Algorithm}
+
+  Let $\path=\row{\e}{\k}$ a path\\
+  Let $\affectf: \aset \rightarrow 2^\C$ a function such that:
+
+  \begin{itemize}
+    \item $\affectf(\e_1) = \colf(\e_1)$
+    \item $\affectf(\e_i) = \colf(\e_i) \cap \affectf(\e_{i-1}) \texttt{ if not empty else } \colf(\e_i)$\footnote{$\forall i > 1$}
+  \end{itemize}
+
+  \mysep{}
+
+  \uncover<2->{
+    $\affect: \aset \rightarrow \C$ the function minimizing $\weight(\path)$ such that:
+    \begin{itemize}
+      \item $\affect(\e_\k) = \texttt{ a rnd elt from } \affectf(\e_\k)$
+      \item $\affect(\e_i) = \affect(\e_i + 1) \texttt{ if } \affect(\e_i + 1) \in \affectf(\e_i) \texttt{ else rnd from } \affectf(\e_i)$
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example run}
+
+  \begin{figure}[!htb]
+    \resizebox{0.9\textwidth}{!}{%
+      \centering
+      \only<1-3>{
+        \buildPathGraph{{\eAcols}/2/a/b}{{\eBcols}/3/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+      }
+      \only<4-5>{
+        \buildPathGraph{{\eAcols}/2/a/b}{{\colB}/1/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+      }
+      \only<6-11>{
+        \buildPathGraph{{\eAcols}/2/a/b}{{\colB}/1/b/c}{{\colB}/1/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+      }
+    }
+    \caption{
+      \only<1>{A path $\path$}%
+      \only<2-10>{Computing $\affectf(\path)$}%
+      \only<11>{Computing $\affect(\path)$}}
+  \end{figure}
+
+  \only<1>{Start to compute $\affectf(\path)$}
+  \only<2>{$\affectf(\e_1) = \colf(\e_1)$}
+  \only<3-4>{$\affectf(\e_2) = \colf(\e_2) \cap \affectf(\e_1) \texttt{ since not empty}$}
+  \only<5-6>{$\affectf(\e_3) = \colf(\e_3) \cap \affectf(\e_2) \texttt{ since not empty}$}
+  \only<7>{$\affectf(\e_4) = \colf(\e_4) \texttt{ since } \colf(\e_4) \cap \affectf(\e_3) = \varnothing$}
+  \only<8>{$\affectf(\e_5) = \colf(\e_5) \texttt{ since } \colf(\e_5) \cap \affectf(\e_4) = \varnothing$}
+  \only<9>{$\affectf(\e_6) = \colf(\e_6) \cap \affectf(\e_5) \texttt{ since not empty}$}
+  \only<10>{Start to compute $\affect(\path)$}
+  \only<11>{$\affect(\e_6) = \colD$}
+  \only<12-13>{$\affect(\e_5) = \colD \texttt{ since } \colD \in \affectf(\e_5)$}
+  \only<14>{Nothing to do for $\e_4, \e_3$ and $\e_2$ since they only have $1$ color}
+  \only<15>{$\affect(\e_1) = \colB \texttt{ since } \colB \in \affectf(\e_1)$}
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Proof}
+
+
+
+\end{frame}

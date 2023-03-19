@@ -1,0 +1,67 @@
+\documentclass[usenames,dvipsnames,fleqn]{beamer}
+\usetheme{Ilmenau}
+
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage[english]{babel}
+\usepackage{Model}
+\usepackage{lmodern}
+\usepackage[outputdir=.aux]{minted}
+\usepackage{changepage}
+\usepackage{epigraph}
+\usepackage{calc}
+\usepackage{img/tikz/path_example}
+% \usepackage[shortlabels]{enumitem}
+\RequirePackage{geometry,tikz,afterpage}
+\usetikzlibrary{automata, positioning, arrows, calc}
+
+\author{Fissore Davide} 
+\title{
+    Path Color Switching\\
+}
+\subtitle{
+    \small{\textit{Supervisor: Jean-Charles Régin}}
+}
+
+% \institute{Université Côte d'Azur}
+\date{Mars 30, 2023}
+
+\useoutertheme{smoothbars}
+
+\setbeamercolor*{palette quaternary}{use=structure,fg=white,bg=structure.fg!50!black}
+
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+    \begin{figure}[htpb]
+        \begin{center}
+            \includegraphics[width=0.6\linewidth]{img/logos/logo_haut_uca.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+% \begin{frame}
+%     \tableofcontents
+% \end{frame}
+
+\newcommand{\secsub}[1]{
+    \section{#1}
+    \subsection{#1}
+}
+
+\AtBeginSection[] {}
+
+\secsub{Problem Description}
+\input{slides/1prob_descr.tex}
+\secsub{Minimize \colorSwitch\ on Paths}
+\input{slides/2minim_path.tex}
+\secsub{Minimize \colorSwitch\ on Graphs}
+\input{slides/3general_graph.tex}
+\secsub{Benchmark}
+\input{slides/4stats.tex}
+\secsub{Conclusion}
+\input{slides/5conclusion.tex}
+
+\end{document}

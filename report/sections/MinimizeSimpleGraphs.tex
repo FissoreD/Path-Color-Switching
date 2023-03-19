@@ -1,11 +1,11 @@
 \section{Minimize Switches in Paths}
 
-The goal of this section is to provide a greedy algorithm able to compute an optimal assignement $\affecto$ of a given path $\path$. The obtained result, will then be extended to general graphs using a matrix technique proposed in \cref{sec:algo_matrix} and the MDD strategy proposed in \cref{sec:algo_mdd}.
+The goal of this section is to provide a greedy algorithm able to compute an optimal assignment $\affecto$ of a given path $\path$. The obtained result, will then be extended to general graphs using a matrix technique proposed in \cref{sec:algo_matrix} and the MDD strategy proposed in \cref{sec:algo_mdd}.
 
 \subsection{Procedure}
 \label{sec:path_proc}
 
-Let $\path = \row{\n}{\len}$ be a path in $\graph$, the greedy strategy to find an optimal assignement $\affecto$ is to \textit{delay} a color switch as much as possible. The algorithm is decomposed in two main parts: the first (\textit{part. A}) assigns each arc $\e_i \in \path$ to a subset of colors chosen from $\colf(\e_i)$ and the second (\textit{part B}) returns the optimal assignement $\affecto$.
+Let $\path = \row{\n}{\len}$ be a path in $\graph$, the greedy strategy to find an optimal assignment $\affecto$ is to \textit{delay} a color switch as much as possible. The algorithm is decomposed in two main parts: the first (\textit{part. A}) assigns each arc $\e_i \in \path$ to a subset of colors chosen from $\colf(\e_i)$ and the second (\textit{part B}) returns the optimal assignment $\affecto$.
 
 \paragraph{Part A.}
 In this part of the procedure, we affect each arc of $\path$ to $\mathcal{L} = \row{\C}{\len}$, such that forall $1 \leq i \leq \len$, $\C_i$ is a subset of $\colf(\e_i)$. Firstly, $\C_1$ is exactly $\colf(\e_1)$. Next, forall $1 < i \leq \len$, the set of colors $\C_i$ attributed to the arc $\e_i$ will be iteratively set to the intersection between $\C_{i-1}$ and $\colf(\e_i)$ if the intersection is non-empty, otherwise $\C_i$ will be affected to $\colf(\e_i)$.
@@ -15,7 +15,7 @@ In this second part of the procedure, we make a unique color affectation from th
 
 An implementation of this procedure, containing both part of the algorithm, can be found in \cref{algo:minpath}.
 
-Here, we want to give a formal proof to show that the stated procedure returns an optimal assignement for any given path. This proof is decomposed in two parts, one for each subpart of the global algorithm. In the first part we show that the list $\mathcal{L}$ minimizes the number of color switches and in second part we show that the cost of the assignement returned by \textit{part B} is the same of the one returned by \textit{part A}.
+Here, we want to give a formal proof to show that the stated procedure returns an optimal assignment for any given path. This proof is decomposed in two parts, one for each subpart of the global algorithm. In the first part we show that the list $\mathcal{L}$ minimizes the number of color switches and in second part we show that the cost of the assignment returned by \textit{part B} is the same of the one returned by \textit{part A}.
 
 \begin{proof}[\normalfont\textbf{Proof of \textit{part A}}]
 	\def\solPartOne{\affect}
@@ -39,7 +39,7 @@ Here, we want to give a formal proof to show that the stated procedure returns a
 \end{proof}
 
 \begin{proof}[\normalfont\textbf{Proof of \textit{part B}}]
-	In the previous proof, we have shown that the number of color switches returned by \textit{part A} is minimal. We only have to prove that the second part of the procedure returns an assignement with the same number of color switches.\\
+	In the previous proof, we have shown that the number of color switches returned by \textit{part A} is minimal. We only have to prove that the second part of the procedure returns an assignment with the same number of color switches.\\
 	Let $\mathcal{L} = \row{\C}{\len}$ be the subset affectation returned by \textit{part A}. By construction of the \textit{part A}, for each set $\C_i$ of $\mathcal{L}$, either $\C_{i+1}$ is a subset of $\C_i$ or $\C_i \cap \C_{i+1} = \varnothing$.
 	Starting from the last arc of the path, we can choose an arbitrary color $\c_\len \in \C_\len$ for the arc $\e_\len$. Then for the arc $\e_{\len-1}$, we choose the same color of $\e_\len$ if possible and repeat the same procedure until reaching the first arc of the path.\\
 	We have, therefore, a color switch only when the intersection of $\C_i$ and $\C_{i-1}$ is empty.
@@ -54,7 +54,18 @@ We can analyze the time complexity of this procedure from the implementation pro
 \subsection{An example run}
 \label{sec:path_ex_run}
 
-\input{img/tikz/path_example.tex}
+\begin{figure}[!htb]
+
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+		\centering
+		\buildPathGraph{{\eAcols}/2/a/b}{{\eBcols}/3/b/c}{{\eCcols}/3/c/d}{{\eDcols}/1/d/e}{{\eEcols}/3/e/f}{{\eFcols}/2/f/g}
+		% \input{img/tikz/path_example.tex}
+	}
+	\caption{A path example}
+	\label{fig:path_example}
+
+\end{figure}
 
 Let's take \cref{fig:path_example}, where $\path = \row{\e}{6}$ and $\colf$ such that
 \begin{align*}
@@ -78,7 +89,7 @@ One can note that there can exist other optimal solutions, from \cref{fig:path_e
 
 A cycle is a path whose starting end ending nodes coincide.
 In this situation, the previous algorithm is no more effective, since we need to keep into account the potential color switch between the first and the last arcs.
-We can, however, easily modify the procedure proposed in \cref{sec:path_proc}, to compute optimal assignement on cycles.
+We can, however, easily modify the procedure proposed in \cref{sec:path_proc}, to compute optimal assignment on cycles.
 
 Let's take the path of \cref{fig:path_example} and imagine that nodes $n_1$ and $n_7$ coincide.
 The affectation $\affect$ of \cref{sec:path_ex_run} is no more optimal since $\weight(\affect) = 3$, whereas the cost of the affectation $\affect' = (\colB, \colB, \colB, \colC, \colB, \colB)$ is $2$.

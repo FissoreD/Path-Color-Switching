@@ -33,7 +33,7 @@ readme/pandoc/
 
 
 **/.aux/*
-!**/.aux/main.pdf
+!**/.aux/*.pdf
 indent.log
 
 TODO

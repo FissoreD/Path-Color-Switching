@@ -1,6 +1,4 @@
-\begin{figure}[!htb]
-
-	\centering
+\newcommand{\buildPathGraph}[6]{
 	\begin{tikzpicture}
 		\def\v{0.25}
 		\def\h{0.26}
@@ -14,18 +12,14 @@
 		\coordinate (f) at (\sep*5,0);
 		\coordinate (g) at (\sep*6,0);
 
+		\def\lis{a,b,c,d,e,f,g}
+
 		% Draw dots with name
 		\foreach \x [count=\i] in {a,b,c,d,e,f,g} {
 				\node at (\x) [circle,fill,inner sep=1.5pt, label=above:$\n_\i$]{};
 			}
 
-		\def\lis{
-			{\eAcols}/2/a/b,
-			{\eBcols}/3/b/c,
-			{\eCcols}/3/c/d,
-			{\eDcols}/1/d/e,
-			{\eEcols}/3/e/f,
-			{\eFcols}/2/f/g}
+		\def\lis{#1,#2,#3,#4,#5,#6}
 		\foreach[expand list] \q/\l/\x/\y [count=\i] in \lis{
 			\draw [opacity=0] ($(\x)+(\h,-1*\v)$) -- node[below,black,opacity=1] {$\e_\i$} ($(\y)+(-\h,-1*\v)$);
 			\pgfmathsetmacro{\sp}{\l/2+0.5};
@@ -37,8 +31,4 @@
 		}
 
 	\end{tikzpicture}
-
-	\caption{A path example}
-	\label{fig:path_example}
-
-\end{figure}
+}
