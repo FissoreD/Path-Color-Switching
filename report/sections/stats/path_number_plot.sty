@@ -1,0 +1,32 @@
+\newcommand{\makeplot}[4]{
+  \begin{tikzpicture}
+    \begin{axis}[
+        % axis lines=middle,
+        x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+        y label style={at={(axis description cs:-0.1,.5)},anchor=south},
+        xlabel={#1},
+        ylabel={#2}]
+      \addplot table [x=length, y=#3, col sep=comma] {#4};
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\buildfigure}[6]{
+  \begin{subfigure}[]{.45\linewidth}
+    \centering
+    \scalebox{.6}{
+      \makeplot{#1}{#2}{#3}{#4};
+    }
+    \caption{#5}
+    \label{img:plots_#6}
+  \end{subfigure}
+}
+
+\newcommand{\buildCouplePlot}[6]{
+  \begin{figure}
+    \buildfigure{Path Length}{#1}{#2}{sections/stats/#5.csv}{Classic algorithm}{#3};
+    \buildfigure{Path Length}{#1}{#2}{sections/stats/all_diff.csv}{\alldiff\ constraint}{#4};
+    \caption{#6 of a given length from the node $1$}
+  \end{figure}
+}
+

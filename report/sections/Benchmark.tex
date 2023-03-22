@@ -4,7 +4,9 @@ We have been provided, by Spotify, a graph representing a sample of the problem 
 
 The \mdd\ version of the algorithm has been tested on this graph in order to obtain some of statistics. In particular we have tested the number of solutions and the time taken for a given path length. The source of the path taken into account, in order to build the results, is the node $1$. The are no big differences of performance for other nodes taken as root of the \mdd.
 
-\input{sections/stats/path_number_plot.tex}
+\buildCouplePlot{Number of paths}{paths-number}{1}{2}{number_of_paths_from_1}{Number of paths}
+
+\buildCouplePlot{Seconds}{time}{3}{4}{time_classic}{Time taken to compute paths}
 
 \paragraph{Number of solutions}
 In \cref{img:plots_1} and \cref{img:plots_2}, we can see that the number of solutions computed by respectively the classic algorithm and the algorithm with the \alldiff\ constraint give a curve with an exponential growth. However, we can also remark that the introduction of the \alldiff\ constraint reduces drastically the number of solutions, in particular, for a path with $10$ edges, there are about $9 \times 10^5$ solutions in the classic version against the about $3 \times 10^4$ of the \alldiff\ version. This difference is justified, as said in the previous sections, by the fact that the \alldiff\ constraints more the domain of the variables.

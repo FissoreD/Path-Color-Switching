@@ -38,16 +38,16 @@
 % \usepackage{mathtools}
 % \usepackage{xcolor}
 % \usepackage{latexsym,amsmath,multicol,booktabs,calligra}
-% \usepackage{graphicx,pstricks,listings,stackengine}
+\usepackage{graphicx,pstricks,listings,stackengine}
 \usepackage{variable}
 % \usetikzlibrary{positioning}
-% \usefonttheme[onlymath]{serif}
+\usefonttheme[onlymath]{serif}
 
-% \usepackage{lmodern}
+\usepackage{lmodern}
 % \usepackage{hyperref}
 \usepackage[english]{babel}
-% \usepackage{lmodern}
-\usepackage[outputdir=.aux]{minted}
+\usepackage{calligra}
+% \usepackage[outputdir=.aux]{minted}
 % \usepackage{changepage}
 \usepackage{epigraph}
 % \usepackage{calc}
@@ -55,6 +55,7 @@
 % \usepackage[shortlabels]{enumitem}
 \usepackage{tikz}
 \usetikzlibrary{calc}
+\usepackage[lined,ruled]{algorithm2e}
 
 
 \newtheorem{remark}{Remark}
@@ -70,3 +71,10 @@
     \line(1,0){40}
   \end{center}
 }
+
+
+\RequirePackage{geometry,tikz,afterpage}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+\usepackage{subcaption}

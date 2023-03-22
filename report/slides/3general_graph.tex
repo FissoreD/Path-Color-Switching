@@ -8,31 +8,98 @@
   A state of a \mdd\ is:
   $$\mddState{\text{String}}{\text{Int}}{\text{Set of Colors}}$$
 
-  Algo:
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Algorithm}
+
+
   \begin{itemize}
     \item The root = $\mddState{\source}{0}{\C}$
-    \item Construction of the layer $\layer_{i+1}$: $\forall \texttt{state} \in \layer_i, \n \in \texttt{succ(state.name)}, \layer_{i+1}.add(\mddState{\n}{state.cost + (\colf(\texttt{state.name}, \n) \cap \texttt{state.colors}) = \varnothing ? 1 : 0}{\colf(\texttt{state.name}, \n) \cap \texttt{state.colors} = \varnothing} ? \colf(\texttt{state.name}, \n) : \colf(\texttt{state.name}, \n) \cap \texttt{state.colors})$
   \end{itemize}
+  \begin{algorithm}[H]
+    \For{$\forall st \in \layer_i$}{
+      \For{\normalfont{$\forall \n \in \texttt{succ(st.name)}$}}{
+        $\texttt{col} = \colf(\texttt{st.name}, \n)$\;
+        $\texttt{inter} \gets \texttt{col} \cap \texttt{st.colors}$\;
+        \eIf{\normalfont{$\texttt{inter} = \varnothing$}}{
+          $\layer_{i+1}.add(\mddState{\n}{\texttt{st.cost} + 1}{\texttt{col}})$
+        }{
+          $\layer_{i+1}.add(\mddState{\n}{\texttt{st.cost}}{\texttt{inter}})$
+        }
+      }
+    }
+    \caption{Construction of the layer $\layer_{i+1}$}
+  \end{algorithm}
 
 \end{frame}
 
 \begin{frame}
   \frametitle{\mdd\ reduction}
 
+  Let $s_1$ and $s_2$ two state on the same layer $\layer$, having same name.
+
+  \begin{itemize}
+    \item \textit{Dominated states:} $s_1$ dominates $s_2$ if the cost of $s_1$ is smaller than the cost of $s_2$
+    \item \textit{\compatibleState\ states:} $s_1$ and $s_2$ are \compatibleState\ if they have same cost. In this case, $s_1$ and $s_2$ are removed from $\layer$ and \\
+          \small{$s_3 = \mddState{s_1\text{.name}}{s_1.\text{cost}}{s_1\text{.colors} \cup s_2\text{.colors}}$}\\
+          is added to $\layer$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Complexity}
+
+  \begin{itemize}
+    \item Each layer at most has $| \vset |$ states;
+    \item The height of the \mdd\ is \k;
+  \end{itemize}
+
+  The overall complexity is therefore
+  \begin{center}
+    \alert{$$\bigo(\k * | \vset | ^ 2 * | \C |)$$}
+  \end{center}
+
+  \mysep{}
+
+  Since $|\C|$ is constant we can simplify and get:
+
+  \begin{center}
+    \alert{$$\bigo(\k * | \vset | ^ 2) $$}
+  \end{center}
 
 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Proof and Complexity}
+  \frametitle{An example}
 
+  \input{img/tikz/graph_example.tex}
 
+  Let's take $\k = 5$
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Benchmark: Solutions}
+
+  \buildCouplePlot{Number of paths}{paths-number}{1}{2}{number_of_paths_from_1}{Number of paths}
 
 \end{frame}
 
 \begin{frame}
   \frametitle{The \alldiff\ variant}
 
+  A variant we can add to the problem is the introduction of the \alldiff\ constraint to the nodes of the path.
 
+  \begin{itemize}
+    \item This modification entails:
+          \begin{itemize}
+            \item Maintain a trace of the fathers of the current state,
+            \item Two states can be reduced only if they have same fathers.
+          \end{itemize}
+    \item The second point causes a complexity blow up: the layer size can be $2^{|\vset|}$.
+    \item The algorithm has now an exponential complexity.
+  \end{itemize}
 
 \end{frame}
