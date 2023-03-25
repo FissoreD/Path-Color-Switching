@@ -20,7 +20,7 @@
   \begin{algorithm}[H]
     \For{$\forall st \in \layer_i$}{
       \For{\normalfont{$\forall \n \in \texttt{succ(st.name)}$}}{
-        $\texttt{col} = \colf(\texttt{st.name}, \n)$\;
+        $\texttt{col} \gets \colf(\texttt{st.name}, \n)$\;
         $\texttt{inter} \gets \texttt{col} \cap \texttt{st.colors}$\;
         \eIf{\normalfont{$\texttt{inter} = \varnothing$}}{
           $\layer_{i+1}.add(\mddState{\n}{\texttt{st.cost} + 1}{\texttt{col}})$
@@ -76,14 +76,7 @@
 
   \input{img/tikz/graph_example.tex}
 
-  Let's take $\k = 5$
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Benchmark: Solutions}
-
-  \buildCouplePlot{Number of paths}{paths-number}{1}{2}{number_of_paths_from_1}{Number of paths}
+  Let's take $\k = 5, \source = \n_1$
 
 \end{frame}
 
@@ -103,3 +96,4 @@
   \end{itemize}
 
 \end{frame}
+
