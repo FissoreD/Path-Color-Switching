@@ -1,6 +1,7 @@
 \documentclass[usenames,dvipsnames,fleqn]{beamer}
 \usetheme{Ilmenau}
 
+\usepackage{graphicx}
 \usepackage{Model}
 \usepackage{sections/stats/path_number_plot}
 
@@ -50,5 +51,24 @@
 \input{slides/4stats.tex}
 \secsub{Conclusion}
 \input{slides/5conclusion.tex}
+
+\appendix
+
+\begin{frame}
+    \frametitle{An example}
+  
+    \begin{columns}
+      \begin{column}{0.40\textwidth}
+        \includegraphics[width=1\textwidth]{img/Screenshot_4.png}
+      \end{column}
+      \begin{column}{0.59\textwidth}
+        \includegraphics[width=1\textwidth]{img/Screenshot_5.png}
+      \end{column}
+    \end{columns}
+  
+    Let's take $\k = 5, \source = \n_1; \target = \n_4$
+  
+  \end{frame}
+  
 
 \end{document}
